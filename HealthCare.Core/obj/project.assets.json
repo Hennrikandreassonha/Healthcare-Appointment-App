@@ -8,26 +8,24 @@
     "net7.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Dator\\.nuget\\packages\\": {}
+    "/Users/klarr/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\Dator\\Henke\\VSCODE\\Healthcare-Appointment-App\\HealthCare.Core\\HealthCare.Core.csproj",
+      "projectUniqueName": "/Users/klarr/Projects/HealthCare/HealthCare.Core/HealthCare.Core.csproj",
       "projectName": "HealthCare.Core",
-      "projectPath": "c:\\Users\\Dator\\Henke\\VSCODE\\Healthcare-Appointment-App\\HealthCare.Core\\HealthCare.Core.csproj",
-      "packagesPath": "C:\\Users\\Dator\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\Dator\\Henke\\VSCODE\\Healthcare-Appointment-App\\HealthCare.Core\\obj\\",
+      "projectPath": "/Users/klarr/Projects/HealthCare/HealthCare.Core/HealthCare.Core.csproj",
+      "packagesPath": "/Users/klarr/.nuget/packages/",
+      "outputPath": "/Users/klarr/Projects/HealthCare/HealthCare.Core/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Dator\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/klarr/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -56,26 +54,12 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[7.0.14, 7.0.14]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[7.0.14, 7.0.14]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[7.0.14, 7.0.14]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.311/RuntimeIdentifierGraph.json"
       }
     }
   }

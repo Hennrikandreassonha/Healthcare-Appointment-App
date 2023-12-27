@@ -9,51 +9,49 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = HealthCare.WebApp
 build_property.RootNamespace = HealthCare.WebApp
-build_property.ProjectDir = C:\Users\Dator\Henke\VSCODE\Healthcare-Appointment-App\HealthCare.WebApp\
-build_property.EnableComHosting = 
-build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.ProjectDir = /Users/klarr/Projects/HealthCare/HealthCare.WebApp/
 build_property.RazorLangVersion = 7.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\Dator\Henke\VSCODE\Healthcare-Appointment-App\HealthCare.WebApp
+build_property.MSBuildProjectDirectory = /Users/klarr/Projects/HealthCare/HealthCare.WebApp
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/Dator/Henke/VSCODE/Healthcare-Appointment-App/HealthCare.WebApp/App.razor]
+[/Users/klarr/Projects/HealthCare/HealthCare.WebApp/App.razor]
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Dator/Henke/VSCODE/Healthcare-Appointment-App/HealthCare.WebApp/Pages/Appointment/ViewAppointment.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXBwb2ludG1lbnRcVmlld0FwcG9pbnRtZW50LnJhem9y
+[/Users/klarr/Projects/HealthCare/HealthCare.WebApp/Pages/Appointment/ViewAppointment.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQXBwb2ludG1lbnQvVmlld0FwcG9pbnRtZW50LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Dator/Henke/VSCODE/Healthcare-Appointment-App/HealthCare.WebApp/Pages/Index.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXgucmF6b3I=
+[/Users/klarr/Projects/HealthCare/HealthCare.WebApp/Pages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSW5kZXgucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Dator/Henke/VSCODE/Healthcare-Appointment-App/HealthCare.WebApp/Shared/BookingComponent.razor]
-build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXEJvb2tpbmdDb21wb25lbnQucmF6b3I=
+[/Users/klarr/Projects/HealthCare/HealthCare.WebApp/Shared/BookingComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL0Jvb2tpbmdDb21wb25lbnQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Dator/Henke/VSCODE/Healthcare-Appointment-App/HealthCare.WebApp/_Imports.razor]
+[/Users/klarr/Projects/HealthCare/HealthCare.WebApp/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Dator/Henke/VSCODE/Healthcare-Appointment-App/HealthCare.WebApp/Pages/Feedback/Feedback.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRmVlZGJhY2tcRmVlZGJhY2sucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = b-binqpy31a3
+[/Users/klarr/Projects/HealthCare/HealthCare.WebApp/Pages/Feedback/Feedback.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRmVlZGJhY2svRmVlZGJhY2sucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-j4lbkit3lk
 
-[C:/Users/Dator/Henke/VSCODE/Healthcare-Appointment-App/HealthCare.WebApp/Shared/MainLayout.razor]
-build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = b-ie76nbze7n
+[/Users/klarr/Projects/HealthCare/HealthCare.WebApp/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL01haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-vje6k3g9kk
 
-[C:/Users/Dator/Henke/VSCODE/Healthcare-Appointment-App/HealthCare.WebApp/Shared/NavMenu.razor]
-build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5hdk1lbnUucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = b-fg22861pnw
+[/Users/klarr/Projects/HealthCare/HealthCare.WebApp/Shared/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL05hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-wnob1m946v
 
-[C:/Users/Dator/Henke/VSCODE/Healthcare-Appointment-App/HealthCare.WebApp/Pages/Error.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
+[/Users/klarr/Projects/HealthCare/HealthCare.WebApp/Pages/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRXJyb3IuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Dator/Henke/VSCODE/Healthcare-Appointment-App/HealthCare.WebApp/Pages/_Host.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0hvc3QuY3NodG1s
+[/Users/klarr/Projects/HealthCare/HealthCare.WebApp/Pages/_Host.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvX0hvc3QuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 

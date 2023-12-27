@@ -1,12 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "BaWQQPRoAaqf4KFyiKgj/EegOGd4tOiqS9rsDjpmKj9uQjV/FxQgGrhyYhGZCEPf1Mp9adUsLewGXQWH3MAhlw==",
+  "dgSpecHash": "YEFDF4SNR1M2Bfu2hoZGWiWKAXr7mbdqO+p7Ts8N6JzRd7ee0HQQnozFXrGYdPzxrYMy9o7976+Z256ZB+v7WQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Dator\\Henke\\VSCODE\\Healthcare-Appointment-App\\HealthCare.Core\\HealthCare.Core.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\Dator\\.nuget\\packages\\microsoft.netcore.app.ref\\7.0.14\\microsoft.netcore.app.ref.7.0.14.nupkg.sha512",
-    "C:\\Users\\Dator\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\7.0.14\\microsoft.windowsdesktop.app.ref.7.0.14.nupkg.sha512",
-    "C:\\Users\\Dator\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\7.0.14\\microsoft.aspnetcore.app.ref.7.0.14.nupkg.sha512"
-  ],
+  "projectFilePath": "/Users/klarr/Projects/HealthCare/HealthCare.Core/HealthCare.Core.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }

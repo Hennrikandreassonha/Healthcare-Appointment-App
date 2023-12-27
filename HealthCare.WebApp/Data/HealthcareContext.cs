@@ -6,7 +6,7 @@ using HealthCare.Core.Models.Appointment;
 using HealthCare.Core.Models.User;
 using Microsoft.EntityFrameworkCore;
 
-namespace HealthCare.WebApp.Data
+namespace HealthCare.Core.Data
 {
     public class HealthcareContext : DbContext
     {
