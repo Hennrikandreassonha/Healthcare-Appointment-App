@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using HealthCare.Core;
+using HealthCare.Core.Data;
 using Microsoft.EntityFrameworkCore;
-using HealthCare.WebApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
