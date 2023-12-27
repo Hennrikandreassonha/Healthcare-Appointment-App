@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 25.0.1706.7
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthCare.WebApp", "HealthCare.WebApp\HealthCare.WebApp.csproj", "{85006D0C-F657-48AA-A1B8-6D66C33CA0EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthCare.WebApp", "HealthCare.WebApp\HealthCare.WebApp.csproj", "{85006D0C-F657-48AA-A1B8-6D66C33CA0EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthCare.Core", "HealthCare.Core\HealthCare.Core.csproj", "{3E6893A6-B70C-40C3-B131-A6611030B855}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthCare.Core", "HealthCare.Core\HealthCare.Core.csproj", "{3E6893A6-B70C-40C3-B131-A6611030B855}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

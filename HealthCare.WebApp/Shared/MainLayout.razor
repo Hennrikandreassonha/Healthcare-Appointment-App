@@ -9,7 +9,21 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            @* If not logged in show login button other show log out. *@
+            @* Comment out the Authorized for now since backend must be done *@
+            @* <AuthorizeView>
+                <Authorized> *@
+                    <NavLink class="nav-link" href="@* redirect to login page*@">
+                        <button>Log out</button>
+                    </NavLink>
+              @*   </Authorized>
+                <NotAuthorized> *@
+                    <NavLink class="nav-link" href="/login">
+                        <button>Log in</button>
+                    </NavLink>
+          @*       </NotAuthorized>
+            </AuthorizeView> *@
+
         </div>
 
         <article class="content px-4">
