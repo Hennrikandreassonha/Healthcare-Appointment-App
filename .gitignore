@@ -9,6 +9,9 @@
 *.user
 *.userosscache
 *.sln.docstates
+obj
+bin
+packages
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -396,19 +399,3 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-HealthCare.Core/obj/HealthCare.Core.csproj.nuget.dgspec.json
-HealthCare.Core/obj/HealthCare.Core.csproj.nuget.g.props
-HealthCare.Core/obj/project.assets.json
-HealthCare.Core/obj/project.nuget.cache
-HealthCare.Core/obj/Debug/net7.0/HealthCare.Core.AssemblyInfoInputs.cache
-HealthCare.Core/obj/Debug/net7.0/HealthCare.Core.assets.cache
-HealthCare.Core/obj/Debug/net7.0/HealthCare.Core.GeneratedMSBuildEditorConfig.editorconfig
-HealthCare.WebApp/obj/HealthCare.WebApp.csproj.nuget.dgspec.json
-HealthCare.WebApp/obj/HealthCare.WebApp.csproj.nuget.g.props
-HealthCare.WebApp/obj/project.assets.json
-HealthCare.WebApp/obj/project.nuget.cache
-HealthCare.WebApp/obj/Debug/net7.0/HealthCare.WebApp.AssemblyInfoInputs.cache
-HealthCare.WebApp/obj/Debug/net7.0/HealthCare.WebApp.assets.cache
-HealthCare.WebApp/obj/Debug/net7.0/HealthCare.WebApp.csproj.AssemblyReference.cache
-HealthCare.WebApp/obj/Debug/net7.0/HealthCare.WebApp.GeneratedMSBuildEditorConfig.editorconfig
-HealthCare.WebApp/obj/Debug/net7.0/HealthCare.WebApp.RazorAssemblyInfo.cache
