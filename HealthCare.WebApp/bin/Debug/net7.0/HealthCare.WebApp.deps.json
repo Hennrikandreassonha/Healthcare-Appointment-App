@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "HealthCare.WebApp/1.0.0": {
+        "dependencies": {
+          "HealthCare.Core": "1.0.0"
+        },
+        "runtime": {
+          "HealthCare.WebApp.dll": {}
+        }
+      },
+      "HealthCare.Core/1.0.0": {
+        "runtime": {
+          "HealthCare.Core.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "HealthCare.WebApp/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "HealthCare.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
