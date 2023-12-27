@@ -10,3 +10,6 @@
 /Users/klarr/Projects/HealthCare/HealthCare.Core/obj/Debug/net7.0/refint/HealthCare.Core.dll
 /Users/klarr/Projects/HealthCare/HealthCare.Core/obj/Debug/net7.0/HealthCare.Core.pdb
 /Users/klarr/Projects/HealthCare/HealthCare.Core/obj/Debug/net7.0/ref/HealthCare.Core.dll
+C:\Users\Dator\Henke\VSCODE\Healthcare-Appointment-App\HealthCare.Core\obj\Debug\net7.0\HealthCare.Core.dll
+C:\Users\Dator\Henke\VSCODE\Healthcare-Appointment-App\HealthCare.Core\obj\Debug\net7.0\refint\HealthCare.Core.dll
+C:\Users\Dator\Henke\VSCODE\Healthcare-Appointment-App\HealthCare.Core\obj\Debug\net7.0\HealthCare.Core.pdb

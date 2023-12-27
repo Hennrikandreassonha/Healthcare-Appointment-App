@@ -34,3 +34,6 @@
 /Users/klarr/Projects/HealthCare/HealthCare.WebApp/obj/Debug/net7.0/HealthCare.WebApp.pdb
 /Users/klarr/Projects/HealthCare/HealthCare.WebApp/obj/Debug/net7.0/HealthCare.WebApp.genruntimeconfig.cache
 /Users/klarr/Projects/HealthCare/HealthCare.WebApp/obj/Debug/net7.0/ref/HealthCare.WebApp.dll
+C:\Users\Dator\Henke\VSCODE\Healthcare-Appointment-App\HealthCare.WebApp\obj\Debug\net7.0\HealthCare.WebApp.dll
+C:\Users\Dator\Henke\VSCODE\Healthcare-Appointment-App\HealthCare.WebApp\obj\Debug\net7.0\refint\HealthCare.WebApp.dll
+C:\Users\Dator\Henke\VSCODE\Healthcare-Appointment-App\HealthCare.WebApp\obj\Debug\net7.0\HealthCare.WebApp.pdb

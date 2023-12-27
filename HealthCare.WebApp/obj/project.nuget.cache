@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "67Rx+emq5UjB/TrCIdk5UMPH5d1iq/qWvwYL8308zZS1WDMHj6N5VjKXmunfqGEokQibMOkW8ouK2HUqzZ5bYw==",
+  "dgSpecHash": "ulCyEZ68Cr2PgBQ30YJQWJzMYeA4yPpwj3IJrMXdRj017jfFF97i5zqgUOAuDlbxxbxu6RAtVDAiZKJeYqCklg==",
   "success": true,
-  "projectFilePath": "/Users/klarr/Projects/HealthCare/HealthCare.WebApp/HealthCare.WebApp.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\Dator\\Henke\\VSCODE\\Healthcare-Appointment-App\\HealthCare.WebApp\\HealthCare.WebApp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Dator\\.nuget\\packages\\microsoft.netcore.app.ref\\7.0.14\\microsoft.netcore.app.ref.7.0.14.nupkg.sha512",
+    "C:\\Users\\Dator\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\7.0.14\\microsoft.windowsdesktop.app.ref.7.0.14.nupkg.sha512",
+    "C:\\Users\\Dator\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\7.0.14\\microsoft.aspnetcore.app.ref.7.0.14.nupkg.sha512",
+    "C:\\Users\\Dator\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\7.0.14\\microsoft.netcore.app.host.win-x64.7.0.14.nupkg.sha512"
+  ],
   "logs": []
 }
