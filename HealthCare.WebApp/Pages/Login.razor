@@ -1,0 +1,34 @@
+﻿@page "/login"
+
+
+<head>
+    <title>Login</title>
+    <link href="~/css/site.css" rel="stylesheet" asp-append-version="true" />
+
+</head>
+
+<div class="center-container">
+    <div class="login">
+        <h3>Login</h3>
+        <form class="login-form">
+            <label>User Name</label>
+            <input @bind="model.Email" placeholder="Email" />
+
+            <label>Password</label>
+            <input @bind="model.Password" type="password" placeholder="Password" />
+
+            <button>Login</button>
+        </form>
+    </div>
+</div>
+
+
+
+@code {
+    private class Model
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
+    private Model model = new Model();
+}

@@ -67,3 +67,29 @@ a, .btn-link {
         content: "An error has occurred."
     }
 
+.center-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.login {
+    text-align: center;
+    padding: 30px;
+    border: solid blue;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    max-width: 340px;
+}
+.login label{
+    
+}
+.login input {
+    margin-bottom: 10px;
+}
+
