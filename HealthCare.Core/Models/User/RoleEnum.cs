@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Core.Models.User
 {
-    public class Patient : User
+    public enum RoleEnum
     {
-        public int Test { get; set; }
+        Patient,
+        Caregiver
     }
 }
