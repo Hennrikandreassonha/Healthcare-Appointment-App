@@ -6,35 +6,39 @@
             <div class="mb-3">
                 <h3>Account Settings</h3>
             </div>
-            <form>
-                <div class="mb-3">
-                    <label>Email: </label>
-                    <input type="email" class="form-control" value="user.berg.alex.h@hotmail.com" style="max-width: 300px">
-                </div>
-                <div class="mb-3">
-                    <label>First Name: </label>
-                    <input type="text" class="form-control" value="@* @user. *@FirstName" style="max-width: 300px">
-                </div>
-                <div class="mb-3">
-                    <label>Last Name: </label>
-                    <input type="text" class="form-control" value="@* @user. *@LastName" style="max-width: 300px">
-                </div>
-                @* @if (user is Patient) *@
-                @* { *@
+            <div class="mb-3">
+                <label>Email: </label>
+                <p class="border p-2" style="max-width: 300px">@* @user. *@ berg.alex.h@hotmail.com</p>
+            </div>
+            <div class="mb-3">
+                <label>First Name: </label>
+                <p class="border p-2" style="max-width: 300px">@* @user. *@FirstName</p>
+            </div>
+            <div class="mb-3">
+                <label>Last Name: </label>
+                <p class="border p-2" style="max-width: 300px">@* @user. *@LastName</p>
+            </div>
+            <div class="mb-3">
+                <label>Date of birth: </label>
+                <p class="border p-2" style="max-width: 300px">@* @user. *@LastName</p>
+            </div>
+            @* @if (user is Patient) *@
+            @* { *@
                 <div class="mb-3">
                     <label>Gender: </label>
-                    <input type="text" class="form-control" value="@* @user. *@Gender" style="max-width: 300px">
+                <p class ="border p-2" style="max-width: 300px">@* @user. *@Gender</p>
                 </div>
-                @* } *@
-                @* else *@
-                @* { *@
+       @*      } *@
+            @* else *@
+           @*  { *@
                 <div class="mb-3">
                     <label>Role: </label>
-                    <input type="text" class="form-control" value="@* user. *@Role" style="max-width: 300px">
+                <p class="border p-2" style="max-width: 300px">@* user. *@Role</p>
                 </div>
-                @* } *@
-                <button type="submit" class="btn btn-primary">Save</button>
-            </form>
+           @*  } *@
+            <NavLink class="nav-link" href="/edit">
+                <button class="btn btn-primary">Edit</button>
+            </NavLink>
         </div>
 
         <div class="col-md-6 border p-3">
@@ -57,7 +61,7 @@
 
 @code {
 
-        // Get user
-
+    // Get user
+   
 
 }
