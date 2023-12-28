@@ -1,5 +1,7 @@
 ﻿@page "/login"
-
+@inject IUserService userService
+@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navManager
 
 <head>
     <title>Login</title>
@@ -7,35 +9,73 @@
 
 </head>
 
-<div class="center-container">
-    <div class="login">
-        <h3>Login</h3>
-        <EditForm Model="model" class="login-form">
-            <label>User Name</label>
-            <InputText @bind-Value="model.Email" class="form-control" placeholder="Email" type="email"
-                       required />
+<div class="row">
+    <div class="col-lg-3 offset-lg-3 pt-3 pb-3 border">
+        <div class="mb-3 text-center">
+            <h3>Login</h3>
+        </div>
+        <EditForm Model="model" class="login-form" OnValidSubmit="Authenticate">
+            <div class="mb-3">
+                <label>Email</label>
+                <InputText @bind-Value="model.Email" class="form-control" placeholder="Email" type="email" required />
+            </div>
+            <div class="mb-3">
 
-            <label>Password</label>
-            <InputText @bind-Value="model.Password" class="form-control" placeholder="Password" type="password"
-                   required />
-
+                <label>Password</label>
+                <InputText @bind-Value="model.Password" class="form-control" placeholder="Password" type="password"
+                    required />
+            </div>
             <button class="btn btn-primary">Sign In</button>
-            
 
-            <p id="account-text">Don't have an account? <a href="/register">Sign up</a></p>
-
+            <div class="mb-3">
+                <p id="account-text">Don't have an account? <a href="/register">Sign up</a></p>
+            </div>
 
         </EditForm>
+
+        @if (errorMsg != "")
+        {
+            <p class="alert alert-danger">@errorMsg</p>
+        }
     </div>
 </div>
 
-
-
 @code {
+    private Model model = new Model();
     private class Model
     {
         public string Email { get; set; }
         public string Password { get; set; }
     }
-    private Model model = new Model();
+    private string errorMsg = "";
+    private async Task Authenticate()
+    {
+        var userAccount = userService.GetByEmail(model.Email);
+
+        Console.WriteLine(BCrypt.Net.BCrypt.HashPassword(model.Password));
+
+        if (userAccount == null || !BCrypt.Net.BCrypt.Verify(model.Password, userAccount.PasswordHash))
+        {
+            errorMsg = "Invalid email or password";
+            return;
+        }
+
+        try
+        {
+            var customAuthStateProvider = (AuthStateProvider)authStateProvider;
+
+            await customAuthStateProvider.UpdateAuthenticationState(new User
+                {
+                    Email = userAccount.Email,
+                    FirstName = userAccount.FirstName,
+                    Role = userAccount.Role
+                });
+            navManager.NavigateTo("/", true);
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
 }

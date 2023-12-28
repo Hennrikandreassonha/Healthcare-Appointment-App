@@ -19,14 +19,16 @@ namespace HealthCare.Core.UserService
         {
             if (_context.Patient.Where(x => x.Email == user.Email).FirstOrDefault() != null || _context.CareGiver.Where(x => x.Email == user.Email).FirstOrDefault() != null)
                 return false;
-                
+
             try
             {
-                if (user is Patient)
+                if (user.Role == RoleEnum.Patient)
                     _context.Patient.Add((Patient)user);
 
-                if (user is CareGiver)
-                    _context.CareGiver.Add((CareGiver)user);
+                if (user is CareGiver careGiver && careGiver.Role == CareGiverRoleEnum.Doctor)
+                {
+                    _context.CareGiver.Add(careGiver);
+                }
 
                 _context.SaveChanges();
             }
@@ -37,6 +39,18 @@ namespace HealthCare.Core.UserService
             }
 
             return true;
+        }
+
+        public User? GetByEmail(string email)
+        {
+            User user = new();
+            user = _context.Patient.Where(x => x.Email == email).FirstOrDefault()!;
+            if(user != null)
+                return user;
+                
+            user = _context.CareGiver.Where(x => x.Email == email).FirstOrDefault()!;
+
+            return user;
         }
     }
 }

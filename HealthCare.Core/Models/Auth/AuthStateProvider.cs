@@ -16,8 +16,7 @@ namespace HealthCare.Core.Models.Auth
         {
             _sessionStorage = sessionStorage;
         }
-
-
+        
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             try
@@ -50,9 +49,8 @@ namespace HealthCare.Core.Models.Auth
                 await _sessionStorage.SetAsync("UserSession", userSession);
                 claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
                 {
-                    new Claim(ClaimTypes.Email, userSession.Email),
-                    new Claim(ClaimTypes.Name, userSession.FirstName),
-                    new Claim(ClaimTypes.Role, userSession.Role.ToString())
+                     new Claim(ClaimTypes.Name, userSession.FirstName),
+                    // new Claim(ClaimTypes.Role, userSession.Role)
                 }));
             }
             else

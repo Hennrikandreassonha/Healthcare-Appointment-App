@@ -9,5 +9,7 @@ namespace HealthCare.Core.UserService
     public interface IUserService
     {
        bool AddUser(User user);
+       User GetByEmail(string email);
+
     }
 }
