@@ -7,5 +7,9 @@ namespace HealthCare.Core.Models.User
 {
     public class Patient : User
     {
+        public Patient()
+        {
+            
+        }
     }
 }

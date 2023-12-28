@@ -3,7 +3,36 @@
 
 <PageTitle>Index</PageTitle>
 <div>
-     <h1>Welcome</h1>
+     <AuthorizeView>
+          <Authorized>
+               <h1>Hello, @context.User.Identity.Name!</h1>
+               @* <h2>You are a @context.User.Identity.!</h2> *@
+
+          </Authorized>
+          <NotAuthorized>
+               <h1>Hello, Guest!</h1>
+          </NotAuthorized>
+     </AuthorizeView>
 </div>
 <BookingComponent />
 
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationState { get; set; }
+
+    @* protected override void OnInitialized()
+    {
+        var authenticationState = context.GetAuthenticationStateAsync().Result;
+        var user = authenticationState.User;
+    // Retrieve role claim
+    var roleClaim = user.FindFirst(System.Security.Claims.ClaimTypes.Role);
+    role = roleClaim?.Value ?? "N/A"; *@
+
+}
+     @* private async Task DisplayGreetingAlert()
+{
+var authState = await authenticationState;
+var message = $"Hello {authState.User.Identity.Name}";
+await js.InvokeVoidAsync("alert", message);
+} *@
+}

@@ -39,7 +39,7 @@
         }
     </div>
 </div>
-
+<span>henrik1995a@live.se</span>
 @code {
     private Model model = new Model();
     private class Model
@@ -62,16 +62,20 @@
 
         try
         {
-            var customAuthStateProvider = (AuthStateProvider)authStateProvider;
+            var customAuthStateProvider = authStateProvider as AuthStateProvider;
+            if (customAuthStateProvider != null)
+            {
+                User user = new User
+                    {
+                        Email = userAccount.Email,
+                        FirstName = userAccount.FirstName,
+                        Role = userAccount.Role
+                    };
 
-            await customAuthStateProvider.UpdateAuthenticationState(new User
-                {
-                    Email = userAccount.Email,
-                    FirstName = userAccount.FirstName,
-                    Role = userAccount.Role
-                });
-            navManager.NavigateTo("/", true);
+                await customAuthStateProvider.UpdateAuthenticationState(user);
 
+                navManager.NavigateTo("/", true);
+            }
         }
         catch (Exception ex)
         {

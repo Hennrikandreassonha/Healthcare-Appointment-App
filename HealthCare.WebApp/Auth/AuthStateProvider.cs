@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.ProtectedBrowserStorage;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
-namespace HealthCare.Core.Models.Auth
+namespace HealthCare.WebApp.Auth
 {
     public class AuthStateProvider : AuthenticationStateProvider
     {
@@ -16,7 +17,6 @@ namespace HealthCare.Core.Models.Auth
         {
             _sessionStorage = sessionStorage;
         }
-        
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             try
@@ -50,7 +50,8 @@ namespace HealthCare.Core.Models.Auth
                 claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
                 {
                      new Claim(ClaimTypes.Name, userSession.FirstName),
-                    // new Claim(ClaimTypes.Role, userSession.Role)
+                    new Claim(ClaimTypes.Role, userSession.Role.ToString()),
+                    new Claim(ClaimTypes.Email, userSession.Email)
                 }));
             }
             else

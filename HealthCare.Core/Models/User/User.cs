@@ -17,5 +17,9 @@ namespace HealthCare.Core.Models.User
         public RoleEnum Role { get; set; }
         public GenderEnum Gender { get; set; }
         public DateTime BirthDate { get; set; }
+        public User()
+        {
+            
+        }
     }
 }
