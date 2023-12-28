@@ -17,6 +17,9 @@ namespace HealthCare.Core.UserService
         }
         public bool AddUser(User user)
         {
+            if (_context.Patient.Where(x => x.Email == user.Email).FirstOrDefault() != null || _context.CareGiver.Where(x => x.Email == user.Email).FirstOrDefault() != null)
+                return false;
+                
             try
             {
                 if (user is Patient)
@@ -24,7 +27,6 @@ namespace HealthCare.Core.UserService
 
                 if (user is CareGiver)
                     _context.CareGiver.Add((CareGiver)user);
-
 
                 _context.SaveChanges();
             }

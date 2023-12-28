@@ -7,6 +7,5 @@ namespace HealthCare.Core.Models.User
 {
     public class Patient : User
     {
-        public int Test { get; set; }
     }
 }
