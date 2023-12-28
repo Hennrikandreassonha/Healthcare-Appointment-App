@@ -10,15 +10,22 @@
 <div class="center-container">
     <div class="login">
         <h3>Login</h3>
-        <form class="login-form">
+        <EditForm Model="model" class="login-form">
             <label>User Name</label>
-            <input @bind="model.Email" placeholder="Email" />
+            <InputText @bind-Value="model.Email" class="form-control" placeholder="Email" type="email"
+                       required />
 
             <label>Password</label>
-            <input @bind="model.Password" type="password" placeholder="Password" />
+            <InputText @bind-Value="model.Password" class="form-control" placeholder="Password" type="password"
+                   required />
 
-            <button>Login</button>
-        </form>
+            <button class="btn btn-primary">Sign In</button>
+            
+
+            <p id="account-text">Don't have an account? <a href="/register">Sign up</a></p>
+
+
+        </EditForm>
     </div>
 </div>
 
