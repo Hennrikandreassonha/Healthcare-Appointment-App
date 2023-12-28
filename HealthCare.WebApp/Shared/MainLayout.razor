@@ -14,12 +14,15 @@
             @* <AuthorizeView>
                 <Authorized> *@
                     <NavLink class="nav-link" href="@* redirect to login page*@">
-                        <button>Log out</button>
+                        <button class="btn btn-primary">Log out</button>
                     </NavLink>
               @*   </Authorized>
                 <NotAuthorized> *@
                     <NavLink class="nav-link" href="/login">
-                        <button>Log in</button>
+                        <button class="btn btn-primary">Log in</button>
+                    </NavLink>
+                    <NavLink class="nav-link" href="/register">
+                        <button class="btn btn-success">Register</button>
                     </NavLink>
           @*       </NotAuthorized>
             </AuthorizeView> *@
