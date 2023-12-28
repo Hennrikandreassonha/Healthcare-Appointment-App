@@ -1,0 +1,65 @@
+﻿@page "/accountsettings"
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <h3>Account Settings</h3>
+            </div>
+            <div class="mb-3">
+                <label>Email: </label>
+                <p>@* @user. *@Email</p>
+            </div>
+            <div class="mb-3">
+                <label>First Name: </label>
+                <p>@* @user. *@FirstName</p>
+            </div>
+            <div class="mb-3">
+                <label>Last Name: </label>
+                <p>@* @user. *@LastName</p>
+            </div>
+            @* @if (user is Patient) *@
+            @* { *@
+                <div class="mb-3">
+                    <label>Gender: </label>
+                    <p>@* @user. *@Gender</p>
+                </div>
+       @*      } *@
+            @* else *@
+           @*  { *@
+                <div class="mb-3">
+                    <label>Role: </label>
+                    <p>@* user. *@Role</p>
+                </div>
+           @*  } *@
+        </div>
+
+        <div class="col-md-6">
+            <div class="mb-3">
+                <h3>Bookings</h3>
+            </div>
+            <div class="mb-3">
+                <label>Upcoming booking: </label>
+                <p>Upcoming meetings</p>
+            </div>
+            <div class="mb-3">
+                <label>Previous booking: </label>
+                <p>Previous meetings</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+
+    //Hantera att hämta inloggad användare. 
+    // public User GetUserFromDB(int id)
+    // {
+        
+    // }
+
+}
