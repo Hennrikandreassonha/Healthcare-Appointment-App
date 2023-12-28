@@ -93,8 +93,12 @@ a, .btn-link {
 }
 .login input {
     margin-bottom: 10px;
+<<<<<<< HEAD
+}
+=======
 }
 #account-text{
     margin-top:7px;
     font-size: 12px;
 }
+>>>>>>> 0366685d982fe148b2553f785a2060d46b8bf583

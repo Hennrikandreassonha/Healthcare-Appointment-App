@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace HealthCare.WebApp.Migrations
+namespace HealthCare.Core.Migrations
 {
     [DbContext(typeof(HealthcareContext))]
-    [Migration("20231227083349_2")]
-    partial class _2
+    [Migration("20231228111116_MigrationName")]
+    partial class MigrationName
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

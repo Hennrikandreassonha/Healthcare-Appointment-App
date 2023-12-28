@@ -1,9 +1,8 @@
 ﻿@page "/register"
-
-
+@inject AuthService authService
 <div class="row">
     <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
-        <EditForm Model="formModel" OnValidSubmit="HandleRegister">
+        <EditForm Model="formModel" OnValidSubmit="HandleRegister" OnInvalidSubmit="HandleInvalid">
             <div class="mb-3 text-center">
                 <h3>Register</h3>
             </div>
@@ -39,12 +38,22 @@
                 <InputText @bind-Value="formModel.Password" class="form-control" placeholder="Password" type="password"
                     required />
             </div>
+            <div class="mb-3">
+                <label>Are you a doctor or nurse? Please type your provided code to register</label>
+                <InputText @bind-Value="formModel.CaregiverCode" class="form-control" />
+            </div>
             <div class="mb-3 d-grid gap-2">
                 <button type="submit" class="btn btn-primary">Register</button>
             </div>
         </EditForm>
-
-        <p id="errmsg">@errorMsg</p>
+        @if (errorMsg != "")
+        {
+            <p class="alert alert-danger">@errorMsg</p>
+        }
+        @if (successMsg != "")
+        {
+            <p class="alert alert-success">@successMsg</p>
+        }
     </div>
 </div>
 
@@ -54,8 +63,22 @@
             Birthdate = DateTime.Now
         };
     private string errorMsg = "";
+    private string successMsg = "";
+
     private void HandleRegister()
     {
-        //Validera, kryptera, skicka till db
+        var success = authService.RegisterUser(formModel);
+
+        if (success)
+            successMsg = "You have been registerd and can now log in!";
+        else
+        {
+            errorMsg = "Error occured, please try again later";
+        }
+
+    }
+    private void HandleInvalid()
+    {
+        errorMsg = "Please fill out all information";
     }
 }
