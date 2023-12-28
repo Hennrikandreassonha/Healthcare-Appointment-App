@@ -15,10 +15,11 @@
                 <InputText @bind-Value="formModel.LastName" class="form-control" placeholder="Last Name" required />
             </div>
 
-           <div class="mb-3">
+            <div class="mb-3">
                 <label>Birthdate</label>
-                <InputDate @bind-Value="formModel.Birthdate" class="form-control" placeholder="BirthDate" required />
+                <input type="date" @bind="formModel.Birthdate" class="form-control" placeholder="BirthDate" required />
             </div>
+
             <div class="mb-3">
                 <label>Gender</label>
                 <select @bind="formModel.Gender" class="form-control" required>
@@ -29,23 +30,31 @@
             </div>
             <div class="mb-3">
                 <label>Email</label>
-                <InputText @bind-Value="formModel.Email" class="form-control" placeholder="Email" type="email" required />
+                <InputText @bind-Value="formModel.Email" class="form-control" placeholder="Email" type="email"
+                    required />
             </div>
             <div class="mb-3">
                 <label>Password</label>
-                <InputText @bind-Value="formModel.Password" class="form-control" placeholder="Password" type="password" required />
+                <InputText @bind-Value="formModel.Password" class="form-control" placeholder="Password" type="password"
+                    required />
             </div>
             <div class="mb-3 d-grid gap-2">
                 <button type="submit" class="btn btn-primary">Register</button>
             </div>
         </EditForm>
+
+        <p id="errmsg">@errorMsg</p>
     </div>
 </div>
 
 @code {
-    private RegisterDto formModel = new();
-
-    private void HandleRegister(){
+    private RegisterDto formModel = new RegisterDto
+        {
+            Birthdate = DateTime.Now
+        };
+    private string errorMsg = "";
+    private void HandleRegister()
+    {
         //Validera, kryptera, skicka till db
     }
 }
