@@ -1,0 +1,34 @@
+﻿@page "/edit"
+@inject AuthService authService
+
+<div class="row">
+    <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
+
+        <div class="mb-3 text-center">
+            <h3>Account Settings</h3>
+        </div>
+        <form>
+            <div class="mb-3">
+                <label>Email: </label>
+                <input type="email" class="form-control" style="max-width: 300px" value="berg.alex.h@hotmail.com" />
+            </div>
+            <div class="mb-3">
+                <label>First Name: </label>
+                <input type="text" class="form-control" style="max-width: 300px" value="user.FirstName">
+            </div>
+            <div class="mb-3">
+                <label>Last Name: </label>
+                <input type="text" class="form-control" style="max-width: 300px" value="user.LastName">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+
+        </form>
+    </div>
+</div>
+
+
+
+@code {
+
+}
