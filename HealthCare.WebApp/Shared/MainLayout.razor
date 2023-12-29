@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
-
+@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navManager
 <PageTitle>HealthCare.WebApp</PageTitle>
 
 <div class="page">
@@ -9,24 +10,21 @@
 
     <main>
         <div class="top-row px-4">
-            @* If not logged in show login button other show log out. *@
-            @* Comment out the Authorized for now since backend must be done *@
-            @* <AuthorizeView>
-                <Authorized> *@
-                    <NavLink class="nav-link" href="@* redirect to login page*@">
-                        <button class="btn btn-primary">Log out</button>
+            <AuthorizeView>
+                <Authorized>
+                    <NavLink href="">
+                        <button class="btn btn-primary" @onclick=Logout>Log out</button>
                     </NavLink>
-              @*   </Authorized>
-                <NotAuthorized> *@
-                    <NavLink class="nav-link" href="/login">
+                </Authorized>
+                <NotAuthorized>
+                    <NavLink href="/login">
                         <button class="btn btn-primary">Log in</button>
                     </NavLink>
-                    <NavLink class="nav-link" href="/register">
+                    <NavLink href="/register">
                         <button class="btn btn-success">Register</button>
                     </NavLink>
-          @*       </NotAuthorized>
-            </AuthorizeView> *@
-
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
 
         <article class="content px-4">
@@ -35,3 +33,11 @@
     </main>
 </div>
 
+@code {
+    private async Task Logout()
+    {
+        var customAuthStateProvider = (AuthStateProvider)authStateProvider;
+        await customAuthStateProvider.UpdateAuthenticationState(null);
+        navManager.NavigateTo("/", true);
+    }
+}

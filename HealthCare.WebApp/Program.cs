@@ -6,17 +6,33 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using HealthCare.Core.Models.Auth;
 using HealthCare.Core.UserService;
+using Microsoft.AspNetCore.Components.Authorization;
+using HealthCare.WebApp;
+using HealthCare.WebApp.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+
 builder.Services.AddScoped<FeedbackService>();
 builder.Services.AddScoped<AppointmentService>();
 builder.Services.AddScoped<BookingService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ProtectedSessionStorage>();
+builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
+
+//For Auth
+
+builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
+builder.Services.AddScoped<ProtectedSessionStorage>();
+
+builder.Services.AddAuthorizationCore();
+builder.Services.AddAuthenticationCore();
+
+// builder.Services.AddAuthorizationCore();
 
 builder.Services.AddDbContext<HealthcareContext>(options => 
     options.UseSqlServer(
@@ -27,9 +43,6 @@ builder.Services.AddDbContext<HealthcareContext>(options =>
         }
     )
 );
-
-builder.Services.AddScoped<ProtectedSessionStorage>();
-
 
 var app = builder.Build();
 

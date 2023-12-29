@@ -9,6 +9,9 @@ namespace HealthCare.Core.Models.User
     {
         public CareGiverRoleEnum Role { get; set; }
         public bool IsAvailable { get; set; }
-        
+        public CareGiver()
+        {
+            
+        }
     }
 }
