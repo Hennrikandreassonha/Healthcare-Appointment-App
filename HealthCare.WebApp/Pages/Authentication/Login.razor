@@ -6,11 +6,10 @@
 <head>
     <title>Login</title>
     <link href="~/css/site.css" rel="stylesheet" asp-append-version="true" />
-
 </head>
 
-<div class="row">
-    <div class="col-lg-3 offset-lg-3 pt-3 pb-3 border">
+<div class="row justify-content-center align-items-center">
+    <div class="col-lg-3 pt-3 pb-3 border">
         <div class="mb-3 text-center">
             <h3>Login</h3>
         </div>
@@ -20,7 +19,6 @@
                 <InputText @bind-Value="model.Email" class="form-control" placeholder="Email" type="email" required />
             </div>
             <div class="mb-3">
-
                 <label>Password</label>
                 <InputText @bind-Value="model.Password" class="form-control" placeholder="Password" type="password"
                     required />
@@ -30,7 +28,6 @@
             <div class="mb-3">
                 <p id="account-text">Don't have an account? <a href="/register">Sign up</a></p>
             </div>
-
         </EditForm>
 
         @if (errorMsg != "")
@@ -39,7 +36,6 @@
         }
     </div>
 </div>
-<span>henrik1995a@live.se</span>
 @code {
     private Model model = new Model();
     private class Model
@@ -59,7 +55,6 @@
             errorMsg = "Invalid email or password";
             return;
         }
-
         try
         {
             var customAuthStateProvider = authStateProvider as AuthStateProvider;

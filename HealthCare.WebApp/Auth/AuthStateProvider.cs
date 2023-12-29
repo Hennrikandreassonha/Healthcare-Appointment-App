@@ -62,5 +62,9 @@ namespace HealthCare.WebApp.Auth
 
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claimsPrincipal)));
         }
+        public string GetEmailFromClaim()
+        {
+            return "";
+        }
     }
 }

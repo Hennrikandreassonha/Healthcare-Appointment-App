@@ -25,7 +25,7 @@ namespace HealthCare.Core.UserService
                 if (user.Role == RoleEnum.Patient)
                     _context.Patient.Add((Patient)user);
 
-                if (user is CareGiver careGiver && careGiver.Role == CareGiverRoleEnum.Doctor)
+                if (user is CareGiver careGiver && careGiver.Role == RoleEnum.Doctor)
                 {
                     _context.CareGiver.Add(careGiver);
                 }

@@ -26,7 +26,7 @@ namespace HealthCare.Core.Models.Auth
             if (!userDto.CaregiverCode.IsNullOrEmpty())
             {
                 careGiver.Email = userDto.Email;
-                careGiver.Role = CareGiverRoleEnum.Doctor;
+                careGiver.Role = RoleEnum.Doctor;
                 careGiver.FirstName = userDto.FirstName;
                 careGiver.LastName = userDto.LastName;
                 careGiver.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password);

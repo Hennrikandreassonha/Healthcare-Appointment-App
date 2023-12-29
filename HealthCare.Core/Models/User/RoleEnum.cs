@@ -8,6 +8,7 @@ namespace HealthCare.Core.Models.User
     public enum RoleEnum
     {
         Patient,
-        Caregiver
+        Nurse,
+        Doctor
     }
 }
