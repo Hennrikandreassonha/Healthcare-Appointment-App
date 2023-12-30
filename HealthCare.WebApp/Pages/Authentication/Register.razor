@@ -67,15 +67,7 @@
 
     private void HandleRegister()
     {
-        var success = authService.RegisterUser(formModel);
-
-        if (success)
-            successMsg = "You have been registerd and can now log in!";
-        else
-        {
-            errorMsg = "Error occured, please try again later";
-        }
-
+        successMsg = authService.RegisterUser(formModel);
     }
     private void HandleInvalid()
     {

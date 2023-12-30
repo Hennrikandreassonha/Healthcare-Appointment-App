@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
-using HealthCare.Core.Models.User;
 
 namespace HealthCare.Core.Models.Auth
 {
@@ -21,6 +20,16 @@ namespace HealthCare.Core.Models.Auth
 
         public RegisterDto()
         {
+        }
+        public RegisterDto(string email, string password, string firstName, string lastName, GenderEnum gender, DateTime birthdate, string? caregiverCode = null)
+        {
+            Email = email;
+            Password = password;
+            FirstName = firstName;
+            LastName = lastName;
+            Gender = gender;
+            Birthdate = birthdate;
+            CaregiverCode = caregiverCode;
         }
     }
 }
