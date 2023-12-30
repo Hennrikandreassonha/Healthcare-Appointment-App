@@ -1,7 +1,9 @@
 ﻿@page "/login"
 @inject IUserService userService
 @inject AuthenticationStateProvider authStateProvider
+@inject AuthService authService
 @inject NavigationManager navManager
+@using HealthCare.Core.Models.Auth
 
 <head>
     <title>Login</title>
@@ -38,20 +40,13 @@
     </div>
 </div>
 @code {
-    private Model model = new Model();
-    private class Model
-    {
-        public string Email { get; set; }
-        public string Password { get; set; }
-    }
+    private LoginDto model = new LoginDto();
     private string errorMsg = "";
     private async Task Authenticate()
     {
-        var userAccount = userService.GetByEmail(model.Email);
+        var userFromDb = authService.Authenticate(model);
 
-        Console.WriteLine(BCrypt.Net.BCrypt.HashPassword(model.Password));
-
-        if (userAccount == null || !BCrypt.Net.BCrypt.Verify(model.Password, userAccount.PasswordHash))
+        if (userFromDb == null)
         {
             errorMsg = "Invalid email or password";
             return;
@@ -63,13 +58,12 @@
             {
                 User user = new User
                     {
-                        Email = userAccount.Email,
-                        FirstName = userAccount.FirstName,
-                        Role = userAccount.Role
+                        Email = userFromDb.Email,
+                        FirstName = userFromDb.FirstName,
+                        Role = userFromDb.Role
                     };
 
                 await customAuthStateProvider.UpdateAuthenticationState(user);
-
                 navManager.NavigateTo("/", true);
             }
         }

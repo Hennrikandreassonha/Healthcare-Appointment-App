@@ -49,5 +49,25 @@ namespace HealthCare.Tests
             Assert.NotNull(result);
             Assert.Equal("You have been registerd as a caregiver", result);
         }
+        [Fact]
+        public void Register_User_Email_Already_Exists_Return_Error_Message()
+        {
+            //Arrange
+            //Adding user with same email 2 times. Resulting in error.
+            var userForTest1 = new RegisterDto("Test", "TestEmail", "firstname", "lastname", GenderEnum.Male, DateTime.Now, "123");
+            var userForTest2 = new RegisterDto("Test", "TestEmail", "firstname", "lastname", GenderEnum.Male, DateTime.Now, "123");
+            //Act
+
+            var result = _authService.RegisterUser(userForTest1);
+            var result2 = _authService.RegisterUser(userForTest2);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Equal("You have been registerd as a caregiver", result);
+
+            //Error result since user already exists.
+            Assert.NotNull(result2);
+            Assert.Equal("Error registering, please try again", result2);
+        }
     }
 }

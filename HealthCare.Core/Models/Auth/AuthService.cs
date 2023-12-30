@@ -37,12 +37,23 @@ namespace HealthCare.Core.Models.Auth
             {
                 return successMsg += "patient";
             }
-             if (registrationResult != null && registrationResult is CareGiver)
+            if (registrationResult != null && registrationResult is CareGiver)
             {
                 return successMsg += "caregiver";
             }
 
             return "Error registering, please try again";
+        }
+        public User? Authenticate(LoginDto loginDto)
+        {
+            var userAccount = _userService.GetByEmail(loginDto.Email);
+
+            if (userAccount == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, userAccount.PasswordHash))
+            {
+                return null;
+            }
+
+            return userAccount;
         }
     }
 }
