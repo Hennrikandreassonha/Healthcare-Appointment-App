@@ -3,12 +3,23 @@
 }
 
 .top-row {
-    height: 3.5rem;
-    background-color: rgba(0,0,0,0.4);
+    background-color:#ffffff;
+    box-shadow: 0 2px 5px rgba(225,229,232,.8);
+    height:5rem;
+    display: flex;
+    justify-content: center;
 }
-
 .navbar-brand {
     font-size: 1.1rem;
+}
+
+.logo {
+    object-fit: contain;
+    max-width: 100%;
+    max-height: 100%;
+    padding: 0 0.5rem;
+    height:3.5rem;
+    align-items: center;
 }
 
 .oi {
@@ -16,38 +27,40 @@
     font-size: 1.1rem;
     vertical-align: text-top;
     top: -2px;
+    color: #1474bb;
 }
 
 .nav-item {
     font-size: 0.9rem;
     padding-bottom: 0.5rem;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+
 }
 
-    .nav-item:first-of-type {
-        padding-top: 1rem;
-    }
+.nav-item:first-of-type {
+    padding-top: 1rem;
+}
 
-    .nav-item:last-of-type {
-        padding-bottom: 1rem;
-    }
+.nav-item:last-of-type {
+    padding-bottom: 1rem;
+}
 
-    .nav-item ::deep a {
-        color: #d7d7d7;
-        border-radius: 4px;
-        height: 3rem;
-        display: flex;
-        align-items: center;
-        line-height: 3rem;
-    }
+.nav-item ::deep a {
+    color: #1a1a1a;
+    border-radius: 4px;
+    height: 3rem;
+    line-height: 3rem;
+}
 
 .nav-item ::deep a.active {
-    background-color: rgba(255,255,255,0.25);
-    color: white;
+    background-color: rgba(255, 255, 255, 0.25);
+    text-decoration: underline #1474bb;
+    color: #1474bb;
 }
 
 .nav-item ::deep a:hover {
-    background-color: rgba(255,255,255,0.1);
-    color: white;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #1474bb;
 }
 
 @media (min-width: 641px) {
@@ -59,11 +72,10 @@
         /* Never collapse the sidebar for wide screens */
         display: block;
     }
-    
+
     .nav-scrollable {
         /* Allow sidebar to scroll for tall menus */
         height: calc(100vh - 3.5rem);
         overflow-y: auto;
     }
 }
-
