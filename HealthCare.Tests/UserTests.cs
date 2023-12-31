@@ -10,6 +10,8 @@ namespace HealthCare.Tests
 {
     public class UserTests
     {
+        //Test cases for User operations.
+        //Note that i am using Database.EnsureDeleted() to prevent data from existing between tests.
         private readonly HealthcareContext _dbContext;
         private readonly IUserService _userService;
         private readonly AuthService _authService;
@@ -34,6 +36,8 @@ namespace HealthCare.Tests
             //Assert
             Assert.NotNull(result);
             Assert.Equal("You have been registerd as a patient", result);
+            _dbContext.Database.EnsureDeleted();
+
         }
         [Fact]
         public void Register_User_Should_Return_Caregiver_Message()
@@ -49,6 +53,7 @@ namespace HealthCare.Tests
             //Assert
             Assert.NotNull(result);
             Assert.Equal("You have been registerd as a caregiver", result);
+            _dbContext.Database.EnsureDeleted();
         }
         [Fact]
         public void Register_User_Email_Already_Exists_Return_Error_Message()
@@ -69,12 +74,13 @@ namespace HealthCare.Tests
             //Error result since user already exists.
             Assert.NotNull(result2);
             Assert.Equal("Error registering, please try again", result2);
+            _dbContext.Database.EnsureDeleted();
         }
         [Fact]
         public void Login_User_Should_Return_User()
         {
             //Arrange
-            var userToRegister = new RegisterDto("Test", "Password", "firstname", "lastname", GenderEnum.Male, DateTime.Now, "123");
+            var userToRegister = new RegisterDto("TestEmail123", "Password", "firstname", "lastname", GenderEnum.Male, DateTime.Now, "123");
 
             //Act
             _authService.RegisterUser(userToRegister);
@@ -83,6 +89,7 @@ namespace HealthCare.Tests
             //Assert
             Assert.NotNull(resultFromLogin);
             Assert.Equal(userToRegister.Email, resultFromLogin.Email);
+            _dbContext.Database.EnsureDeleted();
         }
         [Fact]
         public void Login_User_Wrong_Password_Should_Return_Null()
@@ -96,6 +103,7 @@ namespace HealthCare.Tests
 
             //Assert
             Assert.Null(resultFromLogin);
+            _dbContext.Database.EnsureDeleted();
         }
     }
 }
