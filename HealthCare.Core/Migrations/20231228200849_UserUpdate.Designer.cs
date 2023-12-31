@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace HealthCare.WebApp.Migrations
+namespace HealthCare.Core.Migrations
 {
     [DbContext(typeof(HealthcareContext))]
-    [Migration("20231227083440_3")]
-    partial class _3
+    [Migration("20231228200849_UserUpdate")]
+    partial class UserUpdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,6 +36,9 @@ namespace HealthCare.WebApp.Migrations
                     b.Property<int>("CareGiverId")
                         .HasColumnType("int");
 
+                    b.Property<int>("CareGiverId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("CareGiverNotes")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -51,7 +54,7 @@ namespace HealthCare.WebApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CareGiverId");
+                    b.HasIndex("CareGiverId1");
 
                     b.HasIndex("PatientId");
 
@@ -91,6 +94,12 @@ namespace HealthCare.WebApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AppointmentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -99,10 +108,17 @@ namespace HealthCare.WebApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -140,6 +156,13 @@ namespace HealthCare.WebApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Patient");
@@ -149,7 +172,7 @@ namespace HealthCare.WebApp.Migrations
                 {
                     b.HasOne("HealthCare.Core.Models.User.CareGiver", "CareGiver")
                         .WithMany()
-                        .HasForeignKey("CareGiverId")
+                        .HasForeignKey("CareGiverId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -1,7 +1,30 @@
 ﻿@inject BookingService BookingService
 @page "/"
+@inject AuthenticationStateProvider authStateProvider
+@inject IHttpContextAccessor _httpContextAccessor;
 
 <PageTitle>Index</PageTitle>
-
+<div>
+     <AuthorizeView>
+          <Authorized>
+               <h1>Hello, @context.User.Identity.Name!</h1>
+               @username
+          </Authorized>
+          <NotAuthorized>
+               <h1>Hello, Guest!</h1>
+          </NotAuthorized>
+     </AuthorizeView>
+</div>
 <BookingComponent />
 
+@code {
+     string username = "";
+     protected override async Task OnInitializedAsync()
+     {
+          var customAuthStateProvider = authStateProvider as AuthStateProvider;
+          var authState = await authStateProvider.GetAuthenticationStateAsync();
+          var user = authState.User;
+
+          username = user.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
+     }
+}

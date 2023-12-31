@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace HealthCare.WebApp.Migrations
+namespace HealthCare.Core.Migrations
 {
     /// <inheritdoc />
-    public partial class _1 : Migration
+    public partial class MigrationName : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

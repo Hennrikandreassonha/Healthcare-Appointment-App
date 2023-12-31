@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace HealthCare.WebApp.Migrations
+namespace HealthCare.Core.Migrations
 {
     /// <inheritdoc />
     public partial class _2 : Migration
@@ -10,13 +10,20 @@ namespace HealthCare.WebApp.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-
+            migrationBuilder.DropColumn(
+                name: "Test",
+                table: "Patient");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
+            migrationBuilder.AddColumn<int>(
+                name: "Test",
+                table: "Patient",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
         }
     }
 }

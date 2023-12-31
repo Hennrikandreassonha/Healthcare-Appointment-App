@@ -1,0 +1,73 @@
+﻿@page "/register"
+@inject AuthService authService
+<div class="row">
+    <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
+        <EditForm Model="formModel" OnValidSubmit="HandleRegister" OnInvalidSubmit="HandleInvalid">
+            <div class="mb-3 text-center">
+                <h3>Register</h3>
+            </div>
+            <div class="mb-3">
+                <label>First Name</label>
+                <InputText @bind-Value="formModel.FirstName" class="form-control" placeholder="First Name" required />
+            </div>
+            <div class="mb-3">
+                <label>Last Name</label>
+                <InputText @bind-Value="formModel.LastName" class="form-control" placeholder="Last Name" required />
+            </div>
+
+            <div class="mb-3">
+                <label>Birthdate</label>
+                <input type="date" @bind="formModel.Birthdate" class="form-control" placeholder="BirthDate" required />
+            </div>
+
+            <div class="mb-3">
+                <label>Gender</label>
+                <select @bind="formModel.Gender" class="form-control" required>
+                    <option value="">Select Gender</option>
+                    <option value="@GenderEnum.Male">Male</option>
+                    <option value="@GenderEnum.Female">Female</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label>Email</label>
+                <InputText @bind-Value="formModel.Email" class="form-control" placeholder="Email" type="email"
+                    required />
+            </div>
+            <div class="mb-3">
+                <label>Password</label>
+                <InputText @bind-Value="formModel.Password" class="form-control" placeholder="Password" type="password"
+                    required />
+            </div>
+            <div class="mb-3">
+                <label>Are you a doctor or nurse? Please type your provided code to register</label>
+                <InputText @bind-Value="formModel.CaregiverCode" class="form-control" />
+            </div>
+            <div class="mb-3 d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+        </EditForm>
+        @if (errorMsg != "")
+        {
+            <p class="alert alert-danger">@errorMsg</p>
+        }
+        @if (successMsg != "")
+        {
+            <p class="alert alert-success">@successMsg</p>
+        }
+    </div>
+</div>
+
+@code {
+    private RegisterDto formModel = new RegisterDto();
+    private string errorMsg = "";
+    private string successMsg = "";
+
+    private void HandleRegister()
+    {
+        successMsg = authService.RegisterUser(formModel);
+    }
+    private void HandleInvalid()
+    {
+        errorMsg = "Please fill out all information";
+    }
+}

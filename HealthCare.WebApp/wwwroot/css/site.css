@@ -1,7 +1,12 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+body {
+    font-family: 'Roboto', sans-serif;
+
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Lexend', sans-serif;
 }
 
 h1:focus {
@@ -67,3 +72,25 @@ a, .btn-link {
         content: "An error has occurred."
     }
 
+.center-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.login {
+    text-align: center;
+    padding: 30px;
+    border: solid #1b6ec2;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    max-width: 340px;
+}
+.login input {
+    margin-bottom: 10px;
+}
