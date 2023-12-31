@@ -1,0 +1,75 @@
+﻿@page "/login"
+@inject AuthService authService
+@inject NavigationManager navManager
+@inject AuthenticationStateProvider authStateProvider
+@using HealthCare.Core.Models.Auth
+
+<head>
+    <title>Login</title>
+    <link href="~/css/site.css" rel="stylesheet" asp-append-version="true" />
+</head>
+
+<div class="row justify-content-center align-items-center">
+    <div class="col-lg-3 pt-3 pb-3 border">
+        <EditForm Model="model" class="login-form" OnValidSubmit="Authenticate">
+            <div class="mb-3 text-center">
+                <h3>Login</h3>
+            </div>
+            <div class="mb-3">
+                <label>Email</label>
+                <InputText @bind-Value="model.Email" class="form-control" placeholder="Email" type="email" required />
+            </div>
+            <div class="mb-3">
+                <label>Password</label>
+                <InputText @bind-Value="model.Password" class="form-control" placeholder="Password" type="password"
+                    required />
+            </div>
+            <div class="mb-3 d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Sign In</button>
+            </div>
+            <div class="mb-3">
+                <span id="account-text">Don't have an account? <a href="/register">Sign up</a></span>
+            </div>
+        </EditForm>
+
+        @if (errorMsg != "")
+        {
+            <p class="alert alert-danger">@errorMsg</p>
+        }
+    </div>
+</div>
+
+@code {
+    private LoginDto model = new LoginDto();
+    private string errorMsg = "";
+    private async Task Authenticate()
+    {
+        var userFromDb = authService.Authenticate(model);
+
+        if (userFromDb == null)
+        {
+            errorMsg = "Invalid email or password";
+            return;
+        }
+        try
+        {
+            var customAuthStateProvider = authStateProvider as AuthStateProvider;
+            if (customAuthStateProvider != null)
+            {
+                User user = new User
+                    {
+                        Email = userFromDb.Email,
+                        FirstName = userFromDb.FirstName,
+                        Role = userFromDb.Role
+                    };
+
+                await customAuthStateProvider.UpdateAuthenticationState(user);
+                navManager.NavigateTo("/", true);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+}
