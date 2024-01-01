@@ -67,7 +67,9 @@
     .navbar-toggler {
         display: none;
     }
-
+    .nav-logo-toggle {
+        display: none;
+    }
     .collapse {
         /* Never collapse the sidebar for wide screens */
         display: block;
@@ -78,4 +80,11 @@
         height: calc(100vh - 3.5rem);
         overflow-y: auto;
     }
+}
+
+.nav-logo-toggle{
+    height: 1.5rem;   
+}
+.nav-logo-toggle:hover{
+    cursor: pointer;
 }
