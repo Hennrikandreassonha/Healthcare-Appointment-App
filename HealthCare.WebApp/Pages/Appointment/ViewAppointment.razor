@@ -16,9 +16,6 @@
 
         <ul class="weekdays">
             <li>
-                <abbr title="S">Sunday</abbr>
-            </li>
-            <li>
                 <abbr title="M">Monday</abbr>
             </li>
             <li>
@@ -36,15 +33,23 @@
             <li>
                 <abbr title="S">Saturday</abbr>
             </li>
+            <li>
+                <abbr title="S">Sunday</abbr>
+            </li>
         </ul>
 
         <ol class="day-grid">
             @* <li class="month=prev">29</li>
             <li class="month=prev">30</li>
             <li class="month=prev">31</li> *@
+            @for (int i = 0; i < GetStartDay(currentDate.Year, currentDate.Month); i++)
+            {
+                <li class="empty-day"></li>
+            }
             @foreach (var item in dayList)
             {
-                <li class="date-day" tabIndex="-1" @onclick="() => HandleChosenDate(item)">@item</li>
+                <li class="date-day @(IsTodaysDate(item) ? "current-date" : "")" tabIndex="-1"
+                    @onclick="() => HandleChosenDate(item)">@item</li>
             }
             @* <li class="month-next">1</li>
             <li class="month-next">2</li> *@
@@ -57,17 +62,16 @@
         <div id="day-info">
             <header>
 
-                <h3>There are @appointmentsForDate.Length appointments available for booking for the @chosenDay of
-                    @currentDate.ToString("MMMM")</h3>
+                <h3>There are @appointmentsForDate.Length appointments available the @chosenDay of @currentDate.ToString("MMMM")</h3>
             </header>
-            @if(successMsg != "")
+            @if (successMsg != "")
             {
-                <p class="alert alert-sucess">@successMsg</p>
+                <p class="alert alert-success">@successMsg</p>
             }
             <table>
                 <thead>
                     <tr>
-                        <th>Doctor Name</th>
+                        <th>Doctor</th>
                         <th>Contact</th>
                         <th>Appointment date</th>
                     </tr>
@@ -78,7 +82,7 @@
                         <tr>
                             <td>@item.CareGiver.FirstName @item.CareGiver.LastName</td>
                             <td>@item.CareGiver.Email</td>
-                            <td>@item.DateTime</td>
+                            <td>@item.DateTime.ToString("M/d/yyyy h:mm") - @item.DateTime.AddHours(1).ToString("h:mm")</td>
                             <td>
                                 <button class="btn btn-primary" @onclick="() => HandleBooking(item)">Book</button>
                             </td>
@@ -88,7 +92,6 @@
             </table>
         </div>
     }
-    @* @userLoggedIn.FirstName *@
 </div>
 
 @code {
@@ -101,11 +104,21 @@
     private int? chosenDay = null;
     private Patient? userLoggedIn;
     private string successMsg = "";
+    Dictionary<DayOfWeek, int> weekdayDictionary = new Dictionary<DayOfWeek, int>
+{
+{ DayOfWeek.Monday, 0 },
+{ DayOfWeek.Tuesday, 1 },
+{ DayOfWeek.Wednesday, 2 },
+{ DayOfWeek.Thursday, 3 },
+{ DayOfWeek.Friday, 4 },
+{ DayOfWeek.Saturday, 5 },
+{ DayOfWeek.Sunday, 6 }
+};
 
     protected override async Task OnInitializedAsync()
     {
         yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}";
-        dayList = GetDaysOfMonth(currentDate.Year, currentDate.Month).ToList();
+        UpdateDaysOfMonth(currentDate.Year, currentDate.Month);
 
         var authState = await authStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
@@ -124,23 +137,39 @@
     private void HandleBooking(Appointment appointment)
     {
         var success = appointmentService.AddBooking(appointment, userLoggedIn.Id);
-        if(success)
+        if (success)
             successMsg = "Your appointment was booked successfully!";
 
     }
-    private IEnumerable<int> GetDaysOfMonth(int year, int month)
+    private void UpdateDaysOfMonth(int year, int month)
     {
         int daysInMonth = DateTime.DaysInMonth(year, month);
-        return Enumerable.Range(1, daysInMonth);
+        dayList = Enumerable.Range(1, daysInMonth).ToList();
+
+        //Kolla vart den börjar på vilken dag och sedan börja loopa därifrån?
+        DateTime firstDayOfMonth = new DateTime(year, month, 1);
+
+    }
+    private int GetStartDay(int year, int month)
+    {
+        DateTime firstDayOfMonth = new DateTime(year, month, 1);
+
+        return weekdayDictionary[firstDayOfMonth.DayOfWeek];
     }
     private void DecreaseMonth()
     {
         currentDate = currentDate.AddMonths(-1);
         yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}.";
+        UpdateDaysOfMonth(currentDate.Year, currentDate.Month);
     }
     private void IncreaseMonth()
     {
         currentDate = currentDate.AddMonths(1);
         yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}";
+        UpdateDaysOfMonth(currentDate.Year, currentDate.Month);
+    }
+    private bool IsTodaysDate(int day)
+    {
+        return currentDate.Month == DateTime.Now.Month && day == DateTime.Now.Day;
     }
 }

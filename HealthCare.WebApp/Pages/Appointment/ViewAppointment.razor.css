@@ -3,7 +3,7 @@ header {
     align-items: center;
     font-size: calc(16px + (26 - 16) * ((100vw - 300px) / (1600 - 300)));
     justify-content: center;
-    margin-bottom: 2em;
+    margin-bottom: 1rem;
     background: #1474bb;
     color: #fff;
     min-height: 10vh;
@@ -18,7 +18,9 @@ header {
 #year-month {
     width: 350px;
 }
-
+.current-date{
+    outline: 2px solid #1474bb;
+}
 .available-time {}
 
 #day-info {
@@ -44,14 +46,6 @@ li {
     font-size: calc(16px + (21 - 16) * ((100vw - 300px) / (1600 - 300)));
 }
 
-ul.weekdays {
-    margin-bottom: 1em;
-}
-
-ul.weekdays li {
-    height: 4vw;
-}
-
 ol.day-grid li {
     background-color: #eaeaea;
     border: 1px solid #eaeaea;
@@ -65,11 +59,7 @@ ul.weekdays abbr[title] {
     text-decoration: none;
 }
 
-ol.day-grid li:nth-child(1),
-ol.day-grid li:nth-child(2),
-ol.day-grid li:nth-child(3),
-ol.day-grid li:nth-child(34),
-ol.day-grid li:nth-child(35) {
+ol.day-grid {
     background-color: #fff;
 }
 
@@ -99,7 +89,8 @@ ol.day-grid li:nth-child(35) {
 
 .date-day:hover,
 .date-day:focus {
-    outline: 1px solid #1474bb;
+    background-color: #1474bb !important;
+    color:white !important;
 }
 
 .appointment-flex {
