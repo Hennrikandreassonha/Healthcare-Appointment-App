@@ -7,6 +7,7 @@ using HealthCare.Core.UserService;
 using HealthCare.Core.Data;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Reflection.Metadata.Ecma335;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace HealthCare.Core.UserService
@@ -65,6 +66,32 @@ namespace HealthCare.Core.UserService
             var user = authState.User;
 
             return user.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value.ToString();
+        }
+
+        public async Task UpadetUserAsync(User user)
+        {
+            User existingUser = new User();
+            if (user is Patient)
+            {
+                existingUser = await _context.Patient.FirstOrDefaultAsync(p => p.Id == user.Id);
+            }
+            else
+            {
+                existingUser = await _context.CareGiver.FirstOrDefaultAsync(p => p.Id == user.Id);
+            }
+
+            if (existingUser != null)
+            {
+                existingUser.Email = user.Email;
+                existingUser.FirstName = user.FirstName;
+                existingUser.LastName = user.LastName;
+
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+
+            }
         }
     }
 }
