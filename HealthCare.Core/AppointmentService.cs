@@ -25,7 +25,22 @@ namespace HealthCare.Core
             _context.Add(appointment);
             return true;
         }
-
+        public bool AddBooking(Appointment appointment, int userId)
+        {
+            //By adding the patient this will complete the booking.
+            try
+            {
+                _context.Update(appointment);
+                appointment.PatientId = userId;
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+            return true;
+        }
         public void AddSampleData()
         {
             if (_context.CareGiver.Where(x => x.Email == "TestDoctor1").FirstOrDefault() != null)
