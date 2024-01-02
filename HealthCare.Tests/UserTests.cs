@@ -106,5 +106,56 @@ namespace HealthCare.Tests
             Assert.Null(resultFromLogin);
             _dbContext.Database.EnsureDeleted();
         }
+
+        [Fact]
+        public void Login_User_Should_Return_With_Details()
+        {
+            //Arrange
+            User resultUserAccount = new();
+            var userToRegister = new RegisterDto("Test", "Password", "firstName", "lastName",
+                GenderEnum.Male, DateTime.Now, "123");
+
+            //Act
+            _authService.RegisterUser(userToRegister);
+            resultUserAccount = _userService.GetByEmail(userToRegister.Email);
+
+
+            //Assert
+            Assert.NotNull(resultUserAccount);
+            Assert.Equal(userToRegister.Email,resultUserAccount.Email);
+            Assert.Equal(userToRegister.FirstName,resultUserAccount.FirstName);
+            Assert.Equal(userToRegister.LastName,resultUserAccount.LastName);
+            Assert.Equal(userToRegister.Birthdate,resultUserAccount.BirthDate);
+            Assert.Equal(userToRegister.Gender, resultUserAccount.Gender);
+            _dbContext.Database.EnsureDeleted();
+        }
+
+        [Fact]
+        public void Login_User_Update_Returs_Updated_Details()
+        {
+            //Arrange
+            User resultUserAccount = new();
+            var userToRegister = new RegisterDto("Test", "Password", "firstName", "lastName",
+                GenderEnum.Male, DateTime.Now, "123");
+
+            //Act
+            _authService.RegisterUser(userToRegister);
+            resultUserAccount = _userService.GetByEmail(userToRegister.Email);
+
+            resultUserAccount.FirstName = "NameFirst";
+            resultUserAccount.LastName = "NameLast";
+            resultUserAccount.Email = "TestEmail@test.com";
+
+            _userService.UpdateUserAsync(resultUserAccount);
+
+            //Assert
+            Assert.NotNull(resultUserAccount);
+            Assert.Equal( "NameFirst", resultUserAccount.FirstName);
+            Assert.Equal("NameLast", resultUserAccount.LastName);
+            Assert.Equal("TestEmail@test.com", resultUserAccount.Email);
+
+            _dbContext.Database.EnsureDeleted();
+        }
+
     }
 }
