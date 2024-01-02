@@ -116,8 +116,6 @@
     }
     private DateTime currentDate = DateTime.Now;
     private string yearMonth = "";
-
-
     //Appointments for the date that the user has selected.
     private Appointment[] appointmentsForDate = { };
     private int? chosenDay = null;
@@ -167,6 +165,7 @@
         int daysInMonth = DateTime.DaysInMonth(year, month);
         CalendarInfoObj.Month = month;
         var item1 = Enumerable.Range(1, daysInMonth).ToArray();
+        CalendarInfoObj.Days.Clear();
         foreach (var item in item1)
             CalendarInfoObj.Days.Add(new Day(item));
     }
