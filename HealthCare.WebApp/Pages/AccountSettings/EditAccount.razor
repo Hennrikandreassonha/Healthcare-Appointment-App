@@ -1,5 +1,6 @@
 ﻿@page "/edit"
 @inject AuthService authService
+@inject HealthCare.Core.UserService.IUserService userService
 
 <div class="row">
     <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
@@ -10,15 +11,15 @@
         <form>
             <div class="mb-3">
                 <label>Email: </label>
-                <input type="email" class="form-control" style="max-width: 300px" value="berg.alex.h@hotmail.com" />
+                <input type="email" class="form-control" style="max-width: 300px" value="@userAccount.Email" />
             </div>
             <div class="mb-3">
                 <label>First Name: </label>
-                <input type="text" class="form-control" style="max-width: 300px" value="user.FirstName">
+                <input type="text" class="form-control" style="max-width: 300px" value="@userAccount.FirstName">
             </div>
             <div class="mb-3">
                 <label>Last Name: </label>
-                <input type="text" class="form-control" style="max-width: 300px" value="user.LastName">
+                <input type="text" class="form-control" style="max-width: 300px" value="@userAccount.LastName">
             </div>
 
             <button type="submit" class="btn btn-primary">Save</button>
@@ -30,5 +31,12 @@
 
 
 @code {
+    private string userEmail;
+    private User userAccount = new User();
 
+    protected override async Task OnInitializedAsync()
+    {
+        userEmail = await userService.GetEmailAsync();
+        userAccount = userService.GetByEmail(userEmail);
+    }
 }

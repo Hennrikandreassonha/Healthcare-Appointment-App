@@ -5,16 +5,21 @@ using System.Threading.Tasks;
 using HealthCare.Core.Models.UserModels;
 using HealthCare.Core.UserService;
 using HealthCare.Core.Data;
+using Microsoft.AspNetCore.Components.Authorization;
 using System.Reflection.Metadata.Ecma335;
+
 
 namespace HealthCare.Core.UserService
 {
     public class UserService : IUserService
     {
         private readonly HealthcareContext _context;
-        public UserService(HealthcareContext context)
+        private readonly AuthenticationStateProvider _authenticationStateProvider;
+
+        public UserService(HealthcareContext context, AuthenticationStateProvider authenticationStateProvider)
         {
             _context = context;
+            _authenticationStateProvider = authenticationStateProvider;
         }
         public User? AddUser(User user)
         {
@@ -52,6 +57,14 @@ namespace HealthCare.Core.UserService
             user = _context.CareGiver.Where(x => x.Email == email).FirstOrDefault()!;
 
             return user;
+        }
+
+        public async Task<string> GetEmailAsync()
+        {
+            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            return user.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value.ToString();
         }
     }
 }
