@@ -1,30 +1,39 @@
-﻿@inject BookingService BookingService
-@page "/"
+﻿@page "/"
 @inject AuthenticationStateProvider authStateProvider
 @inject IHttpContextAccessor _httpContextAccessor;
+@inject HealthCare.Core.UserService.IUserService userService
+@using HealthCare.Core.Models.AppointmentModels
 
 <PageTitle>Index</PageTitle>
 <div>
-     <AuthorizeView>
-          <Authorized>
-               <h1>Hello, @context.User.Identity.Name!</h1>
-               @username
-          </Authorized>
-          <NotAuthorized>
-               <h1>Hello, Guest!</h1>
-          </NotAuthorized>
-     </AuthorizeView>
+    <AuthorizeView>
+        <Authorized>
+            <div class="container">
+            <h1>Hello, @context.User.Identity.Name!</h1>
+            <p>@userName</p>
+
+                <div class="mb-3">
+                    <h3>Upcoming meetings</h3>
+                </div>
+            </div>
+
+
+        </Authorized>
+        <NotAuthorized>
+            <h1>Hello, Guest!</h1>
+        </NotAuthorized>
+    </AuthorizeView>
 </div>
-<BookingComponent />
+@* <BookingComponent /> *@
 
 @code {
-     string username = "";
-     protected override async Task OnInitializedAsync()
-     {
-          var customAuthStateProvider = authStateProvider as AuthStateProvider;
-          var authState = await authStateProvider.GetAuthenticationStateAsync();
-          var user = authState.User;
+    string userName = "";
+    User LoggedInUser;
+    
 
-          username = user.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
-     }
+    protected override async Task OnInitializedAsync()
+    {
+        userName = await userService.GetEmailAsync();
+        LoggedInUser = userService.GetByEmail(userName);
+    }
 }
