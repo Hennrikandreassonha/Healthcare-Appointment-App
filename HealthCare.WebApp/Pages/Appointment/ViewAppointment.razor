@@ -1,5 +1,7 @@
 ﻿@*the AppointmentService is added in program.cs *@
 @inject AppointmentService appointmentService
+@inject AuthenticationStateProvider authStateProvider
+@inject UserService userService;
 @*sets the component as a route, nav is changes to this route => see NavMenu*@
 @page "/appointment"
 
@@ -58,18 +60,35 @@
                 <h3>There are @appointmentsForDate.Length appointments available for booking for the @chosenDay of
                     @currentDate.ToString("MMMM")</h3>
             </header>
-
-            <ul>
-                @foreach (Appointment item in appointmentsForDate)
-                {
-                    <li class="available-time">
-                        <h4>@item.CareGiver.FirstName</h4>
-                        <p>@item.DateTime</p>
-                    </li>
-                }
-            </ul>
+            @if(successMsg != "")
+            {
+                <p class="alert alert-sucess">@successMsg</p>
+            }
+            <table>
+                <thead>
+                    <tr>
+                        <th>Doctor Name</th>
+                        <th>Contact</th>
+                        <th>Appointment date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Appointment item in appointmentsForDate)
+                    {
+                        <tr>
+                            <td>@item.CareGiver.FirstName @item.CareGiver.LastName</td>
+                            <td>@item.CareGiver.Email</td>
+                            <td>@item.DateTime</td>
+                            <td>
+                                <button class="btn btn-primary" @onclick="() => HandleBooking(item)">Book</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     }
+    @* @userLoggedIn.FirstName *@
 </div>
 
 @code {
@@ -80,12 +99,19 @@
     //Appointments for the date that the user has selected.
     private Appointment[] appointmentsForDate = { };
     private int? chosenDay = null;
-
+    private Patient? userLoggedIn;
+    private string successMsg = "";
 
     protected override async Task OnInitializedAsync()
     {
         yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}";
         dayList = GetDaysOfMonth(currentDate.Year, currentDate.Month).ToList();
+
+        var authState = await authStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        userLoggedIn = userService.GetByEmail(user.FindFirst(c => c.Type ==
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value) as Patient;
 
         appointmentService.AddSampleData();
     }
@@ -95,8 +121,12 @@
         chosenDay = day;
         appointmentsForDate = appointmentService.GetAppointmentsByDate(dateToCheck).ToArray();
     }
-    private void LoadAppointment()
+    private void HandleBooking(Appointment appointment)
     {
+        var success = appointmentService.AddBooking(appointment, userLoggedIn.Id);
+        if(success)
+            successMsg = "Your appointment was booked successfully!";
+
     }
     private IEnumerable<int> GetDaysOfMonth(int year, int month)
     {
