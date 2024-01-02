@@ -4,6 +4,7 @@
 @inject UserService userService;
 @*sets the component as a route, nav is changes to this route => see NavMenu*@
 @page "/appointment"
+@using System.Globalization
 
 <div class="appointment-flex">
     <div class="calendar">
@@ -62,7 +63,9 @@
         <div id="day-info">
             <header>
 
-                <h3>There are @appointmentsForDate.Length appointments available the @chosenDay of @currentDate.ToString("MMMM")</h3>
+                <h3>There are @appointmentsForDate.Length appointments available for booking for @chosenDay
+                    @currentDate.ToString("MMMM", CultureInfo.InvariantCulture)
+                </h3>
             </header>
             @if (successMsg != "")
             {
