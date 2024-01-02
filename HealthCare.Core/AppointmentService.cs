@@ -1,6 +1,7 @@
 ﻿using System;
 using HealthCare.Core.Data;
 using HealthCare.Core.Models.AppointmentModels;
+using Microsoft.EntityFrameworkCore;
 namespace HealthCare.Core
 {
     public class AppointmentService
@@ -13,7 +14,7 @@ namespace HealthCare.Core
         public IEnumerable<Appointment> GetAppointmentsByDate(DateTime date)
         {
             return _context.Appointment
-      .Where(x => x.DateTime.Year == date.Year && x.DateTime.DayOfYear == date.DayOfYear)
+      .Where(x => x.DateTime.Year == date.Year && x.DateTime.DayOfYear == date.DayOfYear).Include(x => x.CareGiver)
       .ToList();
         }
         public bool AddInitialAppointment(int caregiverId, DateTime date)

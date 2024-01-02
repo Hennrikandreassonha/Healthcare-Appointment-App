@@ -52,14 +52,9 @@
 
     <div id="day-info">
 
-        @* <p>@test</p> *@
+        <h3>There are @appointmentsForDate.Length appointments available for booking for the @chosenDay of @currentDate.ToString("MMMM")</h3>
     </div>
 </div>
-
-@* @if (appointmentDetails != null)
-{
-<p>@appointmentDetails.Details</p>
-} *@
 
 @code {
     private DateTime currentDate = DateTime.Now;
@@ -68,6 +63,8 @@
 
     //Appointments for the date that the user has selected.
     private Appointment[] appointmentsForDate = {};
+    private int chosenDay;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -79,6 +76,7 @@
     private void HandleChosenDate(int day)
     {
         var dateToCheck = new DateTime(currentDate.Year, currentDate.Month, day);
+        chosenDay = day;
         appointmentsForDate = appointmentService.GetAppointmentsByDate(dateToCheck).ToArray();
     }
     private void LoadAppointment()
