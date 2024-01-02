@@ -148,10 +148,6 @@
     {
         int daysInMonth = DateTime.DaysInMonth(year, month);
         dayList = Enumerable.Range(1, daysInMonth).ToList();
-
-        //Kolla vart den börjar på vilken dag och sedan börja loopa därifrån?
-        DateTime firstDayOfMonth = new DateTime(year, month, 1);
-
     }
     private int GetStartDay(int year, int month)
     {

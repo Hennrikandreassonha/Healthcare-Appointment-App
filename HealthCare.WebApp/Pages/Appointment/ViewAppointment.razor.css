@@ -21,8 +21,6 @@ header {
 .current-date{
     outline: 2px solid #1474bb;
 }
-.available-time {}
-
 #day-info {
     margin: 1rem 0;
 }
@@ -91,6 +89,8 @@ ol.day-grid {
 .date-day:focus {
     background-color: #1474bb !important;
     color:white !important;
+    cursor: pointer;
+
 }
 
 .appointment-flex {
