@@ -1,6 +1,7 @@
 ﻿using System;
 using HealthCare.Core.Data;
 using HealthCare.Core.Models.AppointmentModels;
+using Microsoft.EntityFrameworkCore;
 namespace HealthCare.Core
 {
     public class AppointmentService
@@ -13,7 +14,7 @@ namespace HealthCare.Core
         public IEnumerable<Appointment> GetAppointmentsByDate(DateTime date)
         {
             return _context.Appointment
-      .Where(x => x.DateTime.Year == date.Year && x.DateTime.DayOfYear == date.DayOfYear)
+      .Where(x => x.DateTime.Year == date.Year && x.DateTime.DayOfYear == date.DayOfYear).Include(x => x.CareGiver)
       .ToList();
         }
         public bool AddInitialAppointment(int caregiverId, DateTime date)
@@ -39,9 +40,10 @@ namespace HealthCare.Core
             _context.CareGiver.Add(careGiver2);
             _context.SaveChanges();
 
+
             var careGiverFromDb = _context.CareGiver.FirstOrDefault();
-            Appointment appointment = new(careGiverFromDb.Id, DateTime.Now);
-            Appointment appointment2 = new(careGiverFromDb.Id, DateTime.Now.AddDays(1));
+            Appointment appointment = new(careGiverFromDb.Id, DateTime.Today.AddHours(8));
+            Appointment appointment2 = new(careGiverFromDb.Id, DateTime.Today.AddDays(1).AddHours(12));
             _context.Appointment.Add(appointment);
             _context.Appointment.Add(appointment2);
             _context.SaveChanges();
