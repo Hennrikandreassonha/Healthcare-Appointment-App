@@ -9,7 +9,7 @@ namespace HealthCare.Core.Models.UserModels
     {
         public Patient()
         {
-            
+
         }
         public Patient(string passwordHash, string email, string firstName, string lastName, GenderEnum gender, RoleEnum role, DateTime birthdate)
         {
