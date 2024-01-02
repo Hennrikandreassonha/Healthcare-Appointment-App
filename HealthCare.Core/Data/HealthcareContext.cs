@@ -1,9 +1,9 @@
+global using HealthCare.Core.Models.UserModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HealthCare.Core.Models.Appointment;
-using HealthCare.Core.Models.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace HealthCare.Core.Data

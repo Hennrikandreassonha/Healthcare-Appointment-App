@@ -1,13 +1,14 @@
 ﻿@inject BookingService BookingService
 @page "/"
+@inject AuthenticationStateProvider authStateProvider
+@inject IHttpContextAccessor _httpContextAccessor;
 
 <PageTitle>Index</PageTitle>
 <div>
      <AuthorizeView>
           <Authorized>
                <h1>Hello, @context.User.Identity.Name!</h1>
-               @* <h2>You are a @context.User.Identity.!</h2> *@
-
+               @username
           </Authorized>
           <NotAuthorized>
                <h1>Hello, Guest!</h1>
@@ -17,22 +18,13 @@
 <BookingComponent />
 
 @code {
-    [CascadingParameter]
-    private Task<AuthenticationState> authenticationState { get; set; }
+     string username = "";
+     protected override async Task OnInitializedAsync()
+     {
+          var customAuthStateProvider = authStateProvider as AuthStateProvider;
+          var authState = await authStateProvider.GetAuthenticationStateAsync();
+          var user = authState.User;
 
-    @* protected override void OnInitialized()
-    {
-        var authenticationState = context.GetAuthenticationStateAsync().Result;
-        var user = authenticationState.User;
-    // Retrieve role claim
-    var roleClaim = user.FindFirst(System.Security.Claims.ClaimTypes.Role);
-    role = roleClaim?.Value ?? "N/A"; *@
-
-}
-     @* private async Task DisplayGreetingAlert()
-{
-var authState = await authenticationState;
-var message = $"Hello {authState.User.Identity.Name}";
-await js.InvokeVoidAsync("alert", message);
-} *@
+          username = user.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
+     }
 }

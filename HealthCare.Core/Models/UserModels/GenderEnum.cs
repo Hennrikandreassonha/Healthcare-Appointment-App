@@ -1,4 +1,4 @@
-namespace HealthCare.Core.Models.User
+namespace HealthCare.Core.Models.UserModels
 {
     public enum GenderEnum
     {

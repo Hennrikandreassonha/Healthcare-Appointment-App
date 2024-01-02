@@ -58,24 +58,13 @@
 </div>
 
 @code {
-    private RegisterDto formModel = new RegisterDto
-        {
-            Birthdate = DateTime.Now
-        };
+    private RegisterDto formModel = new RegisterDto();
     private string errorMsg = "";
     private string successMsg = "";
 
     private void HandleRegister()
     {
-        var success = authService.RegisterUser(formModel);
-
-        if (success)
-            successMsg = "You have been registerd and can now log in!";
-        else
-        {
-            errorMsg = "Error occured, please try again later";
-        }
-
+        successMsg = authService.RegisterUser(formModel);
     }
     private void HandleInvalid()
     {

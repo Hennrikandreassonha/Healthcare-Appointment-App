@@ -1,35 +1,37 @@
 ﻿@page "/login"
-@inject IUserService userService
-@inject AuthenticationStateProvider authStateProvider
+@inject AuthService authService
 @inject NavigationManager navManager
+@inject AuthenticationStateProvider authStateProvider
+@using HealthCare.Core.Models.Auth
 
 <head>
     <title>Login</title>
     <link href="~/css/site.css" rel="stylesheet" asp-append-version="true" />
 </head>
 
-<div class="row">
-    <div class="col-lg-3 offset-lg-3 pt-3 pb-3 border">
-        <div class="mb-3 text-center">
-            <h3>Login</h3>
-        </div>
+<div class="row justify-content-center align-items-center">
+    <div class="col-lg-3 pt-3 pb-3 border">
         <EditForm Model="model" class="login-form" OnValidSubmit="Authenticate">
+            <div class="mb-3 text-center">
+                <h3>Login</h3>
+            </div>
             <div class="mb-3">
                 <label>Email</label>
                 <InputText @bind-Value="model.Email" class="form-control" placeholder="Email" type="email" required />
             </div>
             <div class="mb-3">
-
                 <label>Password</label>
-                <InputText @bind-Value="model.Password" class="form-control" placeholder="Password" type="password"
-                    required />
+                <InputText @bind-Value="model.Password" class="form-control" placeholder="Password" type="password" required />
             </div>
+            <div class="mb-3 d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Sign In</button>
+            </div>
+
             <button class="btn btn-primary">Sign In</button>
 
             <div class="mb-3">
-                <p id="account-text">Don't have an account? <a href="/register">Sign up</a></p>
+                <span id="account-text">Don't have an account? <a href="/register">Sign up</a></span>
             </div>
-
 
         </EditForm>
 
@@ -39,27 +41,19 @@
         }
     </div>
 </div>
-<span>henrik1995a@live.se</span>
+
 @code {
-    private Model model = new Model();
-    private class Model
-    {
-        public string Email { get; set; }
-        public string Password { get; set; }
-    }
+    private LoginDto model = new LoginDto();
     private string errorMsg = "";
     private async Task Authenticate()
     {
-        var userAccount = userService.GetByEmail(model.Email);
+        var userFromDb = authService.Authenticate(model);
 
-        Console.WriteLine(BCrypt.Net.BCrypt.HashPassword(model.Password));
-
-        if (userAccount == null || !BCrypt.Net.BCrypt.Verify(model.Password, userAccount.PasswordHash))
+        if (userFromDb == null)
         {
             errorMsg = "Invalid email or password";
             return;
         }
-
         try
         {
             var customAuthStateProvider = authStateProvider as AuthStateProvider;
@@ -67,13 +61,12 @@
             {
                 User user = new User
                     {
-                        Email = userAccount.Email,
-                        FirstName = userAccount.FirstName,
-                        Role = userAccount.Role
+                        Email = userFromDb.Email,
+                        FirstName = userFromDb.FirstName,
+                        Role = userFromDb.Role
                     };
 
                 await customAuthStateProvider.UpdateAuthenticationState(user);
-
                 navManager.NavigateTo("/", true);
             }
         }

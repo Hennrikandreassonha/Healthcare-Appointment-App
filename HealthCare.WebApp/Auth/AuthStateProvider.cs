@@ -21,7 +21,7 @@ namespace HealthCare.WebApp.Auth
         {
             try
             {
-                var userSessionStorageResult = await _sessionStorage.GetAsync<HealthCare.Core.Models.User.User>("UserSession");
+                var userSessionStorageResult = await _sessionStorage.GetAsync<HealthCare.Core.Models.UserModels.User>("UserSession");
                 var userSession = userSessionStorageResult.Success ? userSessionStorageResult.Value : null;
                 if (userSession == null)
                     return await Task.FromResult(new AuthenticationState(_anonymous));
@@ -40,7 +40,7 @@ namespace HealthCare.WebApp.Auth
                 return await Task.FromResult(new AuthenticationState(_anonymous));
             }
         }
-        public async Task UpdateAuthenticationState(HealthCare.Core.Models.User.User userSession)
+        public async Task UpdateAuthenticationState(Core.Models.UserModels.User userSession)
         {
             ClaimsPrincipal claimsPrincipal;
 
@@ -61,6 +61,10 @@ namespace HealthCare.WebApp.Auth
             }
 
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claimsPrincipal)));
+        }
+        public string GetEmailFromClaim()
+        {
+            return "";
         }
     }
 }

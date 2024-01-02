@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HealthCare.Core.Models.User;
+using HealthCare.Core.Models.UserModels;
 using HealthCare.Core.UserService;
 using HealthCare.Core.Data;
 using Microsoft.AspNetCore.Components.Authorization;
+using System.Reflection.Metadata.Ecma335;
+
 
 namespace HealthCare.Core.UserService
 {
@@ -19,17 +21,17 @@ namespace HealthCare.Core.UserService
             _context = context;
             _authenticationStateProvider = authenticationStateProvider;
         }
-        public bool AddUser(User user)
+        public User? AddUser(User user)
         {
             if (_context.Patient.Where(x => x.Email == user.Email).FirstOrDefault() != null || _context.CareGiver.Where(x => x.Email == user.Email).FirstOrDefault() != null)
-                return false;
+                return null;
 
             try
             {
                 if (user.Role == RoleEnum.Patient)
                     _context.Patient.Add((Patient)user);
 
-                if (user is CareGiver careGiver && careGiver.Role == CareGiverRoleEnum.Doctor)
+                if (user is CareGiver careGiver && careGiver.Role == RoleEnum.Doctor)
                 {
                     _context.CareGiver.Add(careGiver);
                 }
@@ -39,19 +41,19 @@ namespace HealthCare.Core.UserService
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                return false;
+                return null;
             }
 
-            return true;
+            return user.Role == RoleEnum.Patient ? (Patient)user : (CareGiver)user;
         }
 
         public User? GetByEmail(string email)
         {
             User user = new();
             user = _context.Patient.Where(x => x.Email == email).FirstOrDefault()!;
-            if(user != null)
+            if (user != null)
                 return user;
-                
+
             user = _context.CareGiver.Where(x => x.Email == email).FirstOrDefault()!;
 
             return user;

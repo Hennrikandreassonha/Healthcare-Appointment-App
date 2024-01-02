@@ -25,9 +25,9 @@ builder.Services.AddScoped<ProtectedSessionStorage>();
 builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
 
 //For Auth
-
 builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
 builder.Services.AddScoped<ProtectedSessionStorage>();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); 
 
 builder.Services.AddAuthorizationCore();
 builder.Services.AddAuthenticationCore();
