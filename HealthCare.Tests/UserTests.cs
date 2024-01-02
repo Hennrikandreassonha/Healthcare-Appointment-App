@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HealthCare.WebApp.Auth;
-using HealthCare.WebApp.Pages.Authentication;
 
 namespace HealthCare.Tests
 {

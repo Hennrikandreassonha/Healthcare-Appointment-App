@@ -11,6 +11,12 @@ header {
     justify-content: space-around;
 }
 
+.month-change{
+    cursor: pointer;
+}
+#year-month{
+    width: 350px;
+}
 ul,
 ol {
     display: grid;

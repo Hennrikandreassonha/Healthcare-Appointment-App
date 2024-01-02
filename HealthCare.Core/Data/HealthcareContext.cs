@@ -25,5 +25,6 @@ namespace HealthCare.Core.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
         }
+        
     }
 }
