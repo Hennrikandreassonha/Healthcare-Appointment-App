@@ -3,20 +3,12 @@
 @*sets the component as a route, nav is changes to this route => see NavMenu*@
 @page "/appointment"
 
-<h3>View Appointment Details</h3>
-
-<label for="appointmentId">Appointment ID:</label>
-<input id="appointmentId" @bind="appointmentId" />
-
-<button @onclick="LoadAppointment">View Details</button>
-
 <div class="appointment-flex">
-
     <div class="calendar">
         <header>
-            @* <span><</span> *@
-            <h1>@yearMonth</h1>
-            <span>></span>
+            <span @onclick="DecreaseMonth" class="month-change" title="Change month">&lt;</span>
+            <h1 id="year-month">@yearMonth</h1>
+            <span @onclick="IncreaseMonth" class="month-change" title="Change month">></span>
 
         </header>
 
@@ -60,7 +52,7 @@
 
     <div id="day-info">
 
-        <p>Test123</p>
+        @* <p>@test</p> *@
     </div>
 </div>
 
@@ -70,29 +62,24 @@
 } *@
 
 @code {
-    private string appointmentId;
-    private AppointmentService.AppointmentDetails appointmentDetails;
-    private Appointment sampleAppointment = new();
-    private Appointment sampleAppointment2 = new();
     private DateTime currentDate = DateTime.Now;
     private string yearMonth = "";
     private List<int> dayList = new();
+
     //Appointments for the date that the user has selected.
-    private List<Appointment> appointmentsForDate = new();
+    private Appointment[] appointmentsForDate = {};
 
     protected override async Task OnInitializedAsync()
     {
         yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}";
         dayList = GetDaysOfMonth(currentDate.Year, currentDate.Month).ToList();
 
-        sampleAppointment.DateTime = currentDate;
-        sampleAppointment.Service = Core.Models.Appointment.ServiceEnum.EmergencyCare;
+        appointmentService.AddSampleData();
     }
     private void HandleChosenDate(int day)
     {
-        @* var dateToCheck = new DateTime();
-        dateToCheck.Year = 
-        appointmentsForDate = appointmentService.GetAppointmentsByDate(appointmentId); *@
+        var dateToCheck = new DateTime(currentDate.Year, currentDate.Month, day);
+        appointmentsForDate = appointmentService.GetAppointmentsByDate(dateToCheck).ToArray();
     }
     private void LoadAppointment()
     {
@@ -101,5 +88,15 @@
     {
         int daysInMonth = DateTime.DaysInMonth(year, month);
         return Enumerable.Range(1, daysInMonth);
+    }
+    private void DecreaseMonth()
+    {
+        currentDate = currentDate.AddMonths(-1);
+        yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}.";
+    }
+    private void IncreaseMonth()
+    {
+        currentDate = currentDate.AddMonths(1);
+        yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}";
     }
 }

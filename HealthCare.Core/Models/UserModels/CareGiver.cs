@@ -11,5 +11,15 @@ namespace HealthCare.Core.Models.UserModels
         {
             
         }
+        public CareGiver(string email, string passwordHash, string firstName, string lastName, GenderEnum gender, DateTime birthDate)
+        {
+            Email = email;
+            PasswordHash = passwordHash;
+            FirstName = firstName;
+            LastName = lastName;
+            Gender = gender;
+            BirthDate = birthDate;
+            Role = RoleEnum.Doctor;
+        }
     }
 }
