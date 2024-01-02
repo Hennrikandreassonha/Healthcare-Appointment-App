@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HealthCare.WebApp.Auth;
 using HealthCare.WebApp.Pages.Authentication;
 
 namespace HealthCare.Tests
@@ -15,12 +16,13 @@ namespace HealthCare.Tests
         private readonly HealthcareContext _dbContext;
         private readonly IUserService _userService;
         private readonly AuthService _authService;
+        private readonly AuthStateProvider _authProvider;
 
         public UserTests()
         {
             var optionsBuilder = new DbContextOptionsBuilder<HealthcareContext>().UseInMemoryDatabase("InMemory");
             _dbContext = new HealthcareContext(optionsBuilder.Options);
-            _userService = new UserService(_dbContext);
+            _userService = new UserService(_dbContext, _authProvider);
             _authService = new AuthService(_userService);
         }
         [Fact]
