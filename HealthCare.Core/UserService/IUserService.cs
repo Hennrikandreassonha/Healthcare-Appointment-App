@@ -13,6 +13,7 @@ namespace HealthCare.Core.UserService
        User? AddUser(User user);
        User GetByEmail(string email);
         Task<string> GetEmailAsync();
+        Task UpdateUserAsync(User user);
 
     }
 }
