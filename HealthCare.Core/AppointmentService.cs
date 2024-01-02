@@ -40,9 +40,10 @@ namespace HealthCare.Core
             _context.CareGiver.Add(careGiver2);
             _context.SaveChanges();
 
+
             var careGiverFromDb = _context.CareGiver.FirstOrDefault();
-            Appointment appointment = new(careGiverFromDb.Id, DateTime.Now);
-            Appointment appointment2 = new(careGiverFromDb.Id, DateTime.Now.AddDays(1));
+            Appointment appointment = new(careGiverFromDb.Id, DateTime.Today.AddHours(8));
+            Appointment appointment2 = new(careGiverFromDb.Id, DateTime.Today.AddDays(1).AddHours(12));
             _context.Appointment.Add(appointment);
             _context.Appointment.Add(appointment2);
             _context.SaveChanges();

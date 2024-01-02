@@ -50,10 +50,26 @@
 
     </div>
 
-    <div id="day-info">
+    @if (chosenDay != null)
+    {
+        <div id="day-info">
+            <header>
 
-        <h3>There are @appointmentsForDate.Length appointments available for booking for the @chosenDay of @currentDate.ToString("MMMM")</h3>
-    </div>
+                <h3>There are @appointmentsForDate.Length appointments available for booking for the @chosenDay of
+                    @currentDate.ToString("MMMM")</h3>
+            </header>
+
+            <ul>
+                @foreach (Appointment item in appointmentsForDate)
+                {
+                    <li class="available-time">
+                        <h4>@item.CareGiver.FirstName</h4>
+                        <p>@item.DateTime</p>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
 </div>
 
 @code {
@@ -62,8 +78,8 @@
     private List<int> dayList = new();
 
     //Appointments for the date that the user has selected.
-    private Appointment[] appointmentsForDate = {};
-    private int chosenDay;
+    private Appointment[] appointmentsForDate = { };
+    private int? chosenDay = null;
 
 
     protected override async Task OnInitializedAsync()

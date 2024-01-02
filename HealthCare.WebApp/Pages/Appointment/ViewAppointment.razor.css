@@ -11,12 +11,20 @@ header {
     justify-content: space-around;
 }
 
-.month-change{
+.month-change {
     cursor: pointer;
 }
-#year-month{
+
+#year-month {
     width: 350px;
 }
+
+.available-time {}
+
+#day-info {
+    margin: 1rem 0;
+}
+
 ul,
 ol {
     display: grid;
@@ -97,4 +105,6 @@ ol.day-grid li:nth-child(35) {
 .appointment-flex {
     display: flex;
     margin-bottom: 1rem;
+    flex-direction: column;
+
 }
