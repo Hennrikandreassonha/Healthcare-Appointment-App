@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HealthCare.Core.Models.User;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace HealthCare.Core.UserService
 {
@@ -10,6 +11,7 @@ namespace HealthCare.Core.UserService
     {
        bool AddUser(User user);
        User GetByEmail(string email);
+        Task<string> GetEmailAsync();
 
     }
 }

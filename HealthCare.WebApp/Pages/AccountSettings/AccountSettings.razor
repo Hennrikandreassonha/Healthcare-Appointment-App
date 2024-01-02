@@ -1,67 +1,94 @@
 ﻿@page "/accountsettings"
+@inject HealthCare.Core.UserService.IUserService userService
+<AuthorizeView>
+    <Authorized>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 border p-3">
+                    <div class="mb-3">
+                        <h3>Account Settings</h3>
+                    </div>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-6 border p-3">
-            <div class="mb-3">
-                <h3>Account Settings</h3>
-            </div>
-            <div class="mb-3">
-                <label>Email: </label>
-                <p class="border p-2" style="max-width: 300px">@* @user. *@ berg.alex.h@hotmail.com</p>
-            </div>
-            <div class="mb-3">
-                <label>First Name: </label>
-                <p class="border p-2" style="max-width: 300px">@* @user. *@FirstName</p>
-            </div>
-            <div class="mb-3">
-                <label>Last Name: </label>
-                <p class="border p-2" style="max-width: 300px">@* @user. *@LastName</p>
-            </div>
-            <div class="mb-3">
-                <label>Date of birth: </label>
-                <p class="border p-2" style="max-width: 300px">@* @user. *@LastName</p>
-            </div>
-            @* @if (user is Patient) *@
-            @* { *@
-                <div class="mb-3">
-                    <label>Gender: </label>
-                <p class ="border p-2" style="max-width: 300px">@* @user. *@Gender</p>
+                    <div class="mb-3">
+                        <label>Email: </label>
+                        <p class="border p-2" style="max-width: 300px"> @userAccount.Email</p>
+                    </div>
+                    <div class="mb-3">
+                        <label>First Name: </label>
+                        <p class="border p-2" style="max-width: 300px">@userAccount.FirstName</p>
+                    </div>
+                    <div class="mb-3">
+                        <label>Last Name: </label>
+                        <p class="border p-2" style="max-width: 300px">@userAccount.LastName</p>
+                    </div>
+                    <div class="mb-3">
+                        <label>Date of birth: </label>
+                        <p class="border p-2" style="max-width: 300px">@userAccount.BirthDate</p>
+                    </div>
+                    @if (userAccount is Patient)
+                    {
+                        <div class="mb-3">
+                            <label>Gender: </label>
+                            <p class="border p-2" style="max-width: 300px">@userAccount.Gender</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="mb-3">
+                            <label>Role: </label>
+                            <p class="border p-2" style="max-width: 300px">@userAccount.Role</p>
+                        </div>
+                    }
+                    <NavLink class="nav-link" href="/edit">
+                        <button class="btn btn-primary">Edit</button>
+                    </NavLink>
                 </div>
-       @*      } *@
-            @* else *@
-           @*  { *@
-                <div class="mb-3">
-                    <label>Role: </label>
-                <p class="border p-2" style="max-width: 300px">@* user. *@Role</p>
-                </div>
-           @*  } *@
-            <NavLink class="nav-link" href="/edit">
-                <button class="btn btn-primary">Edit</button>
-            </NavLink>
-        </div>
 
-        <div class="col-md-6 border p-3">
-            <div class="mb-3">
-                <h3>Bookings</h3>
-            </div>
-            <div class="mb-3">
-                <label>Upcoming booking: </label>
-                <p>Upcoming meetings</p>
-            </div>
-            <div class="mb-3">
-                <label>Previous booking: </label>
-                <p>Previous meetings</p>
+                <div class="col-md-6 border p-3">
+                    <div class="mb-3">
+                        <h3>Bookings</h3>
+                    </div>
+                    <div class="mb-3">
+                        <label>Upcoming booking: </label>
+                        <p>Upcoming meetings</p>
+                    </div>
+                    <div class="mb-3">
+                        <label>Previous booking: </label>
+                        <p>Previous meetings</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 border p-3">
+                    <div class="mb-3">
+                        <h3>Account Settings</h3>
+                    </div>
+
+                    <div class="mb-3">
+                        
+                        <p>To see your information you need to <a href="/login">login</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
 
 
 
 @code {
 
-    // Get user
-   
+    private string userEmail;
+    private User userAccount = new User();
+
+    protected override async Task OnInitializedAsync()
+    {
+        userEmail = await userService.GetEmailAsync();
+        userAccount = userService.GetByEmail(userEmail);
+    }
 
 }
