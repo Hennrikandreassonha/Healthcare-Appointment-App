@@ -40,7 +40,7 @@
 
     private async Task SaveUserChanges()
     {
-       await userService.UpadetUserAsync(userAccount);
+       await userService.UpdateUserAsync(userAccount);
         
        NavManager.NavigateTo("/accountsettings");
     }
