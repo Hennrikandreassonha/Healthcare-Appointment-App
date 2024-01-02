@@ -1,18 +1,19 @@
-﻿@*the AppointmentService is added in program.cs *@
-@inject AppointmentService appointmentService
+﻿@inject AppointmentService appointmentService
 @inject AuthenticationStateProvider authStateProvider
 @inject UserService userService;
-@*sets the component as a route, nav is changes to this route => see NavMenu*@
 @page "/appointment"
 @using System.Globalization
 
 <div class="appointment-flex">
     <div class="calendar">
         <header>
-            <span @onclick="DecreaseMonth" class="month-change" title="Change month">&lt;</span>
-            <h1 id="year-month">@yearMonth</h1>
-            <span @onclick="IncreaseMonth" class="month-change" title="Change month">></span>
-
+            <div id="header-div">
+                <img @onclick="DecreaseMonth" src="\calendar-arrow.png" title="Change month" alt="Healhcare logo"
+                    class="calendar-info-arrow">
+                <h1 id="year-month">@yearMonth</h1>
+                <img @onclick="IncreaseMonth" src="\calendar-arrow.png" title="Change month"
+                    class="calendar-info-arrow rotate-180">
+            </div>
         </header>
 
         <ul class="weekdays">
@@ -40,22 +41,17 @@
         </ul>
 
         <ol class="day-grid">
-            @* <li class="month=prev">29</li>
-            <li class="month=prev">30</li>
-            <li class="month=prev">31</li> *@
+
             @for (int i = 0; i < GetStartDay(currentDate.Year, currentDate.Month); i++)
             {
                 <li class="empty-day"></li>
             }
-            @foreach (var item in dayList)
+            @foreach (Day item in CalendarInfoObj.Days)
             {
-                <li class="date-day @(IsTodaysDate(item) ? "current-date" : "")" tabIndex="-1"
-                    @onclick="() => HandleChosenDate(item)">@item</li>
+                <li class="date-day @(IsTodaysDate(item.DayNumber) ? "current-date" : "") @(CalendarInfoObj.DayFocused == item.DayNumber ? "date-day-focus" : "")"
+                    @onclick="() => HandleChosenDate(item)">@item.DayNumber</li>
             }
-            @* <li class="month-next">1</li>
-            <li class="month-next">2</li> *@
         </ol>
-
     </div>
 
     @if (chosenDay != null)
@@ -63,7 +59,7 @@
         <div id="day-info">
             <header>
 
-                <h3>There are @appointmentsForDate.Length appointments available for booking for @chosenDay
+                <h3>There are @appointmentsForDate.Length appointments available for booking @chosenDay of
                     @currentDate.ToString("MMMM", CultureInfo.InvariantCulture)
                 </h3>
             </header>
@@ -98,13 +94,34 @@
 </div>
 
 @code {
+    public class Day
+    {
+        public int DayNumber { get; set; }
+        public bool IsFocused { get; set; }
+        public Day(int day, bool isFocused = false)
+        {
+            DayNumber = day;
+            IsFocused = isFocused;
+        }
+    }
+    public class CalendarInfo
+    {
+        public int DayFocused { get; set; }
+        public List<Day> Days { get; set; }
+        public int Month { get; set; }
+        public CalendarInfo()
+        {
+            Days = new List<Day>();
+        }
+    }
     private DateTime currentDate = DateTime.Now;
     private string yearMonth = "";
-    private List<int> dayList = new();
+
 
     //Appointments for the date that the user has selected.
     private Appointment[] appointmentsForDate = { };
     private int? chosenDay = null;
+    private CalendarInfo CalendarInfoObj = new();
     private Patient? userLoggedIn;
     private string successMsg = "";
     Dictionary<DayOfWeek, int> weekdayDictionary = new Dictionary<DayOfWeek, int>
@@ -131,10 +148,11 @@
 
         appointmentService.AddSampleData();
     }
-    private void HandleChosenDate(int day)
+    private void HandleChosenDate(Day day)
     {
-        var dateToCheck = new DateTime(currentDate.Year, currentDate.Month, day);
-        chosenDay = day;
+        CalendarInfoObj.DayFocused = day.DayNumber;
+        var dateToCheck = new DateTime(currentDate.Year, currentDate.Month, day.DayNumber);
+        chosenDay = day.DayNumber;
         appointmentsForDate = appointmentService.GetAppointmentsByDate(dateToCheck).ToArray();
     }
     private void HandleBooking(Appointment appointment)
@@ -147,12 +165,14 @@
     private void UpdateDaysOfMonth(int year, int month)
     {
         int daysInMonth = DateTime.DaysInMonth(year, month);
-        dayList = Enumerable.Range(1, daysInMonth).ToList();
+        CalendarInfoObj.Month = month;
+        var item1 = Enumerable.Range(1, daysInMonth).ToArray();
+        foreach (var item in item1)
+            CalendarInfoObj.Days.Add(new Day(item));
     }
     private int GetStartDay(int year, int month)
     {
         DateTime firstDayOfMonth = new DateTime(year, month, 1);
-
         return weekdayDictionary[firstDayOfMonth.DayOfWeek];
     }
     private void DecreaseMonth()

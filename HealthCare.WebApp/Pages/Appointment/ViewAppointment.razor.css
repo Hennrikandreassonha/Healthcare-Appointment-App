@@ -2,7 +2,6 @@ header {
     display: flex;
     align-items: center;
     font-size: calc(16px + (26 - 16) * ((100vw - 300px) / (1600 - 300)));
-    justify-content: center;
     margin-bottom: 1rem;
     background: #1474bb;
     color: #fff;
@@ -11,16 +10,22 @@ header {
     justify-content: space-around;
 }
 
-.month-change {
-    cursor: pointer;
+#header-div {
+    max-width: 700px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
 }
 
 #year-month {
     width: 350px;
 }
-.current-date{
+
+.current-date {
     outline: 2px solid #1474bb;
 }
+
 #day-info {
     margin: 1rem 0;
 }
@@ -85,12 +90,16 @@ ol.day-grid {
     }
 }
 
-.date-day:hover,
-.date-day:focus {
+.date-day:hover {
     background-color: #1474bb !important;
-    color:white !important;
+    color: white !important;
     cursor: pointer;
 
+}
+
+.date-day-focus {
+    background-color: #1474bb !important;
+    color: white !important;
 }
 
 .appointment-flex {
@@ -99,16 +108,20 @@ ol.day-grid {
     flex-direction: column;
 
 }
-table{
+
+table {
     margin: auto;
     width: 80%;
 }
+
 table * {
-    padding:0.5rem;
+    padding: 0.5rem;
 }
-table button{
-    width:80px;
+
+table button {
+    width: 80px;
 }
-tr{
+
+tr {
     border: 1px solid black;
 }

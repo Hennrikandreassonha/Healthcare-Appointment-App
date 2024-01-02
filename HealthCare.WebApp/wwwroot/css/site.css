@@ -8,6 +8,21 @@ body {
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Lexend', sans-serif;
 }
+.calendar-info-arrow{
+    width: 30px;
+}
+.rotate-180 {
+    transform: rotate(180deg);
+}
+
+.calendar-info-arrow {
+    transition: ease-in-out 0.7s;
+    cursor: pointer;
+}
+
+.calendar-info-arrow:hover {
+    transform: rotate(180deg) scale(1.15);
+}
 
 h1:focus {
     outline: none;
