@@ -10,17 +10,96 @@
 
 <button @onclick="LoadAppointment">View Details</button>
 
-@if (appointmentDetails != null)
+<div class="appointment-flex">
+
+    <div class="calendar">
+        <header>
+            <span>123</span>
+            <h1>@yearMonth</h1>
+            <span>123</span>
+
+        </header>
+
+        <ul class="weekdays">
+            <li>
+                <abbr title="S">Sunday</abbr>
+            </li>
+            <li>
+                <abbr title="M">Monday</abbr>
+            </li>
+            <li>
+                <abbr title="T">Tuesday</abbr>
+            </li>
+            <li>
+                <abbr title="W">Wednesday</abbr>
+            </li>
+            <li>
+                <abbr title="T">Thursday</abbr>
+            </li>
+            <li>
+                <abbr title="F">Friday</abbr>
+            </li>
+            <li>
+                <abbr title="S">Saturday</abbr>
+            </li>
+        </ul>
+
+        <ol class="day-grid">
+            @* <li class="month=prev">29</li>
+            <li class="month=prev">30</li>
+            <li class="month=prev">31</li> *@
+            @foreach (var item in dayList)
+            {
+                <li class="date-day" tabIndex="-1" @onclick="() => HandleChosenDate(item)">@item</li>
+            }
+            @* <li class="month-next">1</li>
+            <li class="month-next">2</li> *@
+        </ol>
+
+    </div>
+
+    <div id="day-info">
+
+        <p>Test123</p>
+    </div>
+</div>
+
+@* @if (appointmentDetails != null)
 {
-    <p>@appointmentDetails.Details</p>
-}
+<p>@appointmentDetails.Details</p>
+} *@
 
 @code {
     private string appointmentId;
     private AppointmentService.AppointmentDetails appointmentDetails;
+    private Appointment sampleAppointment = new();
+    private Appointment sampleAppointment2 = new();
+    private DateTime currentDate = DateTime.Now;
+    private string yearMonth = "";
+    private List<int> dayList = new();
+    //Appointments for the date that the user has selected.
+    private List<Appointment> appointmentsForDate = new();
 
+    protected override async Task OnInitializedAsync()
+    {
+        yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}";
+        dayList = GetDaysOfMonth(currentDate.Year, currentDate.Month).ToList();
+
+        sampleAppointment.DateTime = currentDate;
+        sampleAppointment.Service = Core.Models.Appointment.ServiceEnum.EmergencyCare;
+    }
+    private void HandleChosenDate(int day)
+    {
+        @* var dateToCheck = new DateTime();
+        dateToCheck.Year = 
+        appointmentsForDate = appointmentService.GetAppointmentsByDate(appointmentId); *@
+    }
     private void LoadAppointment()
     {
-        appointmentDetails = appointmentService.GetAppointmentDetails(appointmentId);
+    }
+    private IEnumerable<int> GetDaysOfMonth(int year, int month)
+    {
+        int daysInMonth = DateTime.DaysInMonth(year, month);
+        return Enumerable.Range(1, daysInMonth);
     }
 }

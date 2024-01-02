@@ -1,25 +1,22 @@
 ﻿using System;
+using HealthCare.Core.Data;
+using HealthCare.Core.Models.AppointmentModels;
 namespace HealthCare.Core
 {
-	public class AppointmentService
-	{
-        private List<AppointmentDetails> appointments;
-
-        public AppointmentService()
+    public class AppointmentService
+    {
+        private readonly HealthcareContext _context;
+        public AppointmentService(HealthcareContext context)
         {
-            // mock data
-            appointments = new List<AppointmentDetails>
-            {
-                new AppointmentDetails { Id = "1", PatientId = "100", Details = "Appointment with Dr. Smith" },
-                new AppointmentDetails { Id = "2", PatientId = "101", Details = "Appointment with Dr. Johnson" }
-            };
-        }
+            _context = context;
 
-        public AppointmentDetails GetAppointmentDetails(string appointmentId)
+        }
+        public IEnumerable<Appointment> GetAppointmentsByDate(DateTime date)
         {
-            return appointments.FirstOrDefault(a => a.Id == appointmentId);
+            return _context.Appointment
+      .Where(x => x.DateTime.Year == date.Year && x.DateTime.DayOfYear == date.DayOfYear)
+      .ToList();
         }
-
 
         public class AppointmentDetails
         {
