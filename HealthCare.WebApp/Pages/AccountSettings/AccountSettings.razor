@@ -1,5 +1,6 @@
 ﻿@page "/accountsettings"
 @inject HealthCare.Core.UserService.IUserService userService
+@inject HealthCare.Core.AppointmentService appointmentService
 <AuthorizeView>
     <Authorized>
         <div class="container">
@@ -50,11 +51,50 @@
                     </div>
                     <div class="mb-3">
                         <label>Upcoming booking: </label>
-                        <p>Upcoming meetings</p>
+                        @foreach (var i in appointments)
+                        {
+                            if (i.DateTime >= DateTime.Now || i.DateTime == DateTime.Now)
+                            {
+                                <ul>
+                                    <div>@i.Service</div>
+                                    <div>@i.DateTime</div>
+                                    @foreach (var c in careGivers)
+                                    {
+                                        if (i.CareGiverId == c.Id)
+                                        {
+                                            <div>@c.FirstName</div>
+                                            <div>@c.Email</div>
+                                        }
+                                    }
+                                </ul>
+                            }
+                        }
                     </div>
                     <div class="mb-3">
                         <label>Previous booking: </label>
-                        <p>Previous meetings</p>
+                        @foreach (var i in appointments)
+                        {
+                            if (i.DateTime <= DateTime.Now)
+                            {
+                                <ul>
+                                    <div>@i.Service</div>
+                                    <div>@i.DateTime</div>
+                                    @foreach (var c in careGivers)
+                                    {
+                                        if (i.CareGiverId == c.Id)
+                                        {
+                                            <div>@c.FirstName</div>
+                                            <div>@c.Email</div>
+                                        }
+                                    }
+                                    @if (i.Feedback != null)
+                                    {
+                                        <div>Feedback:</div>
+                                        <div>@i.Feedback</div>
+                                    }
+                                </ul>
+                            }
+                        }
                     </div>
                 </div>
             </div>
@@ -84,11 +124,15 @@
 
     private string? userEmail;
     private User userAccount = new User();
-    
+    private List<Appointment> appointments = new List<Appointment>();
+    private List<CareGiver> careGivers = new List<CareGiver>();
+
     protected override async Task OnInitializedAsync()
     {
         userEmail = await userService.GetEmailAsync();
         userAccount = userService.GetByEmail(userEmail);
-    }
 
+        appointments = appointmentService.GetCurUserAppointments(userAccount.Id);
+        careGivers = userService.GetCareGivers();
+    }
 }
