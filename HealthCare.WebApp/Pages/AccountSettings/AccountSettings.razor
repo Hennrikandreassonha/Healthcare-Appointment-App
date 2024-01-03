@@ -56,14 +56,14 @@
                             if (i.DateTime >= DateTime.Now || i.DateTime == DateTime.Now)
                             {
                                 <ul>
-                                    <li>@i.Service</li>
-                                    <li>@i.DateTime</li>
+                                    <div>@i.Service</div>
+                                    <div>@i.DateTime</div>
                                     @foreach (var c in careGivers)
                                     {
                                         if (i.CareGiverId == c.Id)
                                         {
-                                            <li>@c.FirstName</li>
-                                            <li>@c.Email</li>
+                                            <div>@c.FirstName</div>
+                                            <div>@c.Email</div>
                                         }
                                     }
                                 </ul>
@@ -77,20 +77,20 @@
                             if (i.DateTime <= DateTime.Now)
                             {
                                 <ul>
-                                    <li>@i.Service</li>
-                                    <li>@i.DateTime</li>
+                                    <div>@i.Service</div>
+                                    <div>@i.DateTime</div>
                                     @foreach (var c in careGivers)
                                     {
                                         if (i.CareGiverId == c.Id)
                                         {
-                                            <li>@c.FirstName</li>
-                                            <li>@c.Email</li>
+                                            <div>@c.FirstName</div>
+                                            <div>@c.Email</div>
                                         }
                                     }
                                     @if (i.Feedback != null)
                                     {
-                                        <p>Feedback:</p>
-                                        <li>@i.Feedback</li>
+                                        <div>Feedback:</div>
+                                        <div>@i.Feedback</div>
                                     }
                                 </ul>
                             }
