@@ -63,10 +63,12 @@ namespace HealthCare.Core
 
 
             var careGiverFromDb = _context.CareGiver.FirstOrDefault();
-            Appointment appointment = new(careGiverFromDb.Id, DateTime.Today.AddHours(8));
-            Appointment appointment2 = new(careGiverFromDb.Id, DateTime.Today.AddDays(1).AddHours(12));
-            _context.Appointment.Add(appointment);
-            _context.Appointment.Add(appointment2);
+            for (int i = 0; i < 30; i++)
+            {
+                DateTime appointmentDateTime = DateTime.Today.AddHours(8).AddDays(i);
+                Appointment appointment = new Appointment(careGiverFromDb.Id, appointmentDateTime);
+                _context.Appointment.Add(appointment);
+            }
             _context.SaveChanges();
         }
     }
