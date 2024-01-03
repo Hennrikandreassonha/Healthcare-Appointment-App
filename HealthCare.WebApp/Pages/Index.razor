@@ -46,8 +46,16 @@
                                              <tr>
                                                   <td>@appointment.DateTime</td>
                                                   <td>@appointment.Service</td>
-                                                  <td>@GetNameOfDoctor(appointment.CareGiverId)</td>
-                                                  <td>
+                                        @if(LoggedInUser is Patient)
+                                        {
+                                            <td>@GetNameOfDoctor(appointment.CareGiverId)</td>
+
+                                        }
+                                        else
+                                        {
+                                             <td>@GetNameOfPatient(appointment.PatientId)</td>
+                                        }
+                                        <td>
                                                        <button class="btn btn-danger"
                                                             @onclick="(e) => RemoveAppointment(appointment)">Cancel</button>
                                                   </td>
@@ -63,7 +71,7 @@
                     </div>
                     <div class="passed-div">
                          <header>
-                              <h3>Previous appoinments</h3>
+                              <h3>Previous appointments</h3>
                          </header>
                          <table>
                               <thead>
@@ -98,50 +106,73 @@
           </NotAuthorized>
      </AuthorizeView>
 </div>
-@* <BookingComponent /> *@
 
 @code {
-     private string userName = "";
-     private User LoggedInUser;
-     private List<Appointment> UpcomingAppointments = new();
-     private List<Appointment> PreviousAppointments = new();
-     public string NameOfDoctor = "";
-     string successMsg = "";
+    private string userName = "";
+    private User LoggedInUser;
+    private List<Appointment> UpcomingAppointments = new();
+    private List<Appointment> PreviousAppointments = new();
+    public string NameOfDoctor = "";
+    public string NameOfPatient = "";
+    string successMsg = "";
 
-     protected override async Task OnInitializedAsync()
-     {
-          userName = await userService.GetEmailAsync();
-          LoggedInUser = userService.GetByEmail(userName);
-          GetAllMeetings(LoggedInUser);
-     }
-     private void GetAllMeetings(User loggedInUser)
-     {
-          List<Appointment> appointments;
-          UpcomingAppointments.Clear();
-          PreviousAppointments.Clear();
+    protected override async Task OnInitializedAsync()
+    {
+        userName = await userService.GetEmailAsync();
+        LoggedInUser = userService.GetByEmail(userName);
+        GetAllMeetings(LoggedInUser);
+    }
+    private void GetAllMeetings(User loggedInUser)
+    {
+        List<Appointment> appointments;
+        UpcomingAppointments.Clear();
+        PreviousAppointments.Clear();
 
-          if (loggedInUser is Patient)
-          {
-               appointments = _context.Appointment.Where(x => x.PatientId == loggedInUser.Id).ToList();
+        if (loggedInUser is Patient)
+        {
+            appointments = _context.Appointment.Where(x => x.PatientId == loggedInUser.Id).ToList();
 
-               foreach (var appointment in appointments)
-               {
-                    if (appointment.DateTime > DateTime.Now)
-                    {
-                         UpcomingAppointments.Add(appointment);
-                    }
-                    else
-                    {
-                         PreviousAppointments.Add(appointment);
-                    }
-               }
-          }
-     }
+            foreach (var appointment in appointments)
+            {
+                if (appointment.DateTime > DateTime.Now)
+                {
+                    UpcomingAppointments.Add(appointment);
+                }
+                else
+                {
+                    PreviousAppointments.Add(appointment);
+                }
+            }
+        }
+        else if (loggedInUser is CareGiver)
+        {
+              appointments = _context.Appointment.Where(x => x.CareGiverId == loggedInUser.Id).ToList();
+
+            foreach (var appointment in appointments)
+            {
+                if (appointment.DateTime > DateTime.Now)
+                {
+                    UpcomingAppointments.Add(appointment);
+                }
+                else
+                {
+                    PreviousAppointments.Add(appointment);
+                }
+            }
+        }
+    }
      private string GetNameOfDoctor(int careGiverId)
      {
           var careGiver = _context.CareGiver.FirstOrDefault(x => x.Id == careGiverId);
 
           return NameOfDoctor = $"{careGiver.FirstName} {careGiver.LastName}";
+     }
+
+     private string GetNameOfPatient(int? patientId)
+     {
+          var patient = _context.Patient.FirstOrDefault(x => x.Id == patientId);
+
+          return NameOfPatient = $"{patient.FirstName} {patient.LastName}";
      }
 
      private void RemoveAppointment(Appointment appointment)
