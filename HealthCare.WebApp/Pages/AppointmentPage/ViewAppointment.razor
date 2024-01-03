@@ -154,9 +154,22 @@
     private void HandleBooking(Appointment appointment)
     {
         var success = appointmentService.AddBooking(appointment, userLoggedIn.Id);
-        //Add Email sent here
+        bool emailSentSuccess = false;
         if (success)
-            successMsg = "Your appointment was booked successfully!";
+            emailSentSuccess = SendEmail(appointment, userLoggedIn);
+        if (emailSentSuccess)
+        {
+            successMsg = "Your appointment was booked successfully! Please check your email for confirmation.";
+            return;
+        }
+
+        errorMsg = "There was a problem booking your appointment, please try again";
+    }
+    public bool SendEmail(Appointment appointment, User user)
+    {
+        emailService = new EmailService(user.Email, appointment);
+        emailService.SendEmail();
+        return true;
     }
     private void UpdateDaysOfMonth(int year, int month)
     {
