@@ -49,7 +49,7 @@ namespace HealthCare.Core
             DateTime birthDate = new DateTime(1970, 1, 1);
 
             CareGiver careGiver1 = new("TestDoctor1", "Passhash", "Luke", "Skywalker", GenderEnum.Male, birthDate);
-            CareGiver careGiver2 = new("TestDoctor2", "Passhash", "Legolas", "Elf", GenderEnum.Male, birthDate);
+                CareGiver careGiver2 = new("TestDoctor2", "Passhash", "Legolas", "Elf", GenderEnum.Male, birthDate);
 
             _context.CareGiver.Add(careGiver1);
             _context.CareGiver.Add(careGiver2);

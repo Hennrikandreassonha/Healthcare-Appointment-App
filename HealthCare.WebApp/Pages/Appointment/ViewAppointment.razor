@@ -46,10 +46,10 @@
             {
                 <li class="empty-day"></li>
             }
-            @foreach (Day item in CalendarInfoObj.Days)
+            @foreach (int item in CalendarInfoObj.Days)
             {
-                <li class="date-day @(IsTodaysDate(item.DayNumber) ? "current-date" : "") @(CalendarInfoObj.DayFocused == item.DayNumber ? "date-day-focus" : "")"
-                    @onclick="() => HandleChosenDate(item)">@item.DayNumber</li>
+                <li class="date-day @(IsTodaysDate(item) ? "current-date" : "") @(CalendarInfoObj.DayFocused == item && CalendarInfoObj.Month == currentDate.Month ? "date-day-focus" : "")"
+                    @onclick="() => HandleChosenDate(item)">@item</li>
             }
         </ol>
     </div>
@@ -60,7 +60,7 @@
             <header>
 
                 <h3>There are @appointmentsForDate.Length appointments available for booking @chosenDay of
-                    @currentDate.ToString("MMMM", CultureInfo.InvariantCulture)
+                    @CalendarInfoObj.GetMonthName(CalendarInfoObj.Month);
                 </h3>
             </header>
             @if (successMsg != "")
@@ -90,28 +90,25 @@
                 </tbody>
             </table>
         </div>
+
     }
 </div>
 
 @code {
-    public class Day
-    {
-        public int DayNumber { get; set; }
-        public bool IsFocused { get; set; }
-        public Day(int day, bool isFocused = false)
-        {
-            DayNumber = day;
-            IsFocused = isFocused;
-        }
-    }
+
     public class CalendarInfo
     {
         public int DayFocused { get; set; }
-        public List<Day> Days { get; set; }
+        public List<int> Days { get; set; }
         public int Month { get; set; }
         public CalendarInfo()
         {
-            Days = new List<Day>();
+            Days = new List<int>();
+        }
+        public string GetMonthName(int monthNumber)
+        {
+            CultureInfo cultureInfo = CultureInfo.CurrentCulture;
+            return cultureInfo.DateTimeFormat.GetMonthName(monthNumber);
         }
     }
     private DateTime currentDate = DateTime.Now;
@@ -146,28 +143,28 @@
 
         appointmentService.AddSampleData();
     }
-    private void HandleChosenDate(Day day)
+    private void HandleChosenDate(int day)
     {
-        CalendarInfoObj.DayFocused = day.DayNumber;
-        var dateToCheck = new DateTime(currentDate.Year, currentDate.Month, day.DayNumber);
-        chosenDay = day.DayNumber;
+        CalendarInfoObj.DayFocused = day;
+        var dateToCheck = new DateTime(currentDate.Year, currentDate.Month, day);
+        chosenDay = day;
+        CalendarInfoObj.Month = currentDate.Month;
         appointmentsForDate = appointmentService.GetAppointmentsByDate(dateToCheck).ToArray();
     }
     private void HandleBooking(Appointment appointment)
     {
         var success = appointmentService.AddBooking(appointment, userLoggedIn.Id);
+        //Add Email sent here
         if (success)
             successMsg = "Your appointment was booked successfully!";
-
     }
     private void UpdateDaysOfMonth(int year, int month)
     {
         int daysInMonth = DateTime.DaysInMonth(year, month);
-        CalendarInfoObj.Month = month;
         var item1 = Enumerable.Range(1, daysInMonth).ToArray();
         CalendarInfoObj.Days.Clear();
         foreach (var item in item1)
-            CalendarInfoObj.Days.Add(new Day(item));
+            CalendarInfoObj.Days.Add(item);
     }
     private int GetStartDay(int year, int month)
     {
