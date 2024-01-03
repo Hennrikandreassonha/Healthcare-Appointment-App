@@ -53,12 +53,21 @@
                         <label>Upcoming booking: </label>
                         @foreach (var i in appointments)
                         {
-                                @i.DateTime
+                            if (i.DateTime >= DateTime.Now || i.DateTime == DateTime.Now)
+                            {
+                                <ul>@i.DateTime</ul>
+                            }
                         }
                     </div>
                     <div class="mb-3">
                         <label>Previous booking: </label>
-                        <p>Previous meetings</p>
+                        @foreach (var i in appointments)
+                        {
+                            if (i.DateTime <= DateTime.Now)
+                            {
+                                <ul>@i.DateTime</ul>
+                            }
+                        }
                     </div>
                 </div>
             </div>
