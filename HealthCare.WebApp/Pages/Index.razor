@@ -81,7 +81,7 @@
                                              <td>@GetNameOfDoctor(appointment.CareGiverId)</td>
                                              <td>
                                                   <button class="btn btn-danger"
-                                                       @onclick="(e) => RemoveAppointment(appointment)">Leave
+                                                       @onclick="(e) => LeaveFeedback(appointment)">Leave
                                                        feedback</button>
                                              </td>
                                         </tr>
@@ -158,6 +158,10 @@
                successMsg = "Your booking has been canceled!";
                GetAllMeetings(LoggedInUser);
           }
+     }
+     private void LeaveFeedback(Appointment appointment)
+     {
+
      }
      public bool SendCancelEmail(Appointment appointment, User user)
      {
