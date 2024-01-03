@@ -62,9 +62,23 @@ namespace HealthCare.Core.UserService
 
         public List<CareGiver> GetCareGivers()
         {
-            List<CareGiver> careGivers = new();
-            careGivers = _context.CareGiver.ToList();
-            return careGivers;
+            List<CareGiver> careGivers = _context.CareGiver.ToList();
+            List<CareGiver> filteredCareGivers = new();
+
+            foreach (var careGiver in careGivers)
+            {
+                var filteredCareGiver = new CareGiver
+                {
+                    Id = careGiver.Id,
+                    FirstName = careGiver.FirstName,
+                    LastName = careGiver.LastName,
+                    Email = careGiver.Email
+                };
+
+                filteredCareGivers.Add(filteredCareGiver);
+            }
+
+            return filteredCareGivers;
         }
 
         public async Task<string?> GetEmailAsync()
