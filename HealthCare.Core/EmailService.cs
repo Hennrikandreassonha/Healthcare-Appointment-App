@@ -18,7 +18,6 @@ namespace HealthCare.Core
         public Appointment AppointmentDetails { get; set; }
         public EmailService()
         {
-
         }
         public EmailService(string recieverEmail, Appointment appointment)
         {
@@ -30,30 +29,35 @@ namespace HealthCare.Core
         }
         public bool SendEmail()
         {
-            MailMessage message = new MailMessage
+            try
             {
-                From = new MailAddress(SenderEmail),
-                Subject = $"Healthcare appointment booking confirmation"
-            };
+                MailMessage message = new MailMessage
+                {
+                    From = new MailAddress(SenderEmail),
+                    Subject = $"Healthcare appointment booking confirmation"
+                };
 
-            var smtpClient = new SmtpClient("smtp.gmail.com")
+                var smtpClient = new SmtpClient("smtp.gmail.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential(SenderEmail, Password),
+                    EnableSsl = true,
+                };
+
+                message.Body = BuildEmailContent();
+                message.IsBodyHtml = true;
+                message.To.Add(RecieverEmail);
+                smtpClient.Send(message);
+            }
+            catch (Exception ex)
             {
-                Port = 587,
-                Credentials = new NetworkCredential(SenderEmail, Password),
-                EnableSsl = true,
-            };
-            message.Body = BuildEmailContent();
-            message.IsBodyHtml = true;
-            message.To.Add(RecieverEmail);
-
-            smtpClient.Send(message);
-
+                Console.WriteLine(ex);
+                return false;
+            }
             return true;
         }
         public string BuildEmailContent()
         {
-            string blueColor = "#1474bb";
-
             return $@"
                 <html>
                     <body style='max-width: 600px; font-family: Arial, sans-serif;'>
@@ -65,7 +69,7 @@ namespace HealthCare.Core
                                 <li><strong>Doctor:</strong> {AppointmentDetails.CareGiver.FirstName} {AppointmentDetails.CareGiver.LastName}</li>
                                 <li><strong>Service:</strong> General Checkup</li>
                                 <li><strong>Date:</strong> {AppointmentDetails.DateTime.ToShortDateString()}</li>
-                                <li><strong>Time:</strong> {AppointmentDetails.DateTime.Hour}:{AppointmentDetails.DateTime.Minute}</li>
+                                <li><strong>Time:</strong> {AppointmentDetails.DateTime.Hour:00}:{AppointmentDetails.DateTime.Minute:00}</li>
                             </ul>
                             <p>Thank you for choosing our service. If you have any questions or need to make changes, please contact us.</p>
                             <p>Best regards,<br>The best healthcare app ever</p>
@@ -73,6 +77,5 @@ namespace HealthCare.Core
                     </body>
                 </html>";
         }
-
     }
 }

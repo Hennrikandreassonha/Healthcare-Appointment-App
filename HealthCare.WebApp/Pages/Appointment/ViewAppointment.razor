@@ -163,8 +163,7 @@
     {
         var success = appointmentService.AddBooking(appointment, userLoggedIn.Id);
         bool emailSentSuccess = false;
-
-        if (true)
+        if (success)
             emailSentSuccess = SendEmail(appointment, userLoggedIn);
         if (emailSentSuccess)
         {
