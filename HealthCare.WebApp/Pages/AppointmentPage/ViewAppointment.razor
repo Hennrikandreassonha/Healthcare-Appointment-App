@@ -1,6 +1,7 @@
 @inject AppointmentService appointmentService
 @inject AuthenticationStateProvider authStateProvider
 @inject UserService userService;
+@inject EmailService emailService;
 @page "/appointment"
 @using System.Globalization
 
@@ -67,6 +68,10 @@
             {
                 <p class="alert alert-success">@successMsg</p>
             }
+            @if (errorMsg != "")
+            {
+                <p class="alert alert-error">@successMsg</p>
+            }
             <table>
                 <thead>
                     <tr>
@@ -119,6 +124,8 @@
     private CalendarInfo CalendarInfoObj = new();
     private Patient? userLoggedIn;
     private string successMsg = "";
+    private string errorMsg = "";
+
     Dictionary<DayOfWeek, int> weekdayDictionary = new Dictionary<DayOfWeek, int>
 {
 { DayOfWeek.Monday, 0 },
@@ -132,6 +139,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+
         yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}";
         UpdateDaysOfMonth(currentDate.Year, currentDate.Month);
 
@@ -201,4 +209,3 @@
         return currentDate.Month == DateTime.Now.Month && day == DateTime.Now.Day;
     }
 }
-
