@@ -11,6 +11,10 @@ namespace HealthCare.Core
         {
             _context = context;
         }
+        public List<Appointment> GetCurUserAppointments(int userId)
+        {
+            return _context.Appointment.Where(x => x.Patient.Id == userId).ToList();
+        }
         public IEnumerable<Appointment> GetAppointmentsByDate(DateTime date)
         {
             return _context.Appointment
