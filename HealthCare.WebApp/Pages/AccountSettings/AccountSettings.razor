@@ -55,7 +55,18 @@
                         {
                             if (i.DateTime >= DateTime.Now || i.DateTime == DateTime.Now)
                             {
-                                <ul>@i.DateTime</ul>
+                                <ul>
+                                    <li>@i.DateTime</li>
+                                    <li>@i.Service</li>
+                                    @foreach (var c in careGivers)
+                                    {
+                                        if (i.CareGiverId == c.Id)
+                                        {
+                                            <li>@c.FirstName</li>
+                                            <li>@c.Email</li>
+                                        }
+                                    }
+                                </ul>
                             }
                         }
                     </div>
@@ -65,7 +76,23 @@
                         {
                             if (i.DateTime <= DateTime.Now)
                             {
-                                <ul>@i.DateTime</ul>
+                                <ul>
+                                    <li>@i.DateTime</li>
+                                    <li>@i.Service</li>
+                                    @foreach (var c in careGivers)
+                                    {
+                                        if (i.CareGiverId == c.Id)
+                                        {
+                                            <li>@c.FirstName</li>
+                                            <li>@c.Email</li>
+                                        }
+                                    }
+                                    @if (i.Feedback != null)
+                                    {
+                                        <p>Feedback:</p>
+                                        <li>@i.Feedback</li>
+                                    }
+                                </ul>
                             }
                         }
                     </div>
@@ -98,6 +125,7 @@
     private string? userEmail;
     private User userAccount = new User();
     private List<Appointment> appointments = new List<Appointment>();
+    private List<CareGiver> careGivers = new List<CareGiver>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -105,6 +133,7 @@
         userAccount = userService.GetByEmail(userEmail);
 
         appointments = appointmentService.GetCurUserAppointments(userAccount.Id);
+        careGivers = userService.GetCareGivers();
     }
 
 }

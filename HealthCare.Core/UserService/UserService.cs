@@ -60,6 +60,13 @@ namespace HealthCare.Core.UserService
             return user;
         }
 
+        public List<CareGiver> GetCareGivers()
+        {
+            List<CareGiver> careGivers = new();
+            careGivers = _context.CareGiver.ToList();
+            return careGivers;
+        }
+
         public async Task<string?> GetEmailAsync()
         {
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
