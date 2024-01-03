@@ -20,6 +20,10 @@
                     <p>
                          you have <u>@UpcomingAppointments.Count</u> upcoming appointments
                     </p>
+                    @if (successMsg != "")
+                    {
+                         <p class="alert alert-success">@successMsg</p>
+                    }
                </div>
 
                <div class="container-flex">
@@ -102,7 +106,7 @@
      private List<Appointment> UpcomingAppointments = new();
      private List<Appointment> PreviousAppointments = new();
      public string NameOfDoctor = "";
-
+     string successMsg = "";
 
      protected override async Task OnInitializedAsync()
      {
@@ -113,6 +117,8 @@
      private void GetAllMeetings(User loggedInUser)
      {
           List<Appointment> appointments;
+          UpcomingAppointments.Clear();
+          PreviousAppointments.Clear();
 
           if (loggedInUser is Patient)
           {
@@ -149,7 +155,8 @@
                _context.Update(appointment);
                _context.SaveChanges();
 
-               NavigationManager.NavigateTo(NavigationManager.Uri, true);
+               successMsg = "Your booking has been canceled!";
+               GetAllMeetings(LoggedInUser);
           }
      }
      public bool SendCancelEmail(Appointment appointment, User user)
