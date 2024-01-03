@@ -31,7 +31,8 @@ tr {
 .passed-div table {
     width: 100%;
 }
-.header-div{
+
+.header-div {
     padding: 0 0.5rem;
 }
 
@@ -58,4 +59,19 @@ header {
     min-height: 6.5vh;
     text-align: center;
     justify-content: space-around;
+}
+
+.feedback-flex {
+    display: flex;
+    flex-direction: column
+}
+
+#feedback-container {
+    width: 100%;
+    border: 1px solid black;
+    margin: 0.5rem 0;
+}
+.feedback-text{
+    margin: 0.5rem;   
+    font-weight: bold;
 }

@@ -46,16 +46,16 @@
                                              <tr>
                                                   <td>@appointment.DateTime</td>
                                                   <td>@appointment.Service</td>
-                                        @if(LoggedInUser is Patient)
-                                        {
-                                            <td>@GetNameOfDoctor(appointment.CareGiverId)</td>
+                                                  @if (LoggedInUser is Patient)
+                                                  {
+                                                       <td>@GetNameOfDoctor(appointment.CareGiverId)</td>
 
-                                        }
-                                        else
-                                        {
-                                             <td>@GetNameOfPatient(appointment.PatientId)</td>
-                                        }
-                                        <td>
+                                                  }
+                                                  else
+                                                  {
+                                                       <td>@GetNameOfPatient(appointment.PatientId)</td>
+                                                  }
+                                                  <td>
                                                        <button class="btn btn-danger"
                                                             @onclick="(e) => RemoveAppointment(appointment)">Cancel</button>
                                                   </td>
@@ -73,30 +73,58 @@
                          <header>
                               <h3>Previous appointments</h3>
                          </header>
-                         <table>
-                              <thead>
-                                   <tr>
-                                        <th>Date</th>
-                                        <th>Service</th>
-                                        <th>Doctor</th </tr>
-                              </thead>
-                              <tbody>
-                                   @foreach (Appointment appointment in PreviousAppointments)
-                                   {
+                         <div class="feedback-flex">
+                              <table>
+                                   <thead>
                                         <tr>
-                                             <td>@appointment.DateTime</td>
-                                             <td>@appointment.Service</td>
-                                             <td>@GetNameOfDoctor(appointment.CareGiverId)</td>
-                                             <td>
-                                                  <button class="btn btn-danger"
-                                                       @onclick="(e) => LeaveFeedback(appointment)">Leave
-                                                       feedback</button>
-                                             </td>
-                                        </tr>
-                                   }
-                              </tbody>
-                         </table>
+                                             <th>Date</th>
+                                             <th>Service</th>
+                                             <th>Doctor</th </tr>
+                                   </thead>
+                                   <tbody>
+                                        @foreach (Appointment appointment in PreviousAppointments)
+                                        {
+                                             <tr>
+                                                  <td>@appointment.DateTime</td>
+                                                  <td>@appointment.Service</td>
+                                                  <td>@GetNameOfDoctor(appointment.CareGiverId)</td>
+                                                  <td>
+                                                       <button class="btn btn-danger"
+                                                            @onclick="(e) => LeaveFeedback(appointment)">Leave
+                                                            feedback</button>
+                                                  </td>
+                                             </tr>
+                                        }
+                                   </tbody>
+                              </table>
+                              @if (leavingFeedback != null)
+                              {
+                                   <div id="feedback-container">
+                                        <header>
+                                             <h3>Feedback</h3>
+                                        </header>
+                                        <p class="feedback-text"><u>Please submit your feedback   
+                                        </u><br> (Only feedbacks with 3 or more stars will be saved)
+                                        </p>
+                                        <ul>
+                                             <li>
+                                                  <strong>Doctor:</strong> @leavingFeedback.CareGiver.FirstName
+                                                  @leavingFeedback.CareGiver.LastName
+                                             </li>
+                                             <li>
+                                                  <strong>Date:</strong>@leavingFeedback.DateTime
+                                             </li>
+                                             <li>
+                                                  <strong>Service:</strong>General Checkup
+                                             </li>
+                                        </ul>
+                                        <button class="btn btn-primary" @onclick="(e) => SubmitFeedback()">Leave
+                                             feedback</button>
 
+                                        <p>Thank you for your cooperation,<br><u>The best healthcare app ever</u></p>
+                                   </div>
+                              }
+                         </div>
                     </div>
                </div>
           </Authorized>
@@ -108,59 +136,64 @@
 </div>
 
 @code {
-    private string userName = "";
-    private User LoggedInUser;
-    private List<Appointment> UpcomingAppointments = new();
-    private List<Appointment> PreviousAppointments = new();
-    public string NameOfDoctor = "";
-    public string NameOfPatient = "";
-    string successMsg = "";
+     private string userName = "";
+     private User LoggedInUser;
+     private List<Appointment> UpcomingAppointments = new();
+     private List<Appointment> PreviousAppointments = new();
+     public string NameOfDoctor = "";
+     public string NameOfPatient = "";
+     string successMsg = "";
+     private Appointment? leavingFeedback = null;
 
-    protected override async Task OnInitializedAsync()
-    {
-        userName = await userService.GetEmailAsync();
-        LoggedInUser = userService.GetByEmail(userName);
-        GetAllMeetings(LoggedInUser);
-    }
-    private void GetAllMeetings(User loggedInUser)
-    {
-        List<Appointment> appointments;
-        UpcomingAppointments.Clear();
-        PreviousAppointments.Clear();
+     protected override async Task OnInitializedAsync()
+     {
+          userName = await userService.GetEmailAsync();
+          LoggedInUser = userService.GetByEmail(userName);
+          GetAllMeetings(LoggedInUser);
+     }
+     private void GetAllMeetings(User loggedInUser)
+     {
+          List<Appointment> appointments;
+          UpcomingAppointments.Clear();
+          PreviousAppointments.Clear();
 
-        if (loggedInUser is Patient)
-        {
-            appointments = _context.Appointment.Where(x => x.PatientId == loggedInUser.Id).ToList();
+          if (loggedInUser is Patient)
+          {
+               appointments = _context.Appointment.Where(x => x.PatientId == loggedInUser.Id).ToList();
 
-            foreach (var appointment in appointments)
-            {
-                if (appointment.DateTime > DateTime.Now)
-                {
-                    UpcomingAppointments.Add(appointment);
-                }
-                else
-                {
-                    PreviousAppointments.Add(appointment);
-                }
-            }
-        }
-        else if (loggedInUser is CareGiver)
-        {
-              appointments = _context.Appointment.Where(x => x.CareGiverId == loggedInUser.Id).ToList();
+               foreach (var appointment in appointments)
+               {
+                    if (appointment.DateTime > DateTime.Now)
+                    {
+                         UpcomingAppointments.Add(appointment);
+                    }
+                    else
+                    {
+                         PreviousAppointments.Add(appointment);
+                    }
+               }
+          }
+          else if (loggedInUser is CareGiver)
+          {
+               appointments = _context.Appointment.Where(x => x.CareGiverId == loggedInUser.Id).ToList();
 
-            foreach (var appointment in appointments)
-            {
-                if (appointment.DateTime > DateTime.Now)
-                {
-                    UpcomingAppointments.Add(appointment);
-                }
-                else
-                {
-                    PreviousAppointments.Add(appointment);
-                }
-            }
-        }
-    }
+               foreach (var appointment in appointments)
+               {
+                    if (appointment.DateTime > DateTime.Now)
+                    {
+                         UpcomingAppointments.Add(appointment);
+                    }
+                    else
+                    {
+                         PreviousAppointments.Add(appointment);
+                    }
+               }
+          }
+     }
+     private void SubmitFeedback()
+     {
+          leavingFeedback = null;
+     }
      private string GetNameOfDoctor(int careGiverId)
      {
           var careGiver = _context.CareGiver.FirstOrDefault(x => x.Id == careGiverId);
@@ -192,7 +225,7 @@
      }
      private void LeaveFeedback(Appointment appointment)
      {
-
+          leavingFeedback = appointment;
      }
      public bool SendCancelEmail(Appointment appointment, User user)
      {
