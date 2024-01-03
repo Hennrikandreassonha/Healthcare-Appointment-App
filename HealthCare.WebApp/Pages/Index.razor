@@ -14,16 +14,20 @@
         <Authorized>
             <div class="container row">
                 <h1>Hello, @context.User.Identity.Name!</h1>
-                <p>@userName</p>
+                
+                <p>Welcome to Health Care AB</p>
+
+
 
                 <div class="col mb-3">
                     <h3>Upcoming appointments</h3>
+
                     @if (UpcomingAppointments != null)
                     {
-                        <ul>
+                        <ul class="list-unstyled">
                             @foreach (var appointment in UpcomingAppointments)
                             {
-                                <li>Date: @appointment.DateTime Service: @appointment.Service </li>
+                                <li>Date: @appointment.DateTime Service: @appointment.Service Caregiver: @GetNameOfDoctor(appointment.CareGiverId) <button class="btn btn-danger">Cancel</button></li>
                             }
                         </ul>
                     }
@@ -37,10 +41,10 @@
                     <h3>Previous appointments</h3>
                     @if (PreviousAppointments != null)
                     {
-                        <ul>
+                        <ul class="list-unstyled">
                             @foreach (var appointment in PreviousAppointments)
                             {
-                                <li>Date: @appointment.DateTime Service: @appointment.Service </li>
+                                <li>Date: @appointment.DateTime Service: @appointment.Service Caregiver: @GetNameOfDoctor(appointment.CareGiverId)</li>
                             }
                         </ul>
                     }
@@ -62,13 +66,11 @@
 @* <BookingComponent /> *@
 
 @code {
-
-    // private readonly HealthcareContext _context;
-
     private string userName = "";
     private User LoggedInUser;
-    private List<Core.Models.AppointmentModels.Appointment> UpcomingAppointments = new();
-    private List<Core.Models.AppointmentModels.Appointment> PreviousAppointments = new();
+    private List<Appointment> UpcomingAppointments = new();
+    private List<Appointment> PreviousAppointments = new();
+    public string NameOfDoctor = "";
 
 
     protected override async Task OnInitializedAsync()
@@ -81,7 +83,7 @@
 
     private void GetAllMeetings(User loggedInUser)
     {
-        List<Core.Models.AppointmentModels.Appointment> appointments;
+        List<Appointment> appointments;
 
         if (loggedInUser is Patient)
         {
@@ -100,4 +102,13 @@
             }
         }
     }
+
+    private string GetNameOfDoctor(int careGiverId)
+    {
+        var careGiver = _context.CareGiver.FirstOrDefault(x => x.Id == careGiverId);
+
+       return NameOfDoctor = $"{careGiver.FirstName} {careGiver.LastName}";
+    }
+
+    //Ta bort patient id. Ta bort service med. 
 }
