@@ -5,6 +5,7 @@
 @using HealthCare.Core.Data
 @using HealthCare.Core.Models.AppointmentModels
 @inject HealthcareContext _context
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
 
 
 
@@ -27,7 +28,8 @@
                         <ul class="list-unstyled">
                             @foreach (var appointment in UpcomingAppointments)
                             {
-                                <li>Date: @appointment.DateTime Service: @appointment.Service Caregiver: @GetNameOfDoctor(appointment.CareGiverId) <button class="btn btn-danger">Cancel</button></li>
+                                <li>Date: @appointment.DateTime Service: @appointment.Service Caregiver: @GetNameOfDoctor(appointment.CareGiverId) 
+                                    <button class="btn btn-danger" @onclick="(e) => RemoveAppointment(appointment)" >Cancel</button></li>
                             }
                         </ul>
                     }
@@ -107,8 +109,22 @@
     {
         var careGiver = _context.CareGiver.FirstOrDefault(x => x.Id == careGiverId);
 
-       return NameOfDoctor = $"{careGiver.FirstName} {careGiver.LastName}";
+        return NameOfDoctor = $"{careGiver.FirstName} {careGiver.LastName}";
     }
 
-    //Ta bort patient id. Ta bort service med. 
+
+
+    private void RemoveAppointment(Appointment appointment)
+    {
+        if(appointment != null)
+        {
+            appointment.PatientId = null;
+            appointment.Service = null;
+
+            _context.Update(appointment);
+            _context.SaveChanges();
+
+            NavigationManager.NavigateTo(NavigationManager.Uri, true);
+        }
+    }
 }
