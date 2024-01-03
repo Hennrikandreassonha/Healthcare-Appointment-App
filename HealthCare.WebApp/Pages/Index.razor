@@ -2,38 +2,102 @@
 @inject AuthenticationStateProvider authStateProvider
 @inject IHttpContextAccessor _httpContextAccessor;
 @inject HealthCare.Core.UserService.IUserService userService
+@using HealthCare.Core.Data
 @using HealthCare.Core.Models.AppointmentModels
+@inject HealthcareContext _context
+
+
 
 <PageTitle>Index</PageTitle>
 <div>
     <AuthorizeView>
         <Authorized>
-            <div class="container">
-            <h1>Hello, @context.User.Identity.Name!</h1>
-            <p>@userName</p>
+            <div class="container row">
+                <h1>Hello, @context.User.Identity.Name!</h1>
+                <p>@userName</p>
 
-                <div class="mb-3">
-                    <h3>Upcoming meetings</h3>
+                <div class="col mb-3">
+                    <h3>Upcoming appointments</h3>
+                    @if (UpcomingAppointments != null)
+                    {
+                        <ul>
+                            @foreach (var appointment in UpcomingAppointments)
+                            {
+                                <li>Date: @appointment.DateTime Service: @appointment.Service </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p>No upcoming appointments</p>
+                    }
                 </div>
-            </div>
 
+                <div class="col mb-3">
+                    <h3>Previous appointments</h3>
+                    @if (PreviousAppointments != null)
+                    {
+                        <ul>
+                            @foreach (var appointment in PreviousAppointments)
+                            {
+                                <li>Date: @appointment.DateTime Service: @appointment.Service </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p>No previous appointments</p>
+                    }
+                </div>
+
+            </div>
 
         </Authorized>
         <NotAuthorized>
             <h1>Hello, Guest!</h1>
+            <p> You'll need to <a href="/login">log in</a> to see any information.</p>
         </NotAuthorized>
     </AuthorizeView>
 </div>
 @* <BookingComponent /> *@
 
 @code {
-    string userName = "";
-    User LoggedInUser;
-    
+
+    // private readonly HealthcareContext _context;
+
+    private string userName = "";
+    private User LoggedInUser;
+    private List<Core.Models.AppointmentModels.Appointment> UpcomingAppointments = new();
+    private List<Core.Models.AppointmentModels.Appointment> PreviousAppointments = new();
+
 
     protected override async Task OnInitializedAsync()
     {
         userName = await userService.GetEmailAsync();
         LoggedInUser = userService.GetByEmail(userName);
+        GetAllMeetings(LoggedInUser);
+    }
+
+
+    private void GetAllMeetings(User loggedInUser)
+    {
+        List<Core.Models.AppointmentModels.Appointment> appointments;
+
+        if (loggedInUser is Patient)
+        {
+            appointments = _context.Appointment.Where(x => x.PatientId == loggedInUser.Id).ToList();
+
+            foreach (var appointment in appointments)
+            {
+                if (appointment.DateTime > DateTime.Now)
+                {
+                    UpcomingAppointments.Add(appointment);
+                }
+                else
+                {
+                    PreviousAppointments.Add(appointment);
+                }
+            }
+        }
     }
 }

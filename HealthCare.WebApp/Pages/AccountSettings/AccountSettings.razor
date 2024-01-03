@@ -84,7 +84,7 @@
 
     private string? userEmail;
     private User userAccount = new User();
-
+    
     protected override async Task OnInitializedAsync()
     {
         userEmail = await userService.GetEmailAsync();
