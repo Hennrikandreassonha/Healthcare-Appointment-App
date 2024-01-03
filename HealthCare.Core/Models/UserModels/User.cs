@@ -19,7 +19,7 @@ namespace HealthCare.Core.Models.UserModels
         public DateTime BirthDate { get; set; }
         public User()
         {
-            
+
         }
     }
 }

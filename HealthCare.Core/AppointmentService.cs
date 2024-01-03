@@ -14,8 +14,8 @@ namespace HealthCare.Core
         public IEnumerable<Appointment> GetAppointmentsByDate(DateTime date)
         {
             return _context.Appointment
-      .Where(x => x.DateTime.Year == date.Year && x.DateTime.DayOfYear == date.DayOfYear).Include(x => x.CareGiver)
-      .ToList();
+                .Where(x => x.DateTime.Year == date.Year && x.DateTime.DayOfYear == date.DayOfYear && x.PatientId == null).Include(x => x.CareGiver)
+                .ToList();
         }
         public bool AddInitialAppointment(int caregiverId, DateTime date)
         {
@@ -50,6 +50,8 @@ namespace HealthCare.Core
 
             CareGiver careGiver1 = new("TestDoctor1", "Passhash", "Luke", "Skywalker", GenderEnum.Male, birthDate);
             CareGiver careGiver2 = new("TestDoctor2", "Passhash", "Legolas", "Elf", GenderEnum.Male, birthDate);
+
+            CareGiver giver = new();
 
             _context.CareGiver.Add(careGiver1);
             _context.CareGiver.Add(careGiver2);

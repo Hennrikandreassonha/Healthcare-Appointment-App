@@ -9,7 +9,6 @@ namespace HealthCare.Core.Models.UserModels
     {
         public CareGiver()
         {
-            
         }
         public CareGiver(string email, string passwordHash, string firstName, string lastName, GenderEnum gender, DateTime birthDate)
         {
@@ -19,7 +18,7 @@ namespace HealthCare.Core.Models.UserModels
             LastName = lastName;
             Gender = gender;
             BirthDate = birthDate;
-            Role = RoleEnum.Doctor;
+            Role = RoleEnum.Doctor; 
         }
     }
 }
