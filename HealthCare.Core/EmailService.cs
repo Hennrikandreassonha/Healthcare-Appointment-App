@@ -72,7 +72,7 @@ namespace HealthCare.Core
                                 <li><strong>Time:</strong> {AppointmentDetails.DateTime.Hour:00}:{AppointmentDetails.DateTime.Minute:00}</li>
                             </ul>
                             <p>Thank you for choosing our service. If you have any questions or need to make changes, please contact us.</p>
-                            <p>Best regards,<br>The best healthcare app ever</p>
+                            <p>Best regards,<br><u>The best healthcare app ever</u></p>
                         </div>
                     </body>
                 </html>";
