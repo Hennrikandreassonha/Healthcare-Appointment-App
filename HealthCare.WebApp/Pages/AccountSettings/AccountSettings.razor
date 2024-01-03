@@ -56,8 +56,8 @@
                             if (i.DateTime >= DateTime.Now || i.DateTime == DateTime.Now)
                             {
                                 <ul>
-                                    <li>@i.DateTime</li>
                                     <li>@i.Service</li>
+                                    <li>@i.DateTime</li>
                                     @foreach (var c in careGivers)
                                     {
                                         if (i.CareGiverId == c.Id)
@@ -77,8 +77,8 @@
                             if (i.DateTime <= DateTime.Now)
                             {
                                 <ul>
-                                    <li>@i.DateTime</li>
                                     <li>@i.Service</li>
+                                    <li>@i.DateTime</li>
                                     @foreach (var c in careGivers)
                                     {
                                         if (i.CareGiverId == c.Id)
