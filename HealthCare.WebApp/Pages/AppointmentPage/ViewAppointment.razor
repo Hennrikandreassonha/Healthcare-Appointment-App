@@ -175,9 +175,8 @@
     }
     private void HandleBooking(Appointment appointment)
     {
-        var success = appointmentService.AddBooking(appointment, userLoggedIn.Id);
-        bool emailSentSuccess = false;
         var success = appointmentService.AddBooking(appointment, userLoggedIn.Id, selectedService);
+        bool emailSentSuccess = false;
         //Add Email sent here
         if (success)
             emailSentSuccess = SendEmail(appointment, userLoggedIn);

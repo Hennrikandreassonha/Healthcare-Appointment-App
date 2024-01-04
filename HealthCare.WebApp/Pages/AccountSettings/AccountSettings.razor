@@ -52,7 +52,7 @@
                     </div>
                     <div class="mb-3">
                         <label>Upcoming booking: </label>
-                        @foreach (var i in appointments)
+                        @* @foreach (var i in appointments)
                         {
                             if (i.DateTime >= DateTime.Now || i.DateTime == DateTime.Now)
                             {
@@ -95,7 +95,7 @@
                                     }
                                 </ul>
                             }
-                        }
+                        } *@
 
                         @if (upcomingAppointments.Count() > 0) {
                             <table>
@@ -195,7 +195,7 @@
         if (userAccount is Patient patient)
         {
             upcomingAppointments = dbContext.Appointment
-                .Where(a => a.PatientId == patient.Id && a.DateTime > DateTime.Now)
+                .Where(a => a.PatientId == patient.Id && a.DateTime >= DateTime.Now)
                 .ToList();
 
             previousAppointments = dbContext.Appointment
@@ -205,15 +205,15 @@
         else if (userAccount is CareGiver careGiver)
         {
             upcomingAppointments = dbContext.Appointment
-                .Where(a => a.CareGiverId == careGiver.Id && a.DateTime > DateTime.Now)
+                .Where(a => a.CareGiverId == careGiver.Id && a.DateTime >= DateTime.Now)
                 .ToList();
 
             previousAppointments = dbContext.Appointment
                 .Where(a => a.CareGiverId == careGiver.Id && a.DateTime <= DateTime.Now)
                 .ToList();
         }
-    }
-
         appointments = appointmentService.GetCurUserAppointments(userAccount.Id);
         careGivers = userService.GetCareGivers();
+    }
+
 }
