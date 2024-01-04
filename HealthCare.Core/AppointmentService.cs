@@ -12,6 +12,10 @@ namespace HealthCare.Core
         {
             _context = context;
         }
+        public IEnumerable<int> GetAvailableTimes()
+        {
+            return new List<int> { 8, 9, 10, 11, 13, 14, 15 };
+        }
         public List<Appointment> GetCurUserAppointments(int userId)
         {
             return _context.Appointment.Where(x => x.Patient.Id == userId).ToList();
@@ -22,6 +26,33 @@ namespace HealthCare.Core
                 .Where(x => x.DateTime.Year == date.Year && x.DateTime.DayOfYear == date.DayOfYear && x.PatientId == null).Include(x => x.CareGiver)
                 .ToList();
         }
+        public bool AddInitialAppointmentsForADay(int caregiverId, DateTime date)
+        {
+            List<int> availableTimes = GetAvailableTimes().ToList();
+
+            List<Appointment> initialAppointments = new List<Appointment>();
+
+            foreach (var hour in availableTimes)
+            {
+                var appointmentExists = _context.Appointment.Any(a =>
+                    a.CareGiverId == caregiverId &&
+                    a.DateTime.Year == date.Year &&
+                    a.DateTime.Month == date.Month &&
+                    a.DateTime.Day == date.Day &&
+                    a.DateTime.Hour == hour);
+
+                if (!appointmentExists)
+                {
+                    var appointment = new Appointment(caregiverId, new DateTime(date.Year, date.Month, date.Day, hour, 0, 0));
+                    initialAppointments.Add(appointment);
+                }
+            }
+
+            _context.AddRange(initialAppointments);
+            _context.SaveChanges();
+
+            return true;
+        }
         public bool AddInitialAppointment(int caregiverId, DateTime date)
         {
             //Adds the initial appointment with caregiverID and date.
@@ -29,6 +60,61 @@ namespace HealthCare.Core
             Appointment appointment = new(caregiverId, date);
             _context.Add(appointment);
             return true;
+        }
+        public bool AddInitialAppointment(int caregiverId, DateTime date, TimeSpan hour)
+        {
+            DateTime appointmentDateTime = date.Date + hour;
+
+            var appointmentToAdd = _context.Appointment.Where(a => a.CareGiverId == caregiverId && a.DateTime == appointmentDateTime)
+                .FirstOrDefault();
+
+            if (appointmentToAdd != null)
+            {
+                _context.Appointment.Add(appointmentToAdd);
+                _context.SaveChanges();
+
+                return true;
+            }
+
+            return false;
+        }
+        public bool RemoveInitialAppointment(int caregiverId, DateTime date, TimeSpan hour)
+        {
+            DateTime appointmentDateTime = date.Date + hour;
+
+            var appointmentToRemove = _context.Appointment.Where(a => a.CareGiverId == caregiverId && a.DateTime == appointmentDateTime)
+                .FirstOrDefault();
+
+            if (appointmentToRemove != null)
+            {
+                _context.Appointment.Remove(appointmentToRemove);
+                _context.SaveChanges();
+
+                return true;
+            }
+
+            return false;
+        }
+        public IEnumerable<Appointment> GetInitialAppointmentsByDate(DateTime date)
+        {
+            return _context.Appointment.Where(x => x.DateTime.Year == date.Year && x.DateTime.DayOfYear == date.DayOfYear && x.PatientId == null)
+                .Include(x => x.CareGiver).ToList();
+        }
+        public bool RemoveInitialAppointmentsForADay(int caregiverId, DateTime date)
+        {
+            var appointmentsToRemove = _context.Appointment
+                .Where(a => a.CareGiverId == caregiverId && a.DateTime.Date == date.Date && a.PatientId == null).ToList();
+
+            _context.RemoveRange(appointmentsToRemove);
+            _context.SaveChanges();
+
+            return true;
+        }
+        public IEnumerable<Appointment> GetDoctorsAppointmentsByDate(int doctorId, DateTime date)
+        {
+            return _context.Appointment
+                .Where(x => x.DateTime.Year == date.Year && x.DateTime.DayOfYear == date.DayOfYear && x.CareGiverId == doctorId &&
+                (x.PatientId == null || x.PatientId != null)).ToList();
         }
         public bool AddBooking(Appointment appointment, int userId, ServiceEnum service)
         {
