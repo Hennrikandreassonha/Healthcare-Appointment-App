@@ -1,6 +1,7 @@
 ﻿@page "/accountsettings"
 @inject HealthCare.Core.UserService.IUserService userService
 @inject HealthCare.Core.AppointmentService appointmentService
+@inject HealthCare.Core.Data.HealthcareContext dbContext
 <AuthorizeView>
     <Authorized>
         <div class="container">
@@ -95,6 +96,63 @@
                                 </ul>
                             }
                         }
+
+                        @if (upcomingAppointments.Count() > 0) {
+                            <table>
+                                <thead>
+                                    <tr>
+                                        @* <th>Doctor</th> *@
+                                        <th>Service</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in upcomingAppointments)
+                                    {
+                                        <tr>
+                                            @* <td>@item.CareGiver.FirstName @item.CareGiver.LastName</td> *@
+                                            <td>@(item.Service != null ? item.Service.Value : "No service booked")</td>
+                                            <td>@item.DateTime</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p>No bookings found!</p>
+                        }
+
+                    </div>
+                    <div class="mb-3">
+                        <label>Previous booking: </label>
+                        @if (previousAppointments.Count() > 0)
+                        {
+                            <table>
+                                <thead>
+                                    <tr>
+                                        @* <th>Doctor</th> *@
+                                        <th>Service</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (Appointment item in previousAppointments)
+                                    {
+                                        <tr>
+                                            @* <td>@item.CareGiver.FirstName @item.CareGiver.LastName</td> *@
+                                            <td>@(item.Service != null ? item.Service.Value : "No service booked")</td>
+                                            <td>@item.DateTime</td>
+                                        </tr>
+
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p>No bookings found!</p>
+                        }
                     </div>
                 </div>
             </div>
@@ -126,13 +184,36 @@
     private User userAccount = new User();
     private List<Appointment> appointments = new List<Appointment>();
     private List<CareGiver> careGivers = new List<CareGiver>();
+    private List<Appointment> upcomingAppointments = new List<Appointment>();
+    private List<Appointment> previousAppointments = new List<Appointment>();
 
     protected override async Task OnInitializedAsync()
     {
         userEmail = await userService.GetEmailAsync();
         userAccount = userService.GetByEmail(userEmail);
 
+        if (userAccount is Patient patient)
+        {
+            upcomingAppointments = dbContext.Appointment
+                .Where(a => a.PatientId == patient.Id && a.DateTime > DateTime.Now)
+                .ToList();
+
+            previousAppointments = dbContext.Appointment
+                .Where(a => a.PatientId == patient.Id && a.DateTime <= DateTime.Now)
+                .ToList();
+        }
+        else if (userAccount is CareGiver careGiver)
+        {
+            upcomingAppointments = dbContext.Appointment
+                .Where(a => a.CareGiverId == careGiver.Id && a.DateTime > DateTime.Now)
+                .ToList();
+
+            previousAppointments = dbContext.Appointment
+                .Where(a => a.CareGiverId == careGiver.Id && a.DateTime <= DateTime.Now)
+                .ToList();
+        }
+    }
+
         appointments = appointmentService.GetCurUserAppointments(userAccount.Id);
         careGivers = userService.GetCareGivers();
-    }
 }

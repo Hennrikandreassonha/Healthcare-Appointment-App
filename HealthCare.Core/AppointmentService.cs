@@ -1,5 +1,6 @@
 ﻿using System;
 using HealthCare.Core.Data;
+using HealthCare.Core.Models.Appointment;
 using HealthCare.Core.Models.AppointmentModels;
 using Microsoft.EntityFrameworkCore;
 namespace HealthCare.Core
@@ -29,13 +30,14 @@ namespace HealthCare.Core
             _context.Add(appointment);
             return true;
         }
-        public bool AddBooking(Appointment appointment, int userId)
+        public bool AddBooking(Appointment appointment, int userId, ServiceEnum service)
         {
             //By adding the patient this will complete the booking.
             try
             {
                 _context.Update(appointment);
                 appointment.PatientId = userId;
+                appointment.Service = service;
                 _context.SaveChanges();
             }
             catch (Exception ex)
