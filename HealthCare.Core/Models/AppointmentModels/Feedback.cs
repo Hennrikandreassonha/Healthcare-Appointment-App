@@ -9,9 +9,17 @@ namespace HealthCare.Core.Models.Appointment
     {
         public int Id { get; set; }
         public string FeedbackText { get; set; }
+        //1-5 stars
+        public int Stars { get; set; }
         public DateTime FeedbackTime { get; set; }
         public int PatientId { get; set; }
         public Patient Patient { get; set; }
-        //Koppla till appointment eller inte?
+        public Feedback(string feedbackText, int stars, int patientId)
+        {
+            FeedbackText = feedbackText;
+            Stars = stars;
+            PatientId = patientId;
+            FeedbackTime = DateTime.Now;
+        }
     }
     }
