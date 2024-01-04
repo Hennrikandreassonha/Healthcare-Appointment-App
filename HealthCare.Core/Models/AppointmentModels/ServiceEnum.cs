@@ -6,7 +6,8 @@ namespace HealthCare.Core.Models.Appointment
     {
         [Display(Name = "General checkup")]
         GeneralCheckup,
-        Vaccinaction,
+		[Display(Name = "Vaccination")]
+		Vaccinaction,
         [Display(Name = "Emergency care")]
         EmergencyCare,
         [Display(Name = "X-ray")]
