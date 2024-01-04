@@ -20,9 +20,10 @@ builder.Services.AddScoped<FeedbackService>();
 builder.Services.AddScoped<AppointmentService>();
 builder.Services.AddScoped<BookingService>();
 builder.Services.AddScoped<AuthService>();
-builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ProtectedSessionStorage>();
+builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
+// Example registration in Startup.cs
 builder.Services.AddScoped<UserService>();
 
 //For Auth
