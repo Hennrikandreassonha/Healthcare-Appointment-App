@@ -2,13 +2,15 @@
 @page "/"
 @inject AuthenticationStateProvider authStateProvider
 @inject IHttpContextAccessor _httpContextAccessor;
-
+@inject HealthCare.Core.UserService.IUserService userService
+@inject HealthCare.Core.Data.HealthcareContext _context
+@inject EmailService emailService
 <PageTitle>Index</PageTitle>
 <div class="@(leavingFeedback != null ? "blur-filter" : "")">
      <AuthorizeView>
           <Authorized>
                <div class="header-div">
-                    <h1>Hello, @context.User.Identity.Name! Welcome to <span class="color-blue">Health Care AB</span>
+                    <h1>Dear, @context.User.Identity.Name! Welcome to <span class="color-blue">Health Care AB</span>
                     </h1>
                     <p>
                          you have <u>@UpcomingAppointments.Count</u> upcoming appointments
@@ -96,7 +98,8 @@
                </div>
           </Authorized>
           <NotAuthorized>
-               <h1>Hello, Guest!</h1>
+               <h1>Dear client</h1>
+               <p> You'll need to <a href="/login">log in</a> to see any information.</p>
           </NotAuthorized>
      </AuthorizeView>
 </div>

@@ -4,6 +4,7 @@
 @page "/appointment"
 @using System.Globalization;
 @using HealthCare.Core.Models.Appointment;
+@inject EmailService emailService
 
 <div class="appointment-flex">
     <div class="calendar">
@@ -68,6 +69,10 @@
             {
                 <p class="alert alert-success">@successMsg</p>
             }
+            @if (errorMsg != "")
+            {
+                <p class="alert alert-error">@successMsg</p>
+            }
             <table>
                 <thead>
                     <tr>
@@ -129,6 +134,7 @@
     private CalendarInfo CalendarInfoObj = new();
     private Patient? userLoggedIn;
     private string successMsg = "";
+    private string errorMsg = "";
     Dictionary<DayOfWeek, int> weekdayDictionary = new Dictionary<DayOfWeek, int>
 {
 { DayOfWeek.Monday, 0 },
@@ -169,9 +175,22 @@
     private void HandleBooking(Appointment appointment)
     {
         var success = appointmentService.AddBooking(appointment, userLoggedIn.Id, selectedService);
-        //Add Email sent here
+        bool emailSentSuccess = false;
         if (success)
-            successMsg = "Your appointment was booked successfully!";
+            emailSentSuccess = SendEmail(appointment, userLoggedIn);
+        if (emailSentSuccess)
+        {
+            successMsg = "Your appointment was booked successfully! Please check your email for confirmation.";
+            return;
+        }
+
+        errorMsg = "There was a problem booking your appointment, please try again";
+    }
+    public bool SendEmail(Appointment appointment, User user)
+    {
+        emailService = new EmailService(user.Email, appointment);
+        emailService.SendEmail();
+        return true;
     }
     private void UpdateDaysOfMonth(int year, int month)
     {
