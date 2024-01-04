@@ -1,8 +1,6 @@
 ﻿@page "/accountsettings"
 @inject HealthCare.Core.UserService.IUserService userService
-@inject HealthCare.Core.Data.HealthcareContext dbContext
 @inject HealthCare.Core.AppointmentService appointmentService
-
 <AuthorizeView>
     <Authorized>
         <div class="container">
@@ -113,6 +111,7 @@
                         }
 
                        @*  @foreach (var i in appointments)
+
                         {
                             if (i.DateTime >= DateTime.Now || i.DateTime == DateTime.Now)
                             {
@@ -155,9 +154,10 @@
                                     }
                                 </ul>
                             }
-
                         }
+
                     </div> *@
+
                 </div>
             </div>
         </div>
@@ -186,43 +186,15 @@
 
     private string? userEmail;
     private User userAccount = new User();
-
-    private List<Appointment> upcomingAppointments = new List<Appointment>();
-    private List<Appointment> previousAppointments = new List<Appointment>();
-
     private List<Appointment> appointments = new List<Appointment>();
     private List<CareGiver> careGivers = new List<CareGiver>();
-
 
     protected override async Task OnInitializedAsync()
     {
         userEmail = await userService.GetEmailAsync();
         userAccount = userService.GetByEmail(userEmail);
 
-
-        if (userAccount is Patient patient)
-        {
-            upcomingAppointments = dbContext.Appointment
-                .Where(a => a.PatientId == patient.Id && a.DateTime > DateTime.Now)
-                .ToList();
-
-            previousAppointments = dbContext.Appointment
-                .Where(a => a.PatientId == patient.Id && a.DateTime <= DateTime.Now)
-                .ToList();
-        }
-        else if (userAccount is CareGiver careGiver)
-        {
-            upcomingAppointments = dbContext.Appointment
-                .Where(a => a.CareGiverId == careGiver.Id && a.DateTime > DateTime.Now)
-                .ToList();
-
-            previousAppointments = dbContext.Appointment
-                .Where(a => a.CareGiverId == careGiver.Id && a.DateTime <= DateTime.Now)
-                .ToList();
-        }
-
         appointments = appointmentService.GetCurUserAppointments(userAccount.Id);
         careGivers = userService.GetCareGivers();
-
     }
 }

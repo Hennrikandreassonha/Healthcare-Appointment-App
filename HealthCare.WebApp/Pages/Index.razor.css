@@ -96,7 +96,6 @@ header {
 
 .blur-filter {
     filter: blur(1.4px);
-
 }
 
 #close-btn {
@@ -105,11 +104,15 @@ header {
     right: 30px;
     cursor: pointer;
 }
-.feedback-btn{
-    width:130px;
+
+.feedback-btn {
+    width: 130px;
 }
+
 .rating {
-    display: inline-block;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
 }
 
 .rating input {
@@ -118,19 +121,26 @@ header {
 
 .rating label {
     cursor: pointer;
-    font-size: 2em;
+    font-size: 2.5rem;
     color: #ddd;
 }
 
 .rating label:hover,
-.rating label:hover ~ label,
-.rating input:checked ~ label {
+.rating label:hover~label,
+.rating input:checked~label {
     color: #ffbf00;
 }
 
-.rating input:checked ~ label:hover,
-.rating input:checked ~ label:hover ~ label,
-.rating input:checked ~ label {
+.rating input:checked~label:hover,
+.rating input:checked~label:hover~label,
+.rating input:checked~label {
     color: #ffd700;
+}
 
+.feedbackform {
+    padding: 0 1rem;
+}
+
+.submit-feedback {
+    margin: 1rem;
 }

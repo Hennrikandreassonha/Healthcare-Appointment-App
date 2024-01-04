@@ -12,17 +12,12 @@
 		<UseRazorSourceGenerator>false</UseRazorSourceGenerator>
 	</PropertyGroup>
 	<ItemGroup>
-	  <Compile Remove="Pages\Appointment\**" />
-	  <Content Remove="Pages\Appointment\**" />
-	  <EmbeddedResource Remove="Pages\Appointment\**" />
-	  <None Remove="Pages\Appointment\**" />
-	</ItemGroup>
-	<ItemGroup>
 		<None Remove="Pages\Feedback\" />
 		<None Remove="Pages\Appointment\" />
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="Pages\Feedback\" />
+		<Folder Include="Pages\AppointmentPage\" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\HealthCare.Core\HealthCare.Core.csproj">

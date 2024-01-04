@@ -1,16 +1,21 @@
-﻿@inject BookingService BookingService
-@page "/"
+﻿@page "/"
 @inject AuthenticationStateProvider authStateProvider
 @inject IHttpContextAccessor _httpContextAccessor;
 @inject HealthCare.Core.UserService.IUserService userService
-@inject HealthCare.Core.Data.HealthcareContext _context
-@inject EmailService emailService
+@using HealthCare.Core.Data
+@using HealthCare.Core.Models.AppointmentModels
+@inject HealthcareContext _context
+@inject EmailService emailService;
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
+
+
+
 <PageTitle>Index</PageTitle>
 <div class="@(leavingFeedback != null ? "blur-filter" : "")">
      <AuthorizeView>
           <Authorized>
                <div class="header-div">
-                    <h1>Dear, @context.User.Identity.Name! Welcome to <span class="color-blue">Health Care AB</span>
+                    <h1>Hello, @context.User.Identity.Name! Welcome to <span class="color-blue">Health Care AB</span>
                     </h1>
                     <p>
                          you have <u>@UpcomingAppointments.Count</u> upcoming appointments
@@ -85,9 +90,10 @@
                                                   <td>@GetNameOfDoctor(appointment.CareGiverId)</td>
                                                   <td>
 
-                                                       
-                                                    
-                                                
+                                                       <button class="btn btn-success feedback-btn"
+                                                            @onclick="(e) => LeaveFeedback(appointment)">Leave
+                                                            feedback</button>
+
                                                   </td>
                                              </tr>
                                         }
@@ -99,8 +105,10 @@
                </div>
           </Authorized>
           <NotAuthorized>
+            
                <h1>Dear client</h1>
                <p> You'll need to <a href="/login">log in</a> to see any information</p>
+
           </NotAuthorized>
      </AuthorizeView>
 </div>
@@ -110,8 +118,7 @@
           <div id="feedback-container">
                <header>
                     <h3>Feedback</h3>
-                    <img @onclick="@SubmitFeedback" src="\remove.png" id="close-btn" title="Close">
-
+                    <img @onclick="@CloseFeedback" src="\remove.png" id="close-btn" title="Close">
                </header>
                <p class="feedback-text"><u>Please submit your feedback
                     </u><br> (Only feedbacks with 3 or more stars will be saved)
@@ -126,42 +133,49 @@
                     </li>
                     <li>
 
-                         <strong>Service:</strong>General Checkup
-                    </li>
-               </ul>
-               <button class="btn btn-primary" @onclick="(e) => SubmitFeedback()">Leave
-                    feedback
-                    </button>
-
-               <ul>
-                   <li>
                          <strong>Service:</strong> General Checkup
                     </li>
                </ul>
-               <EditForm Model="leavingFeedback">
-                    <InputTextArea @bind-Value="leavingFeedback.Feedback" class="form-control" placeholder="Last Name"
-                         required />
-                    <div class="rating">
-                         <input type="radio" id="star1" name="rating" value="1">
-                         <label for="star1">☆</label>
-                         <input type="radio" id="star2" name="rating" value="2">
-                         <label for="star2">☆</label>
-                         <input type="radio" id="star3" name="rating" value="3">
-                         <label for="star3">☆</label>
-                         <input type="radio" id="star4" name="rating" value="4">
-                         <label for="star4">☆</label>
-                         <input type="radio" id="star5" name="rating" value="5">
-                         <label for="star5">☆</label>
-                    </div>
-               </EditForm>
-               <button class="btn btn-primary" @onclick="(e) => SubmitFeedback()">Leave feedback</button>
+               <div class="feedbackform">
+                    <EditForm Model="leavingFeedback" OnSubmit="SubmitFeedback">
+                         <InputTextArea @bind-Value="leavingFeedback.Feedback" class="form-control"
+                              placeholder="Greatest service ever" required />
+                         <div class="rating">
+                              <label for="star1">☆</label>
+                              <input type="radio" id="star2" name="rating" value="2"
+                              checked="@(leavingFeedback.Rating == 1)" onchange="@(() => leavingFeedback.Rating = 1)">
+                              <label for="star2">☆</label>
+                              <input type="radio" id="star3" name="rating" value="3">
+                              <label for="star3">☆</label>
+                              <input type="radio" id="star4" name="rating" value="4">
+                              <label for="star4">☆</label>
+                              <input type="radio" id="star5" name="rating" value="5">
+                              <label for="star5">☆</label>
 
-               <p>Thank you for your cooperation,<br><u>The best healthcare app ever</u></p>
+                         <InputRadioGroup @bind-Value="leavingFeedback.Feedback">
+                              <InputRadio Value="1"></InputRadio>
+                              <label for="star1">☆</label>
+                              <InputRadio Value="1" id="star1"></InputRadio>
+                         </InputRadioGroup>
+                         </div>
+                         <div class="rating">
+                              <button class="btn btn-primary submit-feedback" type="submit">Leave
+                                   feedback</button>
+                         </div>
+                    </EditForm>
+               </div>
           </div>
      </div>
+     <label>
+          <input type="radio" name="edition" checked="@(EditionCode == 1)" onchange="@(() => EditionCode = 1)" /> Home
+     </label>
+      <label>
+          <input type="radio" name="edition" checked="@(EditionCode == 2)" onchange="@(() => EditionCode = 2)" /> Home
+     </label>
 }
 @code {
      private string userName = "";
+     int EditionCode = 1;
      private User LoggedInUser;
      private List<Appointment> UpcomingAppointments = new();
      private List<Appointment> PreviousAppointments = new();
@@ -215,9 +229,13 @@
                }
           }
      }
-     private void SubmitFeedback()
+     private void CloseFeedback()
      {
           leavingFeedback = null;
+     }
+     private void SubmitFeedback()
+     {
+          Console.WriteLine();
      }
      private string GetNameOfDoctor(int careGiverId)
      {
