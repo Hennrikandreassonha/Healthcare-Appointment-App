@@ -37,7 +37,6 @@ namespace HealthCare.Core
             {
                 _context.Update(appointment);
                 appointment.PatientId = userId;
-                appointment.Service = service;
                 _context.SaveChanges();
             }
             catch (Exception ex)
@@ -73,7 +72,6 @@ namespace HealthCare.Core
             }
             _context.SaveChanges();
         }
-
     }
 }
 
