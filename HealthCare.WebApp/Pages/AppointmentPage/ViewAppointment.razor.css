@@ -117,11 +117,6 @@ table {
 table * {
     padding: 0.5rem;
 }
-
-table button {
-    width: 80px;
-}
-
 tr {
     border: 1px solid black;
 }

@@ -66,7 +66,7 @@ namespace HealthCare.Core
                             <p>Your appointment has been successfully booked. Below are the details:</p>
                             <ul>
                                 <li><strong>Doctor:</strong> {AppointmentDetails.CareGiver.FirstName} {AppointmentDetails.CareGiver.LastName}</li>
-                                <li><strong>Service:</strong> {AppointmentDetails.Service} </li>
+                                <li><strong>Service:</strong> General Checkup</li>
                                 <li><strong>Date:</strong> {AppointmentDetails.DateTime.ToShortDateString()}</li>
                                 <li><strong>Time:</strong> {AppointmentDetails.DateTime.Hour:00}:{AppointmentDetails.DateTime.Minute:00}</li>
                             </ul>
@@ -87,7 +87,7 @@ namespace HealthCare.Core
                             <p>Your appointment has been successfully canceled. Below are the details:</p>
                             <ul>
                                 <li><strong>Doctor:</strong> {AppointmentDetails.CareGiver.FirstName} {AppointmentDetails.CareGiver.LastName}</li>
-                                <li><strong>Service:</strong> {AppointmentDetails.Service}</li>
+                                <li><strong>Service:</strong> General Checkup</li>
                                 <li><strong>Date:</strong> {AppointmentDetails.DateTime.ToShortDateString()}</li>
                                 <li><strong>Time:</strong> {AppointmentDetails.DateTime.Hour:00}:{AppointmentDetails.DateTime.Minute:00}</li>
                             </ul>

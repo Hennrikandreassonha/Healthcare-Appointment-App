@@ -1,14 +1,9 @@
 ﻿@inject AppointmentService appointmentService
 @inject AuthenticationStateProvider authStateProvider
 @inject UserService userService;
+@inject EmailService emailService;
 @page "/appointment"
-
-@using System.Globalization;
-@using HealthCare.Core.Models.Appointment;
-@inject EmailService emailService
-
 @using System.Globalization
-
 
 <div class="appointment-flex">
     <div class="calendar">
@@ -66,7 +61,7 @@
             <header>
 
                 <h3>There are @appointmentsForDate.Length appointments available for booking @chosenDay of
-                    @CalendarInfoObj.GetMonthName(CalendarInfoObj.Month);
+                    @CalendarInfoObj.GetMonthName(CalendarInfoObj.Month)
                 </h3>
             </header>
             @if (successMsg != "")
@@ -130,6 +125,7 @@
     private Patient? userLoggedIn;
     private string successMsg = "";
     private string errorMsg = "";
+
     Dictionary<DayOfWeek, int> weekdayDictionary = new Dictionary<DayOfWeek, int>
 {
 { DayOfWeek.Monday, 0 },
@@ -140,11 +136,6 @@
 { DayOfWeek.Saturday, 5 },
 { DayOfWeek.Sunday, 6 }
 };
-    private ServiceEnum selectedService;
-    private void HandleServiceSelection(ServiceEnum service)
-    {
-        selectedService = service;
-    }
 
     protected override async Task OnInitializedAsync()
     {
