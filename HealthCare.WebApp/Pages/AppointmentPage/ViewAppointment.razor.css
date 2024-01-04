@@ -26,7 +26,7 @@ header {
     outline: 2px solid #1474bb;
 }
 
-.day-info {
+#day-info {
     margin: 1rem 0;
 }
 
@@ -117,6 +117,11 @@ table {
 table * {
     padding: 0.5rem;
 }
+
+table button {
+    width: 80px;
+}
+
 tr {
     border: 1px solid black;
 }
