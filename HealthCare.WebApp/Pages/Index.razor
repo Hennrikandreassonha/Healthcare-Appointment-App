@@ -1,30 +1,203 @@
-﻿@inject BookingService BookingService
-@page "/"
+﻿@page "/"
 @inject AuthenticationStateProvider authStateProvider
 @inject IHttpContextAccessor _httpContextAccessor;
+@inject HealthCare.Core.UserService.IUserService userService
+@using HealthCare.Core.Data
+@using HealthCare.Core.Models.AppointmentModels
+@inject HealthcareContext _context
+@inject EmailService emailService;
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
+
+
 
 <PageTitle>Index</PageTitle>
 <div>
      <AuthorizeView>
           <Authorized>
-               <h1>Hello, @context.User.Identity.Name!</h1>
-               @username
+               <div class="header-div">
+                    <h1>Hello, @context.User.Identity.Name! Welcome to <span class="color-blue">Health Care AB</span>
+                    </h1>
+                    <p>
+                         you have <u>@UpcomingAppointments.Count</u> upcoming appointments
+                    </p>
+                    @if (successMsg != "")
+                    {
+                         <p class="alert alert-success">@successMsg</p>
+                    }
+               </div>
+
+               <div class="container-flex">
+                    <div class="upcoming-div">
+                         <header>
+                              <h3>Upcoming appointments</h3>
+                         </header>
+                         @if (UpcomingAppointments != null)
+                         {
+                              <table>
+                                   <thead>
+                                        <tr>
+                                             <th>Date</th>
+                                             <th>Service</th>
+                                             <th>Doctor</th </tr>
+                                   </thead>
+                                   <tbody>
+                                        @foreach (Appointment appointment in UpcomingAppointments)
+                                        {
+                                             <tr>
+                                                  <td>@appointment.DateTime</td>
+                                                  <td>@appointment.Service</td>
+                                        @if(LoggedInUser is Patient)
+                                        {
+                                            <td>@GetNameOfDoctor(appointment.CareGiverId)</td>
+
+                                        }
+                                        else
+                                        {
+                                             <td>@GetNameOfPatient(appointment.PatientId)</td>
+                                        }
+                                        <td>
+                                                       <button class="btn btn-danger"
+                                                            @onclick="(e) => RemoveAppointment(appointment)">Cancel</button>
+                                                  </td>
+                                             </tr>
+                                        }
+                                   </tbody>
+                              </table>
+                         }
+                         else
+                         {
+                              <p>No upcoming appointments</p>
+                         }
+                    </div>
+                    <div class="passed-div">
+                         <header>
+                              <h3>Previous appointments</h3>
+                         </header>
+                         <table>
+                              <thead>
+                                   <tr>
+                                        <th>Date</th>
+                                        <th>Service</th>
+                                        <th>Doctor</th </tr>
+                              </thead>
+                              <tbody>
+                                   @foreach (Appointment appointment in PreviousAppointments)
+                                   {
+                                        <tr>
+                                             <td>@appointment.DateTime</td>
+                                             <td>@appointment.Service</td>
+                                             <td>@GetNameOfDoctor(appointment.CareGiverId)</td>
+                                             <td>
+                                                  <button class="btn btn-danger"
+                                                       @onclick="(e) => LeaveFeedback(appointment)">Leave
+                                                       feedback</button>
+                                             </td>
+                                        </tr>
+                                   }
+                              </tbody>
+                         </table>
+
+                    </div>
+               </div>
           </Authorized>
           <NotAuthorized>
                <h1>Hello, Guest!</h1>
+               <p> You'll need to <a href="/login">log in</a> to see any information.</p>
           </NotAuthorized>
      </AuthorizeView>
 </div>
-<BookingComponent />
 
 @code {
-     string username = "";
-     protected override async Task OnInitializedAsync()
-     {
-          var customAuthStateProvider = authStateProvider as AuthStateProvider;
-          var authState = await authStateProvider.GetAuthenticationStateAsync();
-          var user = authState.User;
+    private string userName = "";
+    private User LoggedInUser;
+    private List<Appointment> UpcomingAppointments = new();
+    private List<Appointment> PreviousAppointments = new();
+    public string NameOfDoctor = "";
+    public string NameOfPatient = "";
+    string successMsg = "";
 
-          username = user.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
+    protected override async Task OnInitializedAsync()
+    {
+        userName = await userService.GetEmailAsync();
+        LoggedInUser = userService.GetByEmail(userName);
+        GetAllMeetings(LoggedInUser);
+    }
+    private void GetAllMeetings(User loggedInUser)
+    {
+        List<Appointment> appointments;
+        UpcomingAppointments.Clear();
+        PreviousAppointments.Clear();
+
+        if (loggedInUser is Patient)
+        {
+            appointments = _context.Appointment.Where(x => x.PatientId == loggedInUser.Id).ToList();
+
+            foreach (var appointment in appointments)
+            {
+                if (appointment.DateTime > DateTime.Now)
+                {
+                    UpcomingAppointments.Add(appointment);
+                }
+                else
+                {
+                    PreviousAppointments.Add(appointment);
+                }
+            }
+        }
+        else if (loggedInUser is CareGiver)
+        {
+              appointments = _context.Appointment.Where(x => x.CareGiverId == loggedInUser.Id).ToList();
+
+            foreach (var appointment in appointments)
+            {
+                if (appointment.DateTime > DateTime.Now)
+                {
+                    UpcomingAppointments.Add(appointment);
+                }
+                else
+                {
+                    PreviousAppointments.Add(appointment);
+                }
+            }
+        }
+    }
+     private string GetNameOfDoctor(int careGiverId)
+     {
+          var careGiver = _context.CareGiver.FirstOrDefault(x => x.Id == careGiverId);
+
+          return NameOfDoctor = $"{careGiver.FirstName} {careGiver.LastName}";
+     }
+
+     private string GetNameOfPatient(int? patientId)
+     {
+          var patient = _context.Patient.FirstOrDefault(x => x.Id == patientId);
+
+          return NameOfPatient = $"{patient.FirstName} {patient.LastName}";
+     }
+
+     private void RemoveAppointment(Appointment appointment)
+     {
+          if (appointment != null)
+          {
+               SendCancelEmail(appointment, LoggedInUser);
+               appointment.PatientId = null;
+               appointment.Service = null;
+
+               _context.Update(appointment);
+               _context.SaveChanges();
+
+               successMsg = "Your booking has been canceled!";
+               GetAllMeetings(LoggedInUser);
+          }
+     }
+     private void LeaveFeedback(Appointment appointment)
+     {
+
+     }
+     public bool SendCancelEmail(Appointment appointment, User user)
+     {
+          emailService = new EmailService(user.Email, appointment);
+          emailService.SendEmail(false);
+          return true;
      }
 }
