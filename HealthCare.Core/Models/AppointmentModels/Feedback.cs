@@ -14,4 +14,4 @@ namespace HealthCare.Core.Models.Appointment
         public Patient Patient { get; set; }
         //Koppla till appointment eller inte?
     }
-}
+    }
