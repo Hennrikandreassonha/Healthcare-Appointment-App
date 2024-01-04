@@ -22,4 +22,4 @@ namespace HealthCare.Core.Models.Appointment
             FeedbackTime = DateTime.Now;
         }
     }
-}
+    }

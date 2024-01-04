@@ -10,8 +10,8 @@ namespace HealthCare.Core.UserService
 {
     public interface IUserService
     {
-       User? AddUser(User user);
-       User GetByEmail(string email);
+        User? AddUser(User user);
+        User GetByEmail(string email);
         Task<string> GetEmailAsync();
         Task UpdateUserAsync(User user);
         List<CareGiver> GetCareGivers();
