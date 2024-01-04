@@ -1,6 +1,5 @@
 ﻿using System;
 using HealthCare.Core.Data;
-using HealthCare.Core.Models.Appointment;
 using HealthCare.Core.Models.AppointmentModels;
 using Microsoft.EntityFrameworkCore;
 namespace HealthCare.Core
@@ -33,7 +32,6 @@ namespace HealthCare.Core
             {
                 _context.Update(appointment);
                 appointment.PatientId = userId;
-                appointment.Service = service;
                 _context.SaveChanges();
             }
             catch (Exception ex)

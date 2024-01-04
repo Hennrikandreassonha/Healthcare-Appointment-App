@@ -1,6 +1,8 @@
 ﻿@page "/accountsettings"
 @inject HealthCare.Core.UserService.IUserService userService
 @inject HealthCare.Core.Data.HealthcareContext dbContext
+@inject HealthCare.Core.AppointmentService appointmentService
+
 <AuthorizeView>
     <Authorized>
         <div class="container">
@@ -51,6 +53,7 @@
                     </div>
                     <div class="mb-3">
                         <label>Upcoming booking: </label>
+
                         @if (upcomingAppointments.Count() > 0) {
                             <table>
                                 <thead>
@@ -106,6 +109,51 @@
                         else
                         {
                             <p>No bookings found!</p>
+
+                        @foreach (var i in appointments)
+                        {
+                            if (i.DateTime >= DateTime.Now || i.DateTime == DateTime.Now)
+                            {
+                                <ul>
+                                    <div>@i.Service</div>
+                                    <div>@i.DateTime</div>
+                                    @foreach (var c in careGivers)
+                                    {
+                                        if (i.CareGiverId == c.Id)
+                                        {
+                                            <div>@c.FirstName</div>
+                                            <div>@c.Email</div>
+                                        }
+                                    }
+                                </ul>
+                            }
+                        }
+                    </div>
+                    <div class="mb-3">
+                        <label>Previous booking: </label>
+                        @foreach (var i in appointments)
+                        {
+                            if (i.DateTime <= DateTime.Now)
+                            {
+                                <ul>
+                                    <div>@i.Service</div>
+                                    <div>@i.DateTime</div>
+                                    @foreach (var c in careGivers)
+                                    {
+                                        if (i.CareGiverId == c.Id)
+                                        {
+                                            <div>@c.FirstName</div>
+                                            <div>@c.Email</div>
+                                        }
+                                    }
+                                    @if (i.Feedback != null)
+                                    {
+                                        <div>Feedback:</div>
+                                        <div>@i.Feedback</div>
+                                    }
+                                </ul>
+                            }
+
                         }
                         
                     </div>
@@ -137,13 +185,19 @@
 
     private string? userEmail;
     private User userAccount = new User();
+
     private List<Appointment> upcomingAppointments = new List<Appointment>();
     private List<Appointment> previousAppointments = new List<Appointment>();
+
+    private List<Appointment> appointments = new List<Appointment>();
+    private List<CareGiver> careGivers = new List<CareGiver>();
+
 
     protected override async Task OnInitializedAsync()
     {
         userEmail = await userService.GetEmailAsync();
         userAccount = userService.GetByEmail(userEmail);
+
 
         if (userAccount is Patient patient)
         {
@@ -165,6 +219,9 @@
                 .Where(a => a.CareGiverId == careGiver.Id && a.DateTime <= DateTime.Now)
                 .ToList();
         }
-    }
 
+        appointments = appointmentService.GetCurUserAppointments(userAccount.Id);
+        careGivers = userService.GetCareGivers();
+
+    }
 }
