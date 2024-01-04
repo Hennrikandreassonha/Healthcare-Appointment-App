@@ -2,7 +2,8 @@
 @inject AuthenticationStateProvider authStateProvider
 @inject UserService userService;
 @page "/appointment"
-@using System.Globalization
+@using System.Globalization;
+@using HealthCare.Core.Models.Appointment;
 
 <div class="appointment-flex">
     <div class="calendar">
@@ -83,6 +84,15 @@
                             <td>@item.CareGiver.Email</td>
                             <td>@item.DateTime.ToString("M/d/yyyy h:mm") - @item.DateTime.AddHours(1).ToString("h:mm")</td>
                             <td>
+                                <select id="selectedService" @onchange="@(e => HandleServiceSelection((ServiceEnum)Enum.Parse(typeof(ServiceEnum), e.Value.ToString())))">
+                                    <option value="">Select Service</option>
+                                    @foreach (ServiceEnum service in Enum.GetValues(typeof(ServiceEnum)))
+                                    {
+                                        <option value="@service">@service</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
                                 <button class="btn btn-primary" @onclick="() => HandleBooking(item)">Book</button>
                             </td>
                         </tr>
@@ -129,6 +139,11 @@
 { DayOfWeek.Saturday, 5 },
 { DayOfWeek.Sunday, 6 }
 };
+    private ServiceEnum selectedService;
+    private void HandleServiceSelection(ServiceEnum service)
+    {
+        selectedService = service;
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -153,7 +168,7 @@
     }
     private void HandleBooking(Appointment appointment)
     {
-        var success = appointmentService.AddBooking(appointment, userLoggedIn.Id);
+        var success = appointmentService.AddBooking(appointment, userLoggedIn.Id, selectedService);
         //Add Email sent here
         if (success)
             successMsg = "Your appointment was booked successfully!";
