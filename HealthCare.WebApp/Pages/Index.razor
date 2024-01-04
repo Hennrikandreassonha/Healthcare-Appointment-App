@@ -132,7 +132,7 @@
                     </li>
                </ul>
                <EditForm Model="leavingFeedback">
-                    <InputTextArea @bind-Value="leavingFeedback.Feedback" class="form-control" placeholder="Last Name"
+                    <InputTextArea @bind-Value="leavingFeedback.Feedback" class="form-control" placeholder="Feedback..."
                          required />
                     <div class="rating">
                          <input type="radio" id="star1" name="rating" value="1">
@@ -148,7 +148,6 @@
                     </div>
                </EditForm>
                <button class="btn btn-primary" @onclick="(e) => SubmitFeedback()">Leave feedback</button>
-               <p>Thank you for your cooperation,<br><u>The best healthcare app ever</u></p>
           </div>
      </div>
 }

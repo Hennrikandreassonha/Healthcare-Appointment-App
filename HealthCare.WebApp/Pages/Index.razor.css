@@ -108,7 +108,9 @@ header {
     width:130px;
 }
 .rating {
-    display: inline-block;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
 }
 
 .rating input {
@@ -117,7 +119,7 @@ header {
 
 .rating label {
     cursor: pointer;
-    font-size: 2em;
+    font-size: 2.5rem;
     color: #ddd;
 }
 
