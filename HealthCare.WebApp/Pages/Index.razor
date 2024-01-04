@@ -11,7 +11,7 @@
 
 
 <PageTitle>Index</PageTitle>
-<div>
+<div class="@(leavingFeedback != null ? "blur-filter" : "")">
      <AuthorizeView>
           <Authorized>
                <div class="header-div">
@@ -89,7 +89,7 @@
                                                   <td>@appointment.Service</td>
                                                   <td>@GetNameOfDoctor(appointment.CareGiverId)</td>
                                                   <td>
-                                                       <button class="btn btn-danger"
+                                                       <button class="btn btn-success"
                                                             @onclick="(e) => LeaveFeedback(appointment)">Leave
                                                             feedback</button>
                                                   </td>
@@ -97,35 +97,9 @@
                                         }
                                    </tbody>
                               </table>
-                              @if (leavingFeedback != null)
-                              {
-                                   <div id="feedback-container">
-                                        <header>
-                                             <h3>Feedback</h3>
-                                        </header>
-                                        <p class="feedback-text"><u>Please submit your feedback   
-                                        </u><br> (Only feedbacks with 3 or more stars will be saved)
-                                        </p>
-                                        <ul>
-                                             <li>
-                                                  <strong>Doctor:</strong> @leavingFeedback.CareGiver.FirstName
-                                                  @leavingFeedback.CareGiver.LastName
-                                             </li>
-                                             <li>
-                                                  <strong>Date:</strong>@leavingFeedback.DateTime
-                                             </li>
-                                             <li>
-                                                  <strong>Service:</strong>General Checkup
-                                             </li>
-                                        </ul>
-                                        <button class="btn btn-primary" @onclick="(e) => SubmitFeedback()">Leave
-                                             feedback</button>
-
-                                        <p>Thank you for your cooperation,<br><u>The best healthcare app ever</u></p>
-                                   </div>
-                              }
                          </div>
                     </div>
+
                </div>
           </Authorized>
           <NotAuthorized>
@@ -134,7 +108,35 @@
           </NotAuthorized>
      </AuthorizeView>
 </div>
+@if (leavingFeedback != null)
+{
+     <div class="feedback-outer-div">
+          <div id="feedback-container">
+               <header>
+                    <h3>Feedback</h3>
+               </header>
+               <p class="feedback-text"><u>Please submit your feedback
+                    </u><br> (Only feedbacks with 3 or more stars will be saved)
+               </p>
+               <ul>
+                    <li>
+                         <strong>Doctor:</strong> @leavingFeedback.CareGiver.FirstName
+                         @leavingFeedback.CareGiver.LastName
+                    </li>
+                    <li>
+                         <strong>Date:</strong>@leavingFeedback.DateTime
+                    </li>
+                    <li>
+                         <strong>Service:</strong>General Checkup
+                    </li>
+               </ul>
+               <button class="btn btn-primary" @onclick="(e) => SubmitFeedback()">Leave
+                    feedback</button>
 
+               <p>Thank you for your cooperation,<br><u>The best healthcare app ever</u></p>
+          </div>
+     </div>
+}
 @code {
      private string userName = "";
      private User LoggedInUser;
