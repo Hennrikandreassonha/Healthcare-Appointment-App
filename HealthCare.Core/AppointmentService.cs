@@ -1,6 +1,5 @@
 ﻿using System;
 using HealthCare.Core.Data;
-using HealthCare.Core.Models.Appointment;
 using HealthCare.Core.Models.AppointmentModels;
 using Microsoft.EntityFrameworkCore;
 namespace HealthCare.Core
@@ -11,12 +10,8 @@ namespace HealthCare.Core
         public AppointmentService(HealthcareContext context)
         {
             _context = context;
-        }
-        public List<Appointment> GetCurUserAppointments(int userId)
-        {
-            return _context.Appointment.Where(x => x.Patient.Id == userId).ToList();
-        }
-        public IEnumerable<Appointment> GetAppointmentsByDate(DateTime date)
+        }   
+        public IEnumerable<int> GetAvailableTimes()
         {
             return new List<int> { 8, 9, 10, 11, 13, 14, 15 };
         }
@@ -110,7 +105,7 @@ namespace HealthCare.Core
             _context.SaveChanges();
 
             return true;
-        }
+        }        
         public bool AddBooking(Appointment appointment, int userId)
         {
             //By adding the patient this will complete the booking.
@@ -118,7 +113,6 @@ namespace HealthCare.Core
             {
                 _context.Update(appointment);
                 appointment.PatientId = userId;
-                appointment.Service = service;
                 _context.SaveChanges();
             }
             catch (Exception ex)
@@ -152,12 +146,10 @@ namespace HealthCare.Core
 
 
             var careGiverFromDb = _context.CareGiver.FirstOrDefault();
-            for (int i = 0; i < 30; i++)
-            {
-                DateTime appointmentDateTime = DateTime.Today.AddHours(8).AddDays(i);
-                Appointment appointment = new Appointment(careGiverFromDb.Id, appointmentDateTime);
-                _context.Appointment.Add(appointment);
-            }
+            Appointment appointment = new(careGiverFromDb.Id, DateTime.Today.AddHours(8));
+            Appointment appointment2 = new(careGiverFromDb.Id, DateTime.Today.AddDays(1).AddHours(12));
+            _context.Appointment.Add(appointment);
+            _context.Appointment.Add(appointment2);
             _context.SaveChanges();
         }
     }

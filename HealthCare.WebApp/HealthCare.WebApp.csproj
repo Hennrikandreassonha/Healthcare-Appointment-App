@@ -17,7 +17,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="Pages\Feedback\" />
-		<Folder Include="Pages\AppointmentPage\" />
+		<Folder Include="Pages\Appointment\" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\HealthCare.Core\HealthCare.Core.csproj">
