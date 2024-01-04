@@ -93,6 +93,15 @@
                             <td>@item.CareGiver.Email</td>
                             <td>@item.DateTime.ToString("M/d/yyyy h:mm") - @item.DateTime.AddHours(1).ToString("h:mm")</td>
                             <td>
+                                <select id="selectedService" @onchange="@(e => HandleServiceSelection((ServiceEnum)Enum.Parse(typeof(ServiceEnum), e.Value.ToString())))">
+                                    <option value="">Select Service</option>
+                                    @foreach (ServiceEnum service in Enum.GetValues(typeof(ServiceEnum)))
+                                    {
+                                        <option value="@service">@service</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
                                 <button class="btn btn-primary" @onclick="() => HandleBooking(item)">Book</button>
                             </td>
                         </tr>
@@ -169,7 +178,7 @@
     }
     private void HandleBooking(Appointment appointment)
     {
-        var success = appointmentService.AddBooking(appointment, userLoggedIn.Id);
+        var success = appointmentService.AddBooking(appointment, userLoggedIn.Id, selectedService);
         bool emailSentSuccess = false;
         if (success)
             emailSentSuccess = SendEmail(appointment, userLoggedIn);

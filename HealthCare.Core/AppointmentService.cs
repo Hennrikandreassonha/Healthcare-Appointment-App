@@ -1,5 +1,6 @@
 ﻿using System;
 using HealthCare.Core.Data;
+using HealthCare.Core.Models.Appointment;
 using HealthCare.Core.Models.AppointmentModels;
 using Microsoft.EntityFrameworkCore;
 namespace HealthCare.Core
@@ -10,6 +11,10 @@ namespace HealthCare.Core
         public AppointmentService(HealthcareContext context)
         {
             _context = context;
+        }
+        public List<Appointment> GetCurUserAppointments(int userId)
+        {
+            return _context.Appointment.Where(x => x.Patient.Id == userId).ToList();
         }
         public IEnumerable<Appointment> GetAppointmentsByDate(DateTime date)
         {
@@ -32,6 +37,7 @@ namespace HealthCare.Core
             {
                 _context.Update(appointment);
                 appointment.PatientId = userId;
+                appointment.Service = service;
                 _context.SaveChanges();
             }
             catch (Exception ex)
@@ -65,6 +71,7 @@ namespace HealthCare.Core
             _context.Appointment.Add(appointment2);
             _context.SaveChanges();
         }
+
     }
 }
 

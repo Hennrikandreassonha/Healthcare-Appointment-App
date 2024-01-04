@@ -85,11 +85,9 @@
                                                   <td>@GetNameOfDoctor(appointment.CareGiverId)</td>
                                                   <td>
 
-                                                       <button class="btn btn-success"
-                                            <button class="btn btn-success feedback-btn"
-
-                                                            @onclick="(e) => LeaveFeedback(appointment)">Leave
-                                                            feedback</button>
+                                                       
+                                                    
+                                                
                                                   </td>
                                              </tr>
                                         }
@@ -102,7 +100,7 @@
           </Authorized>
           <NotAuthorized>
                <h1>Dear client</h1>
-               <p> You'll need to <a href="/login">log in</a> to see any information.</p>
+               <p> You'll need to <a href="/login">log in</a> to see any information</p>
           </NotAuthorized>
      </AuthorizeView>
 </div>
@@ -132,9 +130,11 @@
                     </li>
                </ul>
                <button class="btn btn-primary" @onclick="(e) => SubmitFeedback()">Leave
-                    feedback</button>
+                    feedback
+                    </button>
 
-
+               <ul>
+                   <li>
                          <strong>Service:</strong> General Checkup
                     </li>
                </ul>
