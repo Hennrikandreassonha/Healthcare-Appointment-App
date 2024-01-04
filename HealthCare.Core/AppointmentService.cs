@@ -1,5 +1,6 @@
 ﻿using System;
 using HealthCare.Core.Data;
+using HealthCare.Core.Models.Appointment;
 using HealthCare.Core.Models.AppointmentModels;
 using Microsoft.EntityFrameworkCore;
 namespace HealthCare.Core
