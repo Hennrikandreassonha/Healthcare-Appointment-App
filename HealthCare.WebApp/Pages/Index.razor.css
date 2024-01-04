@@ -96,6 +96,7 @@ header {
 
 .blur-filter {
     filter: blur(1.4px);
+
 }
 
 #close-btn {
@@ -133,4 +134,5 @@ header {
 .rating input:checked ~ label:hover ~ label,
 .rating input:checked ~ label {
     color: #ffd700;
+
 }

@@ -1,21 +1,16 @@
-﻿@page "/"
+﻿@inject BookingService BookingService
+@page "/"
 @inject AuthenticationStateProvider authStateProvider
 @inject IHttpContextAccessor _httpContextAccessor;
 @inject HealthCare.Core.UserService.IUserService userService
-@using HealthCare.Core.Data
-@using HealthCare.Core.Models.AppointmentModels
-@inject HealthcareContext _context
-@inject EmailService emailService;
-@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
-
-
-
+@inject HealthCare.Core.Data.HealthcareContext _context
+@inject EmailService emailService
 <PageTitle>Index</PageTitle>
 <div class="@(leavingFeedback != null ? "blur-filter" : "")">
      <AuthorizeView>
           <Authorized>
                <div class="header-div">
-                    <h1>Hello, @context.User.Identity.Name! Welcome to <span class="color-blue">Health Care AB</span>
+                    <h1>Dear, @context.User.Identity.Name! Welcome to <span class="color-blue">Health Care AB</span>
                     </h1>
                     <p>
                          you have <u>@UpcomingAppointments.Count</u> upcoming appointments
@@ -89,7 +84,10 @@
                                                   <td>@appointment.Service</td>
                                                   <td>@GetNameOfDoctor(appointment.CareGiverId)</td>
                                                   <td>
-                                                       <button class="btn btn-success feedback-btn"
+
+                                                       <button class="btn btn-success"
+                                            <button class="btn btn-success feedback-btn"
+
                                                             @onclick="(e) => LeaveFeedback(appointment)">Leave
                                                             feedback</button>
                                                   </td>
@@ -103,7 +101,7 @@
                </div>
           </Authorized>
           <NotAuthorized>
-               <h1>Hello, Guest!</h1>
+               <h1>Dear client</h1>
                <p> You'll need to <a href="/login">log in</a> to see any information.</p>
           </NotAuthorized>
      </AuthorizeView>
@@ -115,6 +113,7 @@
                <header>
                     <h3>Feedback</h3>
                     <img @onclick="@SubmitFeedback" src="\remove.png" id="close-btn" title="Close">
+
                </header>
                <p class="feedback-text"><u>Please submit your feedback
                     </u><br> (Only feedbacks with 3 or more stars will be saved)
@@ -128,6 +127,14 @@
                          <strong>Date:</strong>@leavingFeedback.DateTime
                     </li>
                     <li>
+
+                         <strong>Service:</strong>General Checkup
+                    </li>
+               </ul>
+               <button class="btn btn-primary" @onclick="(e) => SubmitFeedback()">Leave
+                    feedback</button>
+
+
                          <strong>Service:</strong> General Checkup
                     </li>
                </ul>
@@ -148,6 +155,8 @@
                     </div>
                </EditForm>
                <button class="btn btn-primary" @onclick="(e) => SubmitFeedback()">Leave feedback</button>
+
+               <p>Thank you for your cooperation,<br><u>The best healthcare app ever</u></p>
           </div>
      </div>
 }

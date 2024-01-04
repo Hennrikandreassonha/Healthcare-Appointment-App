@@ -11,10 +11,6 @@ namespace HealthCare.Core
         {
             _context = context;
         }
-        public List<Appointment> GetCurUserAppointments(int userId)
-        {
-            return _context.Appointment.Where(x => x.Patient.Id == userId).ToList();
-        }
         public IEnumerable<Appointment> GetAppointmentsByDate(DateTime date)
         {
             return _context.Appointment
@@ -29,7 +25,7 @@ namespace HealthCare.Core
             _context.Add(appointment);
             return true;
         }
-        public bool AddBooking(Appointment appointment, int userId)
+        public bool AddBooking(Appointment appointment, int userId, ServiceEnum service)
         {
             //By adding the patient this will complete the booking.
             try
@@ -63,12 +59,10 @@ namespace HealthCare.Core
 
 
             var careGiverFromDb = _context.CareGiver.FirstOrDefault();
-            for (int i = 0; i < 30; i++)
-            {
-                DateTime appointmentDateTime = DateTime.Today.AddHours(8).AddDays(i);
-                Appointment appointment = new Appointment(careGiverFromDb.Id, appointmentDateTime);
-                _context.Appointment.Add(appointment);
-            }
+            Appointment appointment = new(careGiverFromDb.Id, DateTime.Today.AddHours(8));
+            Appointment appointment2 = new(careGiverFromDb.Id, DateTime.Today.AddDays(1).AddHours(12));
+            _context.Appointment.Add(appointment);
+            _context.Appointment.Add(appointment2);
             _context.SaveChanges();
         }
     }
