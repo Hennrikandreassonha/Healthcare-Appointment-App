@@ -1,34 +1,49 @@
 ﻿@page "/edit"
 @inject AuthService authService
+@inject HealthCare.Core.UserService.IUserService userService
+@inject NavigationManager NavManager
 
 <div class="row">
     <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
-
         <div class="mb-3 text-center">
             <h3>Account Settings</h3>
         </div>
-        <form>
+        <EditForm Model="userAccount" OnSubmit="SaveUserChanges">
             <div class="mb-3">
                 <label>Email: </label>
-                <input type="email" class="form-control" style="max-width: 300px" value="berg.alex.h@hotmail.com" />
+                <InputText type="email" @bind-Value="userAccount.Email" class="form-control" style="max-width: 300px" />
             </div>
             <div class="mb-3">
                 <label>First Name: </label>
-                <input type="text" class="form-control" style="max-width: 300px" value="user.FirstName">
+                <InputText type="text" @bind-Value="userAccount.FirstName" class="form-control" style="max-width: 300px" />
             </div>
             <div class="mb-3">
                 <label>Last Name: </label>
-                <input type="text" class="form-control" style="max-width: 300px" value="user.LastName">
+                <InputText type="text" @bind-Value="userAccount.LastName" class="form-control" style="max-width: 300px" />
             </div>
 
             <button type="submit" class="btn btn-primary">Save</button>
 
-        </form>
+        </EditForm>
     </div>
 </div>
 
-
-
 @code {
+    private string userEmail;
+    private User userAccount = new User();
+
+    protected override async Task OnInitializedAsync()
+    {
+        userEmail = await userService.GetEmailAsync();
+        userAccount = userService.GetByEmail(userEmail);
+    }
+
+    private async Task SaveUserChanges()
+    {
+       await userService.UpdateUserAsync(userAccount);
+        
+       NavManager.NavigateTo("/accountsettings");
+    }
+
 
 }

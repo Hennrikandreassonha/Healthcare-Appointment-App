@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HealthCare.Core.Models.Appointment;
+using HealthCare.Core.Models.AppointmentModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace HealthCare.Core.Data
@@ -24,5 +25,6 @@ namespace HealthCare.Core.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
         }
+        
     }
 }

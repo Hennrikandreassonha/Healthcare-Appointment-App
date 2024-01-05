@@ -15,7 +15,7 @@ namespace HealthCare.Core.Models.Auth
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public GenderEnum Gender { get; set; }
-        public DateTime Birthdate { get; set; }
+        public DateTime Birthdate { get; set; } = DateTime.Now;
         public string? CaregiverCode { get; set; }
 
         public RegisterDto()

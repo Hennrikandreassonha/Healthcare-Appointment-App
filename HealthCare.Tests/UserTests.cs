@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using HealthCare.WebApp.Pages.Authentication;
+using HealthCare.WebApp.Auth;
 
 namespace HealthCare.Tests
 {
@@ -15,12 +15,13 @@ namespace HealthCare.Tests
         private readonly HealthcareContext _dbContext;
         private readonly IUserService _userService;
         private readonly AuthService _authService;
+        private readonly AuthStateProvider _authProvider;
 
         public UserTests()
         {
             var optionsBuilder = new DbContextOptionsBuilder<HealthcareContext>().UseInMemoryDatabase("InMemory");
             _dbContext = new HealthcareContext(optionsBuilder.Options);
-            _userService = new UserService(_dbContext);
+            _userService = new UserService(_dbContext, _authProvider);
             _authService = new AuthService(_userService);
         }
         [Fact]
@@ -105,5 +106,56 @@ namespace HealthCare.Tests
             Assert.Null(resultFromLogin);
             _dbContext.Database.EnsureDeleted();
         }
+
+        [Fact]
+        public void Login_User_Should_Return_With_Details()
+        {
+            //Arrange
+            User resultUserAccount = new();
+            var userToRegister = new RegisterDto("Test", "Password", "firstName", "lastName",
+                GenderEnum.Male, DateTime.Now, "123");
+
+            //Act
+            _authService.RegisterUser(userToRegister);
+            resultUserAccount = _userService.GetByEmail(userToRegister.Email);
+
+
+            //Assert
+            Assert.NotNull(resultUserAccount);
+            Assert.Equal(userToRegister.Email,resultUserAccount.Email);
+            Assert.Equal(userToRegister.FirstName,resultUserAccount.FirstName);
+            Assert.Equal(userToRegister.LastName,resultUserAccount.LastName);
+            Assert.Equal(userToRegister.Birthdate,resultUserAccount.BirthDate);
+            Assert.Equal(userToRegister.Gender, resultUserAccount.Gender);
+            _dbContext.Database.EnsureDeleted();
+        }
+
+        [Fact]
+        public void Login_User_Update_Returs_Updated_Details()
+        {
+            //Arrange
+            User resultUserAccount = new();
+            var userToRegister = new RegisterDto("Test", "Password", "firstName", "lastName",
+                GenderEnum.Male, DateTime.Now, "123");
+
+            //Act
+            _authService.RegisterUser(userToRegister);
+            resultUserAccount = _userService.GetByEmail(userToRegister.Email);
+
+            resultUserAccount.FirstName = "NameFirst";
+            resultUserAccount.LastName = "NameLast";
+            resultUserAccount.Email = "TestEmail@test.com";
+
+            _userService.UpdateUserAsync(resultUserAccount);
+
+            //Assert
+            Assert.NotNull(resultUserAccount);
+            Assert.Equal( "NameFirst", resultUserAccount.FirstName);
+            Assert.Equal("NameLast", resultUserAccount.LastName);
+            Assert.Equal("TestEmail@test.com", resultUserAccount.Email);
+
+            _dbContext.Database.EnsureDeleted();
+        }
+
     }
 }

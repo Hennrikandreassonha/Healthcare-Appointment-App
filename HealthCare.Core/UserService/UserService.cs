@@ -5,16 +5,22 @@ using System.Threading.Tasks;
 using HealthCare.Core.Models.UserModels;
 using HealthCare.Core.UserService;
 using HealthCare.Core.Data;
+using Microsoft.AspNetCore.Components.Authorization;
 using System.Reflection.Metadata.Ecma335;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace HealthCare.Core.UserService
 {
     public class UserService : IUserService
     {
         private readonly HealthcareContext _context;
-        public UserService(HealthcareContext context)
+        private readonly AuthenticationStateProvider _authenticationStateProvider;
+
+        public UserService(HealthcareContext context, AuthenticationStateProvider authenticationStateProvider)
         {
             _context = context;
+            _authenticationStateProvider = authenticationStateProvider;
         }
         public User? AddUser(User user)
         {
@@ -52,6 +58,61 @@ namespace HealthCare.Core.UserService
             user = _context.CareGiver.Where(x => x.Email == email).FirstOrDefault()!;
 
             return user;
+        }
+
+        public List<CareGiver> GetCareGivers()
+        {
+            List<CareGiver> careGivers = _context.CareGiver.ToList();
+            List<CareGiver> filteredCareGivers = new();
+
+            foreach (var careGiver in careGivers)
+            {
+                var filteredCareGiver = new CareGiver
+                {
+                    Id = careGiver.Id,
+                    FirstName = careGiver.FirstName,
+                    LastName = careGiver.LastName,
+                    Email = careGiver.Email
+                };
+
+                filteredCareGivers.Add(filteredCareGiver);
+            }
+
+            return filteredCareGivers;
+        }
+
+        public async Task<string?> GetEmailAsync()
+        {
+            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            return user.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value.ToString();
+        }
+
+        public async Task UpdateUserAsync(User user)
+        {
+            User existingUser = new();
+            if (user is Patient)
+            {
+                existingUser = await _context.Patient.FirstOrDefaultAsync(p => p.Id == user.Id);
+            }
+            else
+            {
+                existingUser = await _context.CareGiver.FirstOrDefaultAsync(c => c.Id == user.Id);
+            }
+
+            if (existingUser != null)
+            {
+                existingUser.Email = user.Email;
+                existingUser.FirstName = user.FirstName;
+                existingUser.LastName = user.LastName;
+
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new InvalidOperationException("User not found in the database.");
+            }
         }
     }
 }

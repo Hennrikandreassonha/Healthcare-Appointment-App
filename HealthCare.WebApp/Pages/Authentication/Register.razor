@@ -17,7 +17,7 @@
 
             <div class="mb-3">
                 <label>Birthdate</label>
-                <input type="date" @bind="formModel.Birthdate" class="form-control" placeholder="BirthDate" required />
+                <input type="date" @bind="formModel.Birthdate" class="form-control" placeholder="BirthDate" required/>
             </div>
 
             <div class="mb-3">
@@ -58,7 +58,7 @@
 </div>
 
 @code {
-    private RegisterDto formModel = new RegisterDto();
+    private HealthCare.Core.Models.Auth.RegisterDto formModel = new HealthCare.Core.Models.Auth.RegisterDto();
     private string errorMsg = "";
     private string successMsg = "";
 
