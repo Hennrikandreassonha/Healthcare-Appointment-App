@@ -53,43 +53,57 @@ namespace HealthCare.Core
 
             return true;
         }
-        public bool AddInitialAppointment(int caregiverId, DateTime date)
-        {
-            //Adds the initial appointment with caregiverID and date.
-            //When patient books this the patientID and service will be added aswell, making it a complete appointment.
-            Appointment appointment = new(caregiverId, date);
-            _context.Add(appointment);
-            return true;
-        }
-        public bool AddInitialAppointment(int caregiverId, DateTime date, TimeSpan hour)
+        //public bool AddInitialAppointment(int caregiverId, DateTime date)
+        //{
+        //    //Adds the initial appointment with caregiverID and date.
+        //    //When patient books this the patientID and service will be added aswell, making it a complete appointment.
+        //    Appointment appointment = new(caregiverId, date);
+        //    _context.Add(appointment);
+        //    return true;
+        //}
+        public async Task<bool> AddInitialAppointment(int caregiverId, DateTime date, TimeSpan hour)
         {
             DateTime appointmentDateTime = date.Date + hour;
 
-            var appointmentToAdd = _context.Appointment.Where(a => a.CareGiverId == caregiverId && a.DateTime == appointmentDateTime)
-                .FirstOrDefault();
+            var existingAppointment = await _context.Appointment.FirstOrDefaultAsync(a =>
+                a.CareGiverId == caregiverId && a.DateTime == appointmentDateTime);
 
-            if (appointmentToAdd != null)
+            if (existingAppointment == null)
             {
-                _context.Appointment.Add(appointmentToAdd);
-                _context.SaveChanges();
+                var newAppointment = new Appointment
+                {
+                    CareGiverId = caregiverId,
+                    DateTime = appointmentDateTime
+                };
 
+                _context.Appointment.Add(newAppointment);
+                await _context.SaveChangesAsync();
                 return true;
             }
 
             return false;
         }
-        public bool RemoveInitialAppointment(int caregiverId, DateTime date, TimeSpan hour)
+        public async Task<bool> CheckAppointmentExists(int doctorId, DateTime date, TimeSpan time)
+        {
+            DateTime appointmentDateTime = date.Date + time;
+
+            var appointmentExists = await _context.Appointment.AnyAsync(a =>
+                a.CareGiverId == doctorId &&
+                a.DateTime == appointmentDateTime);
+
+            return appointmentExists;
+        }
+        public async Task<bool> RemoveInitialAppointment(int caregiverId, DateTime date, TimeSpan hour)
         {
             DateTime appointmentDateTime = date.Date + hour;
 
-            var appointmentToRemove = _context.Appointment.Where(a => a.CareGiverId == caregiverId && a.DateTime == appointmentDateTime)
-                .FirstOrDefault();
+            var appointmentToRemove = await _context.Appointment.FirstOrDefaultAsync(a =>
+                a.CareGiverId == caregiverId && a.DateTime == appointmentDateTime);
 
             if (appointmentToRemove != null)
             {
                 _context.Appointment.Remove(appointmentToRemove);
-                _context.SaveChanges();
-
+                await _context.SaveChangesAsync();
                 return true;
             }
 
@@ -110,11 +124,29 @@ namespace HealthCare.Core
 
             return true;
         }
-        public IEnumerable<Appointment> GetDoctorsAppointmentsByDate(int doctorId, DateTime date)
+        public IEnumerable<Appointment> GetAvailabilityByDate(int doctorId, DateTime date)
         {
-            return _context.Appointment
+            var availableAppointments = _context.Appointment
                 .Where(x => x.DateTime.Year == date.Year && x.DateTime.DayOfYear == date.DayOfYear && x.CareGiverId == doctorId &&
-                (x.PatientId == null || x.PatientId != null)).ToList();
+                    (x.PatientId == null || x.PatientId != null))
+                .Include(x => x.Patient)
+                .ToList();
+
+            // Extract distinct times
+            var availableTimes = availableAppointments.Select(appointment => appointment.DateTime.Hour).Distinct().ToList();
+
+            // Sort the times in chronological order
+            availableTimes.Sort();
+
+            // Now availableTimes contains the sorted times from 8 am to 3 pm
+
+            // Fetch appointments for the sorted times in chronological order
+            var sortedAppointments = availableAppointments
+                .Where(appointment => availableTimes.Contains(appointment.DateTime.Hour))
+                .OrderBy(appointment => appointment.DateTime.Hour)
+                .ToList();
+
+            return sortedAppointments;
         }
         public bool AddBooking(Appointment appointment, int userId, ServiceEnum service)
         {

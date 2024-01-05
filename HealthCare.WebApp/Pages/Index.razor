@@ -161,76 +161,83 @@
      </div>
 }
 @code {
-     private string userName = "";
-     private User LoggedInUser;
-     private List<Appointment> UpcomingAppointments = new();
-     private List<Appointment> PreviousAppointments = new();
-     public string NameOfDoctor = "";
-     public string NameOfPatient = "";
-     string successMsg = "";
-     private Appointment? leavingFeedback = null;
+    private string userName = "";
+    private User LoggedInUser;
+    private List<Appointment> UpcomingAppointments = new();
+    private List<Appointment> PreviousAppointments = new();
+    public string NameOfDoctor = "";
+    public string NameOfPatient = "";
+    string successMsg = "";
+    private Appointment? leavingFeedback = null;
 
-     protected override async Task OnInitializedAsync()
-     {
-          userName = await userService.GetEmailAsync();
-          LoggedInUser = userService.GetByEmail(userName);
-          GetAllMeetings(LoggedInUser);
-     }
-     private void GetAllMeetings(User loggedInUser)
-     {
-          List<Appointment> appointments;
-          UpcomingAppointments.Clear();
-          PreviousAppointments.Clear();
+    protected override async Task OnInitializedAsync()
+    {
+        userName = await userService.GetEmailAsync();
+        LoggedInUser = userService.GetByEmail(userName);
+        GetAllMeetings(LoggedInUser);
+    }
+    private void GetAllMeetings(User loggedInUser)
+    {
+        List<Appointment> appointments;
+        UpcomingAppointments.Clear();
+        PreviousAppointments.Clear();
 
-          if (loggedInUser is Patient)
-          {
-               appointments = _context.Appointment.Where(x => x.PatientId == loggedInUser.Id).ToList();
+        if (loggedInUser is Patient)
+        {
+            appointments = _context.Appointment.Where(x => x.PatientId == loggedInUser.Id).ToList();
 
-               foreach (var appointment in appointments)
-               {
-                    if (appointment.DateTime > DateTime.Now)
-                    {
-                         UpcomingAppointments.Add(appointment);
-                    }
-                    else
-                    {
-                         PreviousAppointments.Add(appointment);
-                    }
-               }
-          }
-          else if (loggedInUser is CareGiver)
-          {
-               appointments = _context.Appointment.Where(x => x.CareGiverId == loggedInUser.Id).ToList();
+            foreach (var appointment in appointments)
+            {
+                if (appointment.DateTime > DateTime.Now)
+                {
+                    UpcomingAppointments.Add(appointment);
+                }
+                else
+                {
+                    PreviousAppointments.Add(appointment);
+                }
+            }
+        }
+        else if (loggedInUser is CareGiver)
+        {
+            appointments = _context.Appointment.Where(x => x.CareGiverId == loggedInUser.Id).ToList();
 
-               foreach (var appointment in appointments)
-               {
-                    if (appointment.DateTime > DateTime.Now)
-                    {
-                         UpcomingAppointments.Add(appointment);
-                    }
-                    else
-                    {
-                         PreviousAppointments.Add(appointment);
-                    }
-               }
-          }
-     }
-     private void SubmitFeedback()
-     {
-          leavingFeedback = null;
-     }
-     private string GetNameOfDoctor(int careGiverId)
-     {
-          var careGiver = _context.CareGiver.FirstOrDefault(x => x.Id == careGiverId);
+            foreach (var appointment in appointments)
+            {
+                if (appointment.DateTime > DateTime.Now)
+                {
+                    UpcomingAppointments.Add(appointment);
+                }
+                else
+                {
+                    PreviousAppointments.Add(appointment);
+                }
+            }
+        }
+    }
+    private void SubmitFeedback()
+    {
+        leavingFeedback = null;
+    }
+    private string GetNameOfDoctor(int careGiverId)
+    {
+        var careGiver = _context.CareGiver.FirstOrDefault(x => x.Id == careGiverId);
 
-          return NameOfDoctor = $"{careGiver.FirstName} {careGiver.LastName}";
-     }
+        return NameOfDoctor = $"{careGiver.FirstName} {careGiver.LastName}";
+    }
 
-     private string GetNameOfPatient(int? patientId)
-     {
-          var patient = _context.Patient.FirstOrDefault(x => x.Id == patientId);
+    private string GetNameOfPatient(int? patientId)
+    {
+        if (patientId != null)
+        {
+            var patient = _context.Patient.FirstOrDefault(x => x.Id == patientId);
 
-          return NameOfPatient = $"{patient.FirstName} {patient.LastName}";
+            return NameOfPatient = $"{patient.FirstName} {patient.LastName}";
+        }
+        else
+        {
+            return "No patient";   
+        }
      }
 
      private void RemoveAppointment(Appointment appointment)
