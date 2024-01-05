@@ -7,8 +7,7 @@
 @inject HealthcareContext _context
 @inject EmailService emailService;
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
-
-
+@inject FeedbackService feedbackService
 
 <PageTitle>Index</PageTitle>
 <div class="@(leavingFeedback != null ? "blur-filter" : "")">
@@ -118,6 +117,7 @@
                </header>
                <p class="feedback-text"><u>Please submit your feedback
                     </u><br> (Only feedbacks with 3 or more stars will be saved)
+                    <br> <i>Thank you for cooperating</i>
                </p>
                <ul>
                     <li>
@@ -136,37 +136,34 @@
                          <InputTextArea @bind-Value="leavingFeedback.Feedback" class="form-control"
                               placeholder="Greatest service ever" required />
                          <div class="rating">
-                              <label for="star1">☆</label>
-                              <input type="radio" id="star2" name="rating" value="2"
-                              checked="@(leavingFeedback.Rating == 1)" onchange="@(() => leavingFeedback.Rating = 1)">
-                              <label for="star2">☆</label>
-                              <input type="radio" id="star3" name="rating" value="3">
-                              <label for="star3">☆</label>
-                              <input type="radio" id="star4" name="rating" value="4">
-                              <label for="star4">☆</label>
-                              <input type="radio" id="star5" name="rating" value="5">
-                              <label for="star5">☆</label>
-
-                         <InputRadioGroup @bind-Value="leavingFeedback.Feedback">
-                              <InputRadio Value="1"></InputRadio>
-                              <label for="star1">☆</label>
-                              <InputRadio Value="1" id="star1"></InputRadio>
-                         </InputRadioGroup>
+                              <input type="radio" id="star5" name="rating">
+                              <label for="star5" @onclick="(e) => SubmitRating(5)"></label>
+                              <input type="radio" id="star4" name="rating">
+                              <label for="star4" @onclick="(e) => SubmitRating(4)"></label>
+                              <input type="radio" id="star3" name="rating">
+                              <label for="star3" @onclick="(e) => SubmitRating(3)"></label>
+                              <input type="radio" id="star2" name="rating">
+                              <label for="star2" @onclick="(e) => SubmitRating(2)"></label>
+                              <input type="radio" id="star1" name="rating">
+                              <label for="star1" @onclick="(e) => SubmitRating(1)"></label>
                          </div>
-                         <div class="rating">
+                         <div class="submit-feedback-flex">
                               <button class="btn btn-primary submit-feedback" type="submit">Leave
                                    feedback</button>
                          </div>
                     </EditForm>
                </div>
+               @if (FeedbackSuccess != "")
+               {
+                    <p class="alert alert-success" style="padding: 1rem; margin: 1rem;">@FeedbackSuccess <br>
+                    <i>- The best healthcare company ever</i></p>
+               }
+               @if(FeedbackFail != ""){
+                     <p class="alert alert-danger" style="padding: 1rem; margin: 1rem;">@FeedbackFail <br>
+                    <i>- The best healthcare company ever</i></p>
+               }
           </div>
      </div>
-     <label>
-          <input type="radio" name="edition" checked="@(EditionCode == 1)" onchange="@(() => EditionCode = 1)" /> Home
-     </label>
-      <label>
-          <input type="radio" name="edition" checked="@(EditionCode == 2)" onchange="@(() => EditionCode = 2)" /> Home
-     </label>
 }
 @code {
      private string userName = "";
@@ -177,6 +174,9 @@
      public string NameOfDoctor = "";
      public string NameOfPatient = "";
      string successMsg = "";
+     string FeedbackSuccess = "";
+     string FeedbackFail = "";
+     
      private Appointment? leavingFeedback = null;
 
      protected override async Task OnInitializedAsync()
@@ -184,6 +184,27 @@
           userName = await userService.GetEmailAsync();
           LoggedInUser = userService.GetByEmail(userName);
           GetAllMeetings(LoggedInUser);
+     }
+     public void SubmitRating(int rating)
+     {
+          if (leavingFeedback == null)
+          {
+               return;
+          }
+          leavingFeedback.Rating = rating;
+     }
+     private void SubmitFeedback()
+     {
+          FeedbackSuccess = "";
+          FeedbackFail = "";
+          var success = feedbackService.SaveFeedback(leavingFeedback);
+          if(success){
+                
+               FeedbackSuccess = "Your feedback has been saved, thank you for cooperating";
+          }
+          else{
+               FeedbackFail = "Rating was below 3 stars and therefore not saved, thank you anyway!";
+          }
      }
      private void GetAllMeetings(User loggedInUser)
      {
@@ -228,10 +249,6 @@
      {
           leavingFeedback = null;
      }
-     private void SubmitFeedback()
-     {
-          Console.WriteLine();
-     }
      private string GetNameOfDoctor(int careGiverId)
      {
           var careGiver = _context.CareGiver.FirstOrDefault(x => x.Id == careGiverId);
@@ -264,6 +281,8 @@
      private void LeaveFeedback(Appointment appointment)
      {
           leavingFeedback = appointment;
+          FeedbackSuccess = "";
+          FeedbackFail = "";
      }
      public bool SendCancelEmail(Appointment appointment, User user)
      {

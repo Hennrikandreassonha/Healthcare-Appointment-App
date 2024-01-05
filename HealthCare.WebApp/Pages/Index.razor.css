@@ -111,8 +111,12 @@ header {
 
 .rating {
     display: flex;
-    flex-direction: row-reverse;
     justify-content: center;
+}
+
+.rating {
+    unicode-bidi: bidi-override;
+    direction: rtl;
 }
 
 .rating input {
@@ -121,24 +125,32 @@ header {
 
 .rating label {
     cursor: pointer;
-    font-size: 2.5rem;
-    color: #ddd;
+    font-size: 35px;
+    color: #ccc;
+}
+
+.rating label:before {
+    content: '\2605';
+    margin: 0 5px;
+}
+
+.rating input:checked~label {
+    color: gold;
 }
 
 .rating label:hover,
-.rating label:hover~label,
-.rating input:checked~label {
-    color: #ffbf00;
-}
-
-.rating input:checked~label:hover,
-.rating input:checked~label:hover~label,
-.rating input:checked~label {
-    color: #ffd700;
+.rating label:hover~label {
+    color: gold;
 }
 
 .feedbackform {
     padding: 0 1rem;
+}
+
+.submit-feedback-flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .submit-feedback {

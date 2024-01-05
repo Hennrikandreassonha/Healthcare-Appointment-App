@@ -1,5 +1,5 @@
 ﻿@page "/register"
-@inject AuthService authService
+@inject HealthCare.Core.Models.Auth.AuthService authService
 <div class="row">
     <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
         <EditForm Model="formModel" OnValidSubmit="HandleRegister" OnInvalidSubmit="HandleInvalid">
@@ -24,8 +24,8 @@
                 <label>Gender</label>
                 <select @bind="formModel.Gender" class="form-control" required>
                     <option value="">Select Gender</option>
-                    <option value="@GenderEnum.Male">Male</option>
-                    <option value="@GenderEnum.Female">Female</option>
+                    <option value="@HealthCare.Core.Models.UserModels.GenderEnum.Male">Male</option>
+                    <option value="@HealthCare.Core.Models.UserModels.GenderEnum.Female">Female</option>
                 </select>
             </div>
             <div class="mb-3">
