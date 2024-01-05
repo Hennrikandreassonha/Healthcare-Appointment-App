@@ -53,14 +53,6 @@ namespace HealthCare.Core
 
             return true;
         }
-        //public bool AddInitialAppointment(int caregiverId, DateTime date)
-        //{
-        //    //Adds the initial appointment with caregiverID and date.
-        //    //When patient books this the patientID and service will be added aswell, making it a complete appointment.
-        //    Appointment appointment = new(caregiverId, date);
-        //    _context.Add(appointment);
-        //    return true;
-        //}
         public async Task<bool> AddInitialAppointment(int caregiverId, DateTime date, TimeSpan hour)
         {
             DateTime appointmentDateTime = date.Date + hour;
@@ -132,15 +124,10 @@ namespace HealthCare.Core
                 .Include(x => x.Patient)
                 .ToList();
 
-            // Extract distinct times
             var availableTimes = availableAppointments.Select(appointment => appointment.DateTime.Hour).Distinct().ToList();
 
-            // Sort the times in chronological order
             availableTimes.Sort();
 
-            // Now availableTimes contains the sorted times from 8 am to 3 pm
-
-            // Fetch appointments for the sorted times in chronological order
             var sortedAppointments = availableAppointments
                 .Where(appointment => availableTimes.Contains(appointment.DateTime.Hour))
                 .OrderBy(appointment => appointment.DateTime.Hour)
