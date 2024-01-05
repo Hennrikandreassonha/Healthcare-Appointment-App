@@ -10,7 +10,7 @@
 @inject FeedbackService feedbackService
 
 <PageTitle>Index</PageTitle>
-<div class="@(leavingFeedback != null ? "blur-filter" : "")">
+<div class="@(LeavingFeedback != null ? "blur-filter" : "")">
      <AuthorizeView>
           <Authorized>
                <div class="header-div">
@@ -88,9 +88,17 @@
                                                   <td>@appointment.Service</td>
                                                   <td>@GetNameOfDoctor(appointment.CareGiverId)</td>
                                                   <td>
-                                                       <button class="btn btn-success feedback-btn"
+                                                       @if(appointment.Feedback == null){
+                                                       <button class="btn btn-primary feedback-btn"
                                                             @onclick="(e) => LeaveFeedback(appointment)">Leave
                                                             feedback</button>
+                                                       }
+                                                       @if(appointment.Feedback != "" && appointment.Feedback != null)
+                                                       {
+                                                             <button class="btn btn-success feedback-btn"
+                                                            @onclick="(e) => ViewFeedback(appointment)">View
+                                                            feedback</button>
+                                                       }
                                                   </td>
                                              </tr>
                                         }
@@ -107,34 +115,45 @@
           </NotAuthorized>
      </AuthorizeView>
 </div>
-@if (leavingFeedback != null)
+@if (LeavingFeedback != null || ViewingFeedback != null)
 {
      <div class="feedback-outer-div">
           <div id="feedback-container">
                <header>
-                    <h3>Feedback</h3>
+               @if(LeavingFeedback != null){
+                    <h3>Leave Feedback</h3>
+}
+               @if(ViewingFeedback != null){
+                    <h3>Viewing Feedback</h3>
+}    
                     <img @onclick="@CloseFeedback" src="\remove.png" id="close-btn" title="Close">
                </header>
+               @if(LeavingFeedback != null){
                <p class="feedback-text"><u>Please submit your feedback
                     </u><br> (Only feedbacks with 3 or more stars will be saved)
                     <br> <i>Thank you for cooperating</i>
                </p>
+               }
+
                <ul>
                     <li>
-                         <strong>Doctor:</strong> @leavingFeedback.CareGiver.FirstName
-                         @leavingFeedback.CareGiver.LastName
+                          <strong>Doctor:</strong>
+                         @(LeavingFeedback != null ? $"{LeavingFeedback.CareGiver.FirstName} {LeavingFeedback.CareGiver.LastName}" : $"{ViewingFeedback.CareGiver.FirstName} {ViewingFeedback.CareGiver.LastName}")
+
                     </li>
                     <li>
-                         <strong>Date:</strong>@leavingFeedback.DateTime
+                         <strong>Date:</strong> @(LeavingFeedback != null ? LeavingFeedback.DateTime : ViewingFeedback.DateTime)
+
                     </li>
                     <li>
-                         <strong>Service:</strong> General Checkup
+                         <strong>Service:</strong> @(LeavingFeedback != null ? LeavingFeedback.Service : ViewingFeedback.Service)
                     </li>
                </ul>
+               @if(LeavingFeedback != null){
                <div class="feedbackform">
-                    <EditForm Model="leavingFeedback" OnSubmit="SubmitFeedback">
-                         <InputTextArea @bind-Value="leavingFeedback.Feedback" class="form-control"
-                              placeholder="Greatest service ever" required />
+                    <EditForm Model="LeavingFeedback" OnValidSubmit="SubmitFeedback">
+                         <textarea class="form-control" @bind="LeavingFeedback.Feedback"
+                              placeholder="Greatest service ever" required>  </textarea>
                          <div class="rating">
                               <input type="radio" id="star5" name="rating">
                               <label for="star5" @onclick="(e) => SubmitRating(5)"></label>
@@ -153,6 +172,15 @@
                          </div>
                     </EditForm>
                </div>
+               }
+               @if(ViewingFeedback != null){
+
+                    <p>@ViewingFeedback.Feedback</p>
+                    @for(int i = 0; i <= ViewingFeedback.Rating; i++){
+                         <label class="leaving-feedback-star">&#x2605;</label>
+                    }
+               }
+
                @if (FeedbackSuccess != "")
                {
                     <p class="alert alert-success" style="padding: 1rem; margin: 1rem;">@FeedbackSuccess <br>
@@ -167,7 +195,6 @@
 }
 @code {
      private string userName = "";
-     int EditionCode = 1;
      private User LoggedInUser;
      private List<Appointment> UpcomingAppointments = new();
      private List<Appointment> PreviousAppointments = new();
@@ -177,7 +204,9 @@
      string FeedbackSuccess = "";
      string FeedbackFail = "";
      
-     private Appointment? leavingFeedback = null;
+     private Appointment? LeavingFeedback = null;
+     private Appointment? ViewingFeedback = null;
+
 
      protected override async Task OnInitializedAsync()
      {
@@ -187,17 +216,17 @@
      }
      public void SubmitRating(int rating)
      {
-          if (leavingFeedback == null)
+          if (LeavingFeedback == null)
           {
                return;
           }
-          leavingFeedback.Rating = rating;
+          LeavingFeedback.Rating = rating;
      }
      private void SubmitFeedback()
      {
           FeedbackSuccess = "";
           FeedbackFail = "";
-          var success = feedbackService.SaveFeedback(leavingFeedback);
+          var success = feedbackService.SaveFeedback(LeavingFeedback);
           if(success){
                 
                FeedbackSuccess = "Your feedback has been saved, thank you for cooperating";
@@ -247,7 +276,8 @@
      }
      private void CloseFeedback()
      {
-          leavingFeedback = null;
+          LeavingFeedback = null;
+          ViewingFeedback = null;
      }
      private string GetNameOfDoctor(int careGiverId)
      {
@@ -280,9 +310,14 @@
      }
      private void LeaveFeedback(Appointment appointment)
      {
-          leavingFeedback = appointment;
+          LeavingFeedback = appointment;
           FeedbackSuccess = "";
           FeedbackFail = "";
+          ViewingFeedback = null;
+     }
+     private void ViewFeedback (Appointment appointment){
+          ViewingFeedback = appointment;
+          LeavingFeedback = null;
      }
      public bool SendCancelEmail(Appointment appointment, User user)
      {

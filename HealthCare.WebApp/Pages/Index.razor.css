@@ -128,7 +128,12 @@ header {
     font-size: 35px;
     color: #ccc;
 }
+.leaving-feedback-star{
+    font-size: 35px;
+    margin: 0 5px;
+    color: gold;
 
+}
 .rating label:before {
     content: '\2605';
     margin: 0 5px;
