@@ -208,7 +208,9 @@
 
         if (loggedInUser is Patient)
         {
-            appointments = _context.Appointment.Where(x => x.PatientId == loggedInUser.Id).ToList();
+            appointments = _context.Appointment.Where(x => x.PatientId == loggedInUser.Id)
+            .OrderBy(x=>x.DateTime)
+            .ToList();
 
             foreach (var appointment in appointments)
             {
@@ -224,7 +226,9 @@
         }
         else if (loggedInUser is CareGiver)
         {
-            appointments = _context.Appointment.Where(x => x.CareGiverId == loggedInUser.Id).ToList();
+            appointments = _context.Appointment.Where(x => x.CareGiverId == loggedInUser.Id)
+            .OrderBy(x => x.DateTime)
+            .ToList();
 
             foreach (var appointment in appointments)
             {
