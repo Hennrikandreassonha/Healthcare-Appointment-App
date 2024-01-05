@@ -49,6 +49,7 @@
                                 @foreach (Appointment appointment in UpcomingAppointments)
                                 {
                                     <tr>
+
                                         <td>@appointment.DateTime</td>
                                         <td>@appointment.Service</td>
                                         @if (LoggedInUser is Patient)
@@ -106,7 +107,7 @@
                                             <td>
                                             </td>
                                         }
-                                        @if(LoggedInUser is CareGiver)
+                                        @if (LoggedInUser is CareGiver)
                                         {
                                             <td>@GetNameOfPatient(appointment.PatientId)</td>
                                         }
@@ -209,13 +210,14 @@
         if (loggedInUser is Patient)
         {
             appointments = _context.Appointment.Where(x => x.PatientId == loggedInUser.Id)
-            .OrderBy(x=>x.DateTime)
+            .OrderBy(x => x.DateTime)
             .ToList();
 
             foreach (var appointment in appointments)
             {
                 if (appointment.DateTime > DateTime.Now)
                 {
+
                     UpcomingAppointments.Add(appointment);
                 }
                 else
@@ -234,7 +236,10 @@
             {
                 if (appointment.DateTime > DateTime.Now)
                 {
-                    UpcomingAppointments.Add(appointment);
+                    @if (appointment.PatientId != null)
+                    {
+                        UpcomingAppointments.Add(appointment);
+                    }
                 }
                 else
                 {
