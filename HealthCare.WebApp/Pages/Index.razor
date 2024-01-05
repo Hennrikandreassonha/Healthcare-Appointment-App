@@ -236,14 +236,17 @@
             {
                 if (appointment.DateTime > DateTime.Now)
                 {
-                    @if (appointment.PatientId != null)
+                    if (appointment.PatientId != null)
                     {
                         UpcomingAppointments.Add(appointment);
                     }
                 }
                 else
                 {
-                    PreviousAppointments.Add(appointment);
+                    if (appointment.PatientId != null)
+                    {
+                        PreviousAppointments.Add(appointment);
+                    }
                 }
             }
         }
