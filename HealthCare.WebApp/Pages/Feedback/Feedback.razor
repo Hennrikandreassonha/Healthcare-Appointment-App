@@ -8,17 +8,14 @@
 <button @onclick="SubmitFeedback">Submit Feedback</button>
 
 <h3 class="feedback">All Feedback</h3>
-@foreach (var feedback in feedbackService.GetAllFeedback())
-{
-    <p>@feedback</p>
-}
+@* @foreach (var feedback in feedbackService.GetAllFeedback()) *@
 
 @code {
     private string userFeedback;
 
     private void SubmitFeedback()
     {
-        feedbackService.SaveFeedback(userFeedback);
+        @* feedbackService.SaveFeedback(userFeedback); *@
         // reset the input field
         userFeedback = string.Empty; 
     }

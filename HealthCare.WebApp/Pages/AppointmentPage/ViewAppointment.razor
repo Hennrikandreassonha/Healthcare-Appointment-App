@@ -115,7 +115,7 @@
             <div class="day-info">
                 <header>
                     <h3>
-                        Click on a date to check your appointments
+                        Click on a date to check availability
                     </h3>
                 </header>
                 <table>
@@ -144,11 +144,6 @@
                                     <td></td>
                                     <td></td>
                                     <td>@item.DateTime.ToString("M/d/yyyy h:mm") - @item.DateTime.AddHours(1).ToString("h:mm")</td>
-                                    @* <td>
-                                        <button class="btn btn-primary" @onclick="() => ToggleAvailability(userLoggedIn.Id, item.DateTime)">
-                                            @(isAvailable ? "Set unavailable" : "Set available")
-                                        </button>
-                                    </td> *@
                                 </tr>
                             }
                         }
@@ -200,17 +195,17 @@
     private string successMsg = "";
     private string errorMsg = "";
     Dictionary<DayOfWeek, int> weekdayDictionary = new Dictionary<DayOfWeek, int>
-{
-{ DayOfWeek.Monday, 0 },
-{ DayOfWeek.Tuesday, 1 },
-{ DayOfWeek.Wednesday, 2 },
-{ DayOfWeek.Thursday, 3 },
-{ DayOfWeek.Friday, 4 },
-{ DayOfWeek.Saturday, 5 },
-{ DayOfWeek.Sunday, 6 }
-};
+    {
+        { DayOfWeek.Monday, 0 },
+        { DayOfWeek.Tuesday, 1 },
+        { DayOfWeek.Wednesday, 2 },
+        { DayOfWeek.Thursday, 3 },
+        { DayOfWeek.Friday, 4 },
+        { DayOfWeek.Saturday, 5 },
+        { DayOfWeek.Sunday, 6 }
+    };
     private ServiceEnum selectedService;
-    private bool isAvailableAllDay = false;
+    private bool isAvailableAllDay;
     private void HandleServiceSelection(ServiceEnum service)
     {
         selectedService = service;
@@ -235,21 +230,23 @@
     }
     private async Task ToggleAvailability(int doctorId, DateTime dateToToggle, string selectedTime)
     {
-        // Parse the selectedTime as needed
-        int timeSelected = int.Parse(selectedTime);
-
-        bool appointmentExists = await appointmentService.CheckAppointmentExists(doctorId, dateToToggle, new TimeSpan(timeSelected, 0, 0));
-
-        if (appointmentExists)
+        if (!string.IsNullOrEmpty(selectedTime))
         {
-            await appointmentService.RemoveInitialAppointment(doctorId, dateToToggle, new TimeSpan(timeSelected, 0, 0));
-        }
-        else
-        {
-            await appointmentService.AddInitialAppointment(doctorId, dateToToggle, new TimeSpan(timeSelected, 0, 0));
-        }
+            int timeSelected = int.Parse(selectedTime);
 
-        appointmentsForBooking = appointmentService.GetAvailabilityByDate(doctorId, dateToToggle).ToArray();
+            bool appointmentExists = await appointmentService.CheckAppointmentExists(doctorId, dateToToggle, new TimeSpan(timeSelected, 0, 0));
+
+            if (appointmentExists)
+            {
+                await appointmentService.RemoveInitialAppointment(doctorId, dateToToggle, new TimeSpan(timeSelected, 0, 0));
+            }
+            else
+            {
+                await appointmentService.AddInitialAppointment(doctorId, dateToToggle, new TimeSpan(timeSelected, 0, 0));
+            }
+
+            appointmentsForBooking = appointmentService.GetAvailabilityByDate(doctorId, dateToToggle).ToArray();
+        }        
     }
     private void ToggleAvailabilityForADay(int doctorId, DateTime dateToToggle)
     {
@@ -279,7 +276,7 @@
         }
         else if (user.Role == RoleEnum.Doctor)
         {
-            appointmentsForBooking = appointmentService.GetAvailabilityByDate(user.Id, dateToCheck).ToArray();
+                appointmentsForBooking = appointmentService.GetAvailabilityByDate(user.Id, dateToCheck).ToArray();
         }
     }
     private void HandleBooking(Appointment appointment)
