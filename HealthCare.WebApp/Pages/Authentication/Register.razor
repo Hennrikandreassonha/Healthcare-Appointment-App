@@ -39,7 +39,7 @@
                     required />
             </div>
             <div class="mb-3">
-                <label>Are you a doctor or nurse? Please type your provided code to register</label>
+                <label>Are you a doctor or nurse? Please type your provided code to register. Leave empty otherwise</label>
                 <InputText @bind-Value="formModel.CaregiverCode" class="form-control" />
             </div>
             <div class="mb-3 d-grid gap-2">
@@ -64,7 +64,16 @@
 
     private void HandleRegister()
     {
-        successMsg = authService.RegisterUser(formModel);
+        var result = authService.RegisterUser(formModel);
+
+        if (result.StartsWith("ERROR: Invalid Caregiver Code"))
+        {
+            errorMsg = "Invalid Caregiver Code. Please enter the correct code.";
+        }
+        else
+        {
+            successMsg = result;
+        }
     }
     private void HandleInvalid()
     {
