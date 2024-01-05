@@ -276,12 +276,12 @@
         }
         else if (user.Role == RoleEnum.Doctor)
         {
-            appointmentsForBooking = appointmentService.GetAvailabilityByDate(user.Id, dateToCheck).ToArray();
+                appointmentsForBooking = appointmentService.GetAvailabilityByDate(user.Id, dateToCheck).ToArray();
         }
     }
     private void HandleBooking(Appointment appointment)
     {
-        var success = appointmentService.AddBooking(appointment, userLoggedIn.Id);
+        var success = appointmentService.AddBooking(appointment, userLoggedIn.Id, selectedService);
         bool emailSentSuccess = false;
         if (success)
             emailSentSuccess = SendEmail(appointment, userLoggedIn);
