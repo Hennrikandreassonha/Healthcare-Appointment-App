@@ -40,9 +40,6 @@ namespace HealthCare.Core.Migrations
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Stars")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("PatientId");
@@ -68,9 +65,6 @@ namespace HealthCare.Core.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PatientId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Rating")
                         .HasColumnType("int");
 
                     b.Property<int?>("Service")

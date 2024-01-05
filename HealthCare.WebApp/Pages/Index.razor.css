@@ -96,6 +96,7 @@ header {
 
 .blur-filter {
     filter: blur(1.4px);
+
 }
 
 #close-btn {
@@ -104,11 +105,9 @@ header {
     right: 30px;
     cursor: pointer;
 }
-
-.feedback-btn {
-    width: 130px;
+.feedback-btn{
+    width:130px;
 }
-
 .rating {
     display: flex;
     justify-content: center;
@@ -158,6 +157,4 @@ header {
     justify-content: center;
 }
 
-.submit-feedback {
-    margin: 1rem;
 }
