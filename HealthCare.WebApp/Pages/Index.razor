@@ -10,7 +10,7 @@
 @inject FeedbackService feedbackService
 
 <PageTitle>Index</PageTitle>
-<div class="@(LeavingFeedback != null ? "blur-filter" : "")">
+<div class="@(LeavingFeedback != null  || ViewingFeedback != null ? "blur-filter" : "")">
      <AuthorizeView>
           <Authorized>
                <div class="header-div">
@@ -157,27 +157,42 @@
                     <br> <i>Thank you for cooperating</i>
                </p>
                }
-
+@if(LeavingFeedback != null){
                <ul>
-                    <li>
-                          <strong>Doctor:</strong>
-                         @(LeavingFeedback != null ? $"{LeavingFeedback.CareGiver.FirstName} {LeavingFeedback.CareGiver.LastName}" : $"{ViewingFeedback.CareGiver.FirstName} {ViewingFeedback.CareGiver.LastName}")
+    <li>
+        <strong>Doctor:</strong> @($"{LeavingFeedback.CareGiver.FirstName} {LeavingFeedback.CareGiver.LastName}")
+    </li>
+    <li>
+        <strong>Date:</strong> @LeavingFeedback.DateTime
+    </li>
+    <li>
+        <strong>Service:</strong> @LeavingFeedback.Service
+    </li>
+</ul>
+}
+@if (ViewingFeedback != null)
+{
+<table class="review-feedback-table">
+      <tr>
+    <th><strong>Doctor:</strong></th>
+     <th><strong>Date:</strong></th>
+     <th><strong>Date:</strong></th>
+  </tr>
+    <tr>
+        <td>@($"{ViewingFeedback.CareGiver.FirstName} {ViewingFeedback.CareGiver.LastName}")</td>
+        <td>@ViewingFeedback.DateTime</td>
+        <td>@ViewingFeedback.Service</td>
+  </tr>
+</table>
+}
 
-                    </li>
-                    <li>
-                         <strong>Date:</strong> @(LeavingFeedback != null ? LeavingFeedback.DateTime : ViewingFeedback.DateTime)
-
-                    </li>
-                    <li>
-                         <strong>Service:</strong> @(LeavingFeedback != null ? LeavingFeedback.Service : ViewingFeedback.Service)
-                    </li>
-               </ul>
                @if(LeavingFeedback != null){
                <div class="feedbackform">
-                    <EditForm Model="LeavingFeedback" OnValidSubmit="SubmitFeedback">
-                         <textarea class="form-control" @bind="LeavingFeedback.Feedback"
+                    <EditForm Model="LeavingFeedback" OnSubmit="SubmitFeedback">
+                         <textarea class="form-control" @bind="FeedbackText"
                               placeholder="Greatest service ever" required>  </textarea>
                          <div class="rating">
+                              @* Funkar inte med en loop eller InputRadio *@
                               <input type="radio" id="star5" name="rating">
                               <label for="star5" @onclick="(e) => SubmitRating(5)"></label>
                               <input type="radio" id="star4" name="rating">
@@ -198,19 +213,30 @@
                }
                @if(ViewingFeedback != null){
 
-                    <p>@ViewingFeedback.Feedback</p>
+                    <div class="feedback-second-section">
+                    <div class="feedback-inner-section">
+                    <p><strong>Feedback:</strong></p>
+                    <textarea disabled>@ViewingFeedback.Feedback</textarea>
+                    </div>
+                    <div class="feedback-inner-section">
+                    
+                    <p><strong>Rating:</strong></p>
+                    <div class="star-div">
                     @for(int i = 0; i <= ViewingFeedback.Rating; i++){
                          <label class="leaving-feedback-star">&#x2605;</label>
                     }
+                    </div>
+                    </div>
+                    </div>
                }
 
-               @if (FeedbackSuccess != "")
+               @if (FeedbackSuccessText != "")
                {
-                    <p class="alert alert-success" style="padding: 1rem; margin: 1rem;">@FeedbackSuccess <br>
+                    <p class="alert alert-success" style="padding: 1rem; margin: 1rem;">@FeedbackSuccessText <br>
                     <i>- The best healthcare company ever</i></p>
                }
-               @if(FeedbackFail != ""){
-                     <p class="alert alert-danger" style="padding: 1rem; margin: 1rem;">@FeedbackFail <br>
+               @if(FeedbackFailText != ""){
+                     <p class="alert alert-danger" style="padding: 1rem; margin: 1rem;">@FeedbackFailText <br>
                     <i>- The best healthcare company ever</i></p>
                }
           </div>
@@ -224,13 +250,11 @@
      public string NameOfDoctor = "";
      public string NameOfPatient = "";
      string successMsg = "";
-     string FeedbackSuccess = "";
-     string FeedbackFail = "";
-     
+     string FeedbackSuccessText = "";
+     string FeedbackFailText = "";
+     string FeedbackText = "";
      private Appointment? LeavingFeedback = null;
      private Appointment? ViewingFeedback = null;
-
-
      protected override async Task OnInitializedAsync()
      {
           userName = await userService.GetEmailAsync();
@@ -247,16 +271,22 @@
      }
      private void SubmitFeedback()
      {
-          FeedbackSuccess = "";
-          FeedbackFail = "";
-          var success = feedbackService.SaveFeedback(LeavingFeedback);
+          FeedbackSuccessText = "";
+          FeedbackFailText = "";
+          if(LeavingFeedback == null || LeavingFeedback.Rating == null || FeedbackText.IsNullOrEmpty()){
+               FeedbackFailText = "Error saving your feedback, please try again";
+               return;
+          }
+
+          var success = feedbackService.SaveFeedback(LeavingFeedback, FeedbackText);
           if(success){
                 
-               FeedbackSuccess = "Your feedback has been saved, thank you for cooperating";
+               FeedbackSuccessText = "Your feedback has been saved, thank you for cooperating";
           }
           else{
-               FeedbackFail = "Rating was below 3 stars and therefore not saved, thank you anyway!";
+               FeedbackFailText = "Rating was below 3 stars and therefore not saved, thank you anyway!";
           }
+          FeedbackText = "";
      }
     private void GetAllMeetings(User loggedInUser)
    {
@@ -312,6 +342,7 @@
      {
           LeavingFeedback = null;
           ViewingFeedback = null;
+          FeedbackText = "";
      }
      private string GetNameOfDoctor(int careGiverId)
      {
@@ -352,13 +383,17 @@
      private void LeaveFeedback(Appointment appointment)
      {
           LeavingFeedback = appointment;
-          FeedbackSuccess = "";
-          FeedbackFail = "";
+          FeedbackSuccessText = "";
+          FeedbackFailText = "";
+          FeedbackText = "";
           ViewingFeedback = null;
      }
      private void ViewFeedback (Appointment appointment){
           ViewingFeedback = appointment;
           LeavingFeedback = null;
+          FeedbackText = "";
+          FeedbackSuccessText = "";
+          FeedbackFailText = "";
      }
      public bool SendCancelEmail(Appointment appointment, User user)
      {

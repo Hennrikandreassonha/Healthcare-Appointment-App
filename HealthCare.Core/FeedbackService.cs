@@ -12,11 +12,12 @@ namespace HealthCare.Core
             _context = context;
 
         }
-        public bool SaveFeedback(Appointment appointmentFeedback)
+        public bool SaveFeedback(Appointment appointmentFeedback, string feedbackText)
         {
             if (appointmentFeedback.Rating >= 3)
             {
                 _context.Update(appointmentFeedback);
+                appointmentFeedback.Feedback = feedbackText;
                 _context.SaveChanges();
                 return true;
             }
