@@ -126,15 +126,39 @@
             <div class="day-info">
                 <header>
                     <h3>
-                        Click on a date to check your appointments
+                        Click on a date to check availability
                     </h3>
                 </header>
+                <button class="btn btn-primary" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
+                    new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused))">
+                    @if (appointmentsForBooking.Any())
+                    {
+                        <text>Set unavailable all day</text>
+                        isAvailableAllDay = true;
+                    }
+                    else
+                    {
+                        <text>Set available all day</text>
+                        isAvailableAllDay = false;
+                    }
+                </button>
+                <select @onchange="@(async (args) => await ToggleAvailability(userLoggedIn.Id, new DateTime(currentDate.Year, CalendarInfoObj.Month,
+                        CalendarInfoObj.DayFocused), args.Value.ToString()))">
+                    <option value="">Select Time Slot To Add or Remove</option>
+                    @foreach (var time in appointmentService.GetAvailableTimes())
+                    {
+                        <option value="@time">@time:00</option>
+                    }
+                </select>
                 <table>
                     <thead>
                         <tr>
-                            <th>Patient</th>
-                            <th>Contact</th>
-                            <th>Appointment date</th>
+                            @if (appointmentsForBooking.Any(a => a.Patient != null || a.Patient == null))
+                            {
+                                <th>Patient</th>
+                                <th>Contact</th>
+                                <th>Appointment date</th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -146,7 +170,6 @@
                                     <td>@item.Patient.FirstName @item.Patient.LastName</td>
                                     <td>@item.Patient.Email</td>
                                     <td>@item.DateTime.ToString("M/d/yyyy h:mm") - @item.DateTime.AddHours(1).ToString("h:mm")</td>
-
                                 </tr>
                             }
                             else
@@ -155,28 +178,11 @@
                                     <td></td>
                                     <td></td>
                                     <td>@item.DateTime.ToString("M/d/yyyy h:mm") - @item.DateTime.AddHours(1).ToString("h:mm")</td>
-                                    @* <td>
-                                        <button class="btn btn-primary" @onclick="() => ToggleAvailability(userLoggedIn.Id, item.DateTime)">
-                                            @(isAvailable ? "Set unavailable" : "Set available")
-                                        </button>
-                                    </td> *@
                                 </tr>
                             }
                         }
                     </tbody>
                 </table>
-                <button class="btn btn-primary" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
-                    new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused))">
-                    @(isAvailableAllDay ? "Set unavailable all day" : "Set available all day")
-                </button>
-                <select @onchange="@(async (args) => await ToggleAvailability(userLoggedIn.Id, new DateTime(currentDate.Year, CalendarInfoObj.Month, 
-                    CalendarInfoObj.DayFocused), args.Value.ToString()))">
-                    <option value="">Select Time Slot To Add or Remove</option>
-                    @foreach (var time in appointmentService.GetAvailableTimes())
-                    {
-                        <option value="@time">@time:00</option>
-                    }
-                </select>
             </div>
         }
     }
@@ -211,17 +217,17 @@
     private string successMsg = "";
     private string errorMsg = "";
     Dictionary<DayOfWeek, int> weekdayDictionary = new Dictionary<DayOfWeek, int>
-{
-{ DayOfWeek.Monday, 0 },
-{ DayOfWeek.Tuesday, 1 },
-{ DayOfWeek.Wednesday, 2 },
-{ DayOfWeek.Thursday, 3 },
-{ DayOfWeek.Friday, 4 },
-{ DayOfWeek.Saturday, 5 },
-{ DayOfWeek.Sunday, 6 }
-};
+    {
+        { DayOfWeek.Monday, 0 },
+        { DayOfWeek.Tuesday, 1 },
+        { DayOfWeek.Wednesday, 2 },
+        { DayOfWeek.Thursday, 3 },
+        { DayOfWeek.Friday, 4 },
+        { DayOfWeek.Saturday, 5 },
+        { DayOfWeek.Sunday, 6 }
+    };
     private ServiceEnum selectedService;
-    private bool isAvailableAllDay = false;
+    private bool isAvailableAllDay;
     private void HandleServiceSelection(ServiceEnum service)
     {
         selectedService = service;
@@ -250,21 +256,23 @@
     }
     private async Task ToggleAvailability(int doctorId, DateTime dateToToggle, string selectedTime)
     {
-        // Parse the selectedTime as needed
-        int timeSelected = int.Parse(selectedTime);
-
-        bool appointmentExists = await appointmentService.CheckAppointmentExists(doctorId, dateToToggle, new TimeSpan(timeSelected, 0, 0));
-
-        if (appointmentExists)
+        if (!string.IsNullOrEmpty(selectedTime))
         {
-            await appointmentService.RemoveInitialAppointment(doctorId, dateToToggle, new TimeSpan(timeSelected, 0, 0));
-        }
-        else
-        {
-            await appointmentService.AddInitialAppointment(doctorId, dateToToggle, new TimeSpan(timeSelected, 0, 0));
-        }
+            int timeSelected = int.Parse(selectedTime);
 
-        appointmentsForBooking = appointmentService.GetAvailabilityByDate(doctorId, dateToToggle).ToArray();
+            bool appointmentExists = await appointmentService.CheckAppointmentExists(doctorId, dateToToggle, new TimeSpan(timeSelected, 0, 0));
+
+            if (appointmentExists)
+            {
+                await appointmentService.RemoveInitialAppointment(doctorId, dateToToggle, new TimeSpan(timeSelected, 0, 0));
+            }
+            else
+            {
+                await appointmentService.AddInitialAppointment(doctorId, dateToToggle, new TimeSpan(timeSelected, 0, 0));
+            }
+
+            appointmentsForBooking = appointmentService.GetAvailabilityByDate(doctorId, dateToToggle).ToArray();
+        }        
     }
     private void ToggleAvailabilityForADay(int doctorId, DateTime dateToToggle)
     {
