@@ -118,12 +118,36 @@
                         Click on a date to check availability
                     </h3>
                 </header>
+                <button class="btn btn-primary" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
+                    new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused))">
+                    @if (appointmentsForBooking.Any())
+                    {
+                        <text>Set unavailable all day</text>
+                        isAvailableAllDay = true;
+                    }
+                    else
+                    {
+                        <text>Set available all day</text>
+                        isAvailableAllDay = false;
+                    }
+                </button>
+                <select @onchange="@(async (args) => await ToggleAvailability(userLoggedIn.Id, new DateTime(currentDate.Year, CalendarInfoObj.Month,
+                        CalendarInfoObj.DayFocused), args.Value.ToString()))">
+                    <option value="">Select Time Slot To Add or Remove</option>
+                    @foreach (var time in appointmentService.GetAvailableTimes())
+                    {
+                        <option value="@time">@time:00</option>
+                    }
+                </select>
                 <table>
                     <thead>
                         <tr>
-                            <th>Patient</th>
-                            <th>Contact</th>
-                            <th>Appointment date</th>
+                            @if (appointmentsForBooking.Any(a => a.Patient != null || a.Patient == null))
+                            {
+                                <th>Patient</th>
+                                <th>Contact</th>
+                                <th>Appointment date</th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -135,7 +159,6 @@
                                     <td>@item.Patient.FirstName @item.Patient.LastName</td>
                                     <td>@item.Patient.Email</td>
                                     <td>@item.DateTime.ToString("M/d/yyyy h:mm") - @item.DateTime.AddHours(1).ToString("h:mm")</td>
-
                                 </tr>
                             }
                             else
@@ -149,18 +172,6 @@
                         }
                     </tbody>
                 </table>
-                <button class="btn btn-primary" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
-                    new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused))">
-                    @(isAvailableAllDay ? "Set unavailable all day" : "Set available all day")
-                </button>
-                <select @onchange="@(async (args) => await ToggleAvailability(userLoggedIn.Id, new DateTime(currentDate.Year, CalendarInfoObj.Month, 
-                    CalendarInfoObj.DayFocused), args.Value.ToString()))">
-                    <option value="">Select Time Slot To Add or Remove</option>
-                    @foreach (var time in appointmentService.GetAvailableTimes())
-                    {
-                        <option value="@time">@time:00</option>
-                    }
-                </select>
             </div>
         }
     }
