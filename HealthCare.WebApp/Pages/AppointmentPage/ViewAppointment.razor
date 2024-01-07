@@ -79,9 +79,12 @@
                     <p class="alert alert-error">@successMsg</p>
                 }
 
-                @* filtering starts here *@
 
-                <input type="text" @bind="careGiverNameFilter" @oninput="FilterByName" placeholder="Filter by name" />
+                <div class="filter-table-wrapper">
+                @* filtering starts here *@
+                <div class="filter-container">
+                    <input class="filter" type="text" @bind="careGiverNameFilter" @oninput="FilterByName" placeholder="Filter by name" />
+                </div>
 
                 @* <select @onchange="FilterByRole"></select>
                     <option value="">Filter by Role</option> *@
@@ -119,6 +122,7 @@
                         }
                     </tbody>
                 </table>
+                </div>
             </div>
         }
         else if (userLoggedIn.Role == RoleEnum.Doctor)
