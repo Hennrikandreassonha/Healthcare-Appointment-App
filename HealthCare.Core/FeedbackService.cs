@@ -1,30 +1,27 @@
 ﻿using System;
+using HealthCare.Core.Data;
+using HealthCare.Core.Models.AppointmentModels;
 namespace HealthCare.Core
 {
     public class FeedbackService
     {
-        private List<string> feedbackList = new List<string>();
+        private readonly HealthcareContext _context;
 
-        public FeedbackService()
+        public FeedbackService(HealthcareContext context)
         {
-            LoadDummyData();
+            _context = context;
+
         }
-
-        private void LoadDummyData()
+        public bool SaveFeedback(Appointment appointmentFeedback, string feedbackText)
         {
-            // mock data
-            feedbackList.Add("Great service, thank you!");
-            feedbackList.Add("Very satisfied with the care provided.");
-        }
-
-        public void SaveFeedback(string feedback)
-        {
-            feedbackList.Add(feedback);
-        }
-
-        public IEnumerable<string> GetAllFeedback()
-        {
-            return feedbackList;
+            if (appointmentFeedback.Rating >= 3)
+            {
+                _context.Update(appointmentFeedback);
+                appointmentFeedback.Feedback = feedbackText;
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
         }
     }
 }

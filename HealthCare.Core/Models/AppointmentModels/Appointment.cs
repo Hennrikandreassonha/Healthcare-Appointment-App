@@ -12,7 +12,7 @@ namespace HealthCare.Core.Models.AppointmentModels
         public DateTime DateTime { get; set; }
         public ServiceEnum? Service { get; set; }
         public string? Feedback { get; set; }
-        // public string? CareGiverNotes { get; set; }
+        public int? Rating { get; set; }
         public int? PatientId { get; set; }
         public int CareGiverId { get; set; }
         public Patient Patient { get; set; }
