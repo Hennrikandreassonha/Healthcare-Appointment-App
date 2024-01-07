@@ -125,3 +125,14 @@ table button {
 tr {
     border: 1px solid black;
 }
+
+.filter-container {
+    margin-bottom: 1rem;
+    width: auto;
+}
+
+.name-filter {
+    padding: 0.5rem;
+    border: 1px solid black;
+    margin-left: 7.5rem;
+}
