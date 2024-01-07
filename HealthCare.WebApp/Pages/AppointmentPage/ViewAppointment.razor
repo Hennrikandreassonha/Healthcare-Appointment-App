@@ -97,7 +97,7 @@
                                         <option value="">Select Service</option>
                                         @foreach (ServiceEnum service in Enum.GetValues(typeof(ServiceEnum)))
                                         {
-                                            <option value="@service">@service</option>
+                                            <option value="@service">@service.GetDisplayName()</option>
                                         }
                                     </select>
                                 </td>
@@ -221,7 +221,6 @@
     {
         selectedService = service;
     }
-
     protected override async Task OnInitializedAsync()
     {
         yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}";
