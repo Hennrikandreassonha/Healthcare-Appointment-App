@@ -80,14 +80,18 @@
                 }
 
 
-                <div class="filter-table-wrapper">
                 @* filtering starts here *@
                 <div class="filter-container">
-                    <input class="filter" type="text" @bind="careGiverNameFilter" @oninput="FilterByName" placeholder="Filter by name" />
-                </div>
+                    <input class="name-filter" type="text" @bind="careGiverNameFilter" @oninput="FilterByName" placeholder="Filter by name" />
 
-                @* <select @onchange="FilterByRole"></select>
-                    <option value="">Filter by Role</option> *@
+                    <label for="time-slot-filter">Select Time Slot:</label>
+                    <select id="time-slot-filter" @onchange="FilterByTime">
+                        @foreach (var timeSlot in Enum.GetValues(typeof(TimeSlots)).Cast<TimeSlots>())
+                        {
+                            <option value="@timeSlot">@timeSlot.ToString()</option>
+                        }
+                    </select>
+                </div>
 
                 @* filtering ends here *@
 
@@ -122,7 +126,6 @@
                         }
                     </tbody>
                 </table>
-                </div>
             </div>
         }
         else if (userLoggedIn.Role == RoleEnum.Doctor)
@@ -240,6 +243,19 @@
     // Array to save original appointments so that they can be returned after filtering
     private Appointment[] resetFilteredAppointments = { };
     private string careGiverNameFilter = "";
+    private TimeSlots appointmentTimeFilter;
+    public enum TimeSlots
+    {
+        All,
+        Slot_08_00 = 8,
+        Slot_09_00 = 9,
+        Slot_10_00 = 10,
+        Slot_11_00 = 11,
+        Slot_12_00 = 12,
+        Slot_13_00 = 13,
+        Slot_14_00 = 14,
+        Slot_15_00 = 15
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -366,35 +382,33 @@
         FilterCareGivers();
     }
 
-    // currently not working as we currently have no way of assigning specific roles to careGivers however might become relevant in the future
-
-    /*
-    private void FilterByRole(ChangeEventArgs e)
+    private void FilterByTime(ChangeEventArgs e)
+    {
+        if (Enum.TryParse<TimeSlots>(e.Value.ToString(), out var selectedSlot))
         {
-        careGiverRoleFilter = e.Value.ToString();
-        FilterCareGivers();
+            appointmentTimeFilter = selectedSlot;
+            FilterCareGivers();
+        }
     }
-    */
 
     private void FilterCareGivers()
     {
         if (!string.IsNullOrWhiteSpace(careGiverNameFilter))
         {
             string regexPattern = $"^{Regex.Escape(careGiverNameFilter)}.*";
-            appointmentsForDate = appointmentsForDate.Where(c =>
-                Regex.IsMatch($"{c.CareGiver.FirstName} {c.CareGiver.LastName}", regexPattern, RegexOptions.IgnoreCase)).ToArray();
+            appointmentsForDate = appointmentsForDate.Where(n =>
+                Regex.IsMatch($"{n.CareGiver.FirstName} {n.CareGiver.LastName}", regexPattern, RegexOptions.IgnoreCase)).ToArray();
         }
         else
         {
             appointmentsForDate = resetFilteredAppointments;
         }
 
-        /*
-        if (!string.IsNullOrWhiteSpace(careGiverRoleFilter))
+        if (appointmentTimeFilter != TimeSlots.All)
         {
-            appointmentsForDate = appointmentsForDate.Where(c => c.CareGiver.Role.ToString() == careGiverRoleFilter).ToArray();
+            int hourToFilter = (int)appointmentTimeFilter;
+            appointmentsForDate = appointmentsForDate.Where(a => a.DateTime.Hour == hourToFilter).ToArray();
         }
-        */
     }
 
 
