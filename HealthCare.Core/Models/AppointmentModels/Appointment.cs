@@ -7,7 +7,7 @@ using HealthCare.Core.Models.Appointment;
 namespace HealthCare.Core.Models.AppointmentModels
 {
     public class Appointment
-    {
+        {
         public int Id { get; set; }
         public DateTime DateTime { get; set; }
         public ServiceEnum? Service { get; set; }

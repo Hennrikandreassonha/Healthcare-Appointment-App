@@ -90,6 +90,10 @@ ol.day-grid {
     }
 }
 
+.date-day {
+    position: relative;
+}
+
 .date-day:hover {
     background-color: #1474bb !important;
     color: white !important;
@@ -124,4 +128,17 @@ table button {
 
 tr {
     border: 1px solid black;
+}
+
+.hover-div {
+    position: absolute;
+    left: 5px;
+    bottom: 5px;
+    pointer-events: none;
+}
+.hover-div-text {
+    font-size: 16px;
+}
+.hover-div span{
+    display: block;
 }

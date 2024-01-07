@@ -58,25 +58,30 @@ namespace HealthCare.Core
         public string BuildEmailContentConfirmation()
         {
             return $@"
-                <html>
-                    <body style='max-width: 600px; font-family: Arial, sans-serif;'>
-                        <div style='border: 1px solid grey; padding: 0.5rem;'>
-                            <h2>Appointment Confirmation</h2>
-                            <p>Dear {AppointmentDetails.Patient.FirstName} {AppointmentDetails.Patient.LastName},</p>
-                            <p>Your appointment has been successfully booked. Below are the details:</p>
-                            <ul>
-                                <li><strong>Doctor:</strong> {AppointmentDetails.CareGiver.FirstName} {AppointmentDetails.CareGiver.LastName}</li>
-                                <li><strong>Service:</strong> {AppointmentDetails.Service} </li>
-                                <li><strong>Date:</strong> {AppointmentDetails.DateTime.ToShortDateString()}</li>
-                                <li><strong>Time:</strong> {AppointmentDetails.DateTime.Hour:00}:{AppointmentDetails.DateTime.Minute:00}</li>
-                            </ul>
-                            <p>Thank you for choosing our service. If you have any questions or need to make changes, please contact us.</p>
+        <html>
+            <body style='max-width: 600px; font-family: Arial, sans-serif;'>
+                <div style='border: 1px solid grey; padding: 0.5rem;'>
+                    <h2>Appointment Confirmation</h2>
+                    <p>Dear {AppointmentDetails.Patient.FirstName} {AppointmentDetails.Patient.LastName},</p>
+                    <p>Your appointment has been successfully booked. Below are the details:</p>
+                    <ul>
+                        <li><strong>Doctor:</strong> {AppointmentDetails.CareGiver.FirstName} {AppointmentDetails.CareGiver.LastName}</li>
+                        <li><strong>Service:</strong> {AppointmentDetails.Service} </li>
+                        <li><strong>Date:</strong> {AppointmentDetails.DateTime.ToShortDateString()}</li>
+                        <li><strong>Time:</strong> {AppointmentDetails.DateTime.Hour:00}:{AppointmentDetails.DateTime.Minute:00}</li>
+                    </ul>
+                    <div style='display:flex; align-items: center;'>
+                        <div>
+                            <p>Thank you for choosing our service. If you have any questions or need to make changes, please visit our website.</p>
                             <p>Best regards,<br><u>The best healthcare app ever</u></p>
                         </div>
-                    </body>
-                </html>";
+                        <img src='https://i.ibb.co/BLBWZCV/logo.png' style='width: 140px; height: 100%; margin: 0 10px;'/>
+                    </div>
+                </div>
+            </body>
+        </html>";
         }
-         public string BuildEmailContentCanceling()
+        public string BuildEmailContentCanceling()
         {
             return $@"
                 <html>
@@ -91,8 +96,14 @@ namespace HealthCare.Core
                                 <li><strong>Date:</strong> {AppointmentDetails.DateTime.ToShortDateString()}</li>
                                 <li><strong>Time:</strong> {AppointmentDetails.DateTime.Hour:00}:{AppointmentDetails.DateTime.Minute:00}</li>
                             </ul>
-                            <p>Thank you for choosing our service. If you would like to book another appointment please visit our website.</p>
-                            <p>Best regards,<br><u>The best healthcare app ever</u></p>
+                            
+                            <div style='display:flex; align-items: center;'>
+                                 <div>
+                                     <p>Thank you for choosing our service. If you would like to book another appointment please visit our website.</p>
+                                     <p>Best regards,<br><u>The best healthcare app ever</u></p>
+                                 </div>
+                                 <img src='https://i.ibb.co/BLBWZCV/logo.png' style='width: 140px; height: 100%; margin: 0 10px;'/>
+                            </div>
                         </div>
                     </body>
                 </html>";

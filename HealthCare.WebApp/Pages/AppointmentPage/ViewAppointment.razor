@@ -1,11 +1,10 @@
-﻿@inject AppointmentService appointmentService
+﻿@page "/appointment"
+@inject AppointmentService appointmentService
 @inject AuthenticationStateProvider authStateProvider
 @inject UserService userService;
-@page "/appointment"
-
+@inject EmailService emailService
 @using System.Globalization;
 @using HealthCare.Core.Models.Appointment;
-@inject EmailService emailService
 
 <div class="appointment-flex">
     <div class="calendar">
@@ -52,14 +51,25 @@
             @foreach (int item in CalendarInfoObj.Days)
             {
                 <li class="date-day @(IsTodaysDate(item) ? "current-date" : "") @(CalendarInfoObj.DayFocused == item && CalendarInfoObj.Month == currentDate.Month ? "date-day-focus" : "")"
-                    @onclick="() => HandleChosenDate(item, userLoggedIn)">@item</li>
+                    @onclick="() => HandleChosenDate(item, userLoggedIn)"
+                    @onmouseover="() => OnMouseOverDate(item, userLoggedIn)" @onmouseout="OnMouseOut">
+                    @item
+
+                    @if (AvailableHoverDay == item)
+                    {
+                        <div class="hover-div">
+                            <span><u>@AvailableHover</u></span>
+                            <span class="hover-div-text">Times Available</span>
+                        </div>
+                    }
+                </li>
             }
         </ol>
     </div>
-
     @if (chosenDay != null)
     {
         @if (userLoggedIn.Role == RoleEnum.Patient)
+
         {
             <div id="day-info">
                 <header>
@@ -70,10 +80,12 @@
                     </h3>
                 </header>
                 @if (successMsg != "")
+
                 {
                     <p class="alert alert-success">@successMsg</p>
                 }
                 @if (errorMsg != "")
+
                 {
                     <p class="alert alert-error">@successMsg</p>
                 }
@@ -87,15 +99,18 @@
                     </thead>
                     <tbody>
                         @foreach (Appointment item in appointmentsForDate)
+
                         {
                             <tr>
                                 <td>@item.CareGiver.FirstName @item.CareGiver.LastName</td>
                                 <td>@item.CareGiver.Email</td>
                                 <td>@item.DateTime.ToString("M/d/yyyy h:mm") - @item.DateTime.AddHours(1).ToString("h:mm")</td>
                                 <td>
-                                    <select id="selectedService" @onchange="@(e => HandleServiceSelection((ServiceEnum)Enum.Parse(typeof(ServiceEnum), e.Value.ToString())))">
+                                    <select id="selectedService"
+                                        @onchange="@(e => HandleServiceSelection((ServiceEnum)Enum.Parse(typeof(ServiceEnum), e.Value.ToString())))">
                                         <option value="">Select Service</option>
                                         @foreach (ServiceEnum service in Enum.GetValues(typeof(ServiceEnum)))
+
                                         {
                                             <option value="@service">@service</option>
                                         }
@@ -110,7 +125,9 @@
                 </table>
             </div>
         }
+
         else if (userLoggedIn.Role == RoleEnum.Doctor)
+
         {
             <div class="day-info">
                 <header>
@@ -121,20 +138,26 @@
                 <button class="btn btn-primary" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
                     new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused))">
                     @if (appointmentsForBooking.Any())
+
                     {
                         <text>Set unavailable all day</text>
                         isAvailableAllDay = true;
+
                     }
+
                     else
+
                     {
                         <text>Set available all day</text>
                         isAvailableAllDay = false;
+
                     }
                 </button>
                 <select @onchange="@(async (args) => await ToggleAvailability(userLoggedIn.Id, new DateTime(currentDate.Year, CalendarInfoObj.Month,
                         CalendarInfoObj.DayFocused), args.Value.ToString()))">
                     <option value="">Select Time Slot To Add or Remove</option>
                     @foreach (var time in appointmentService.GetAvailableTimes())
+
                     {
                         <option value="@time">@time:00</option>
                     }
@@ -152,8 +175,10 @@
                     </thead>
                     <tbody>
                         @foreach (Appointment item in appointmentsForBooking)
+
                         {
                             @if (item.Patient != null)
+
                             {
                                 <tr>
                                     <td>@item.Patient.FirstName @item.Patient.LastName</td>
@@ -161,7 +186,9 @@
                                     <td>@item.DateTime.ToString("M/d/yyyy h:mm") - @item.DateTime.AddHours(1).ToString("h:mm")</td>
                                 </tr>
                             }
+
                             else
+
                             {
                                 <tr>
                                     <td></td>
@@ -178,7 +205,6 @@
 </div>
 
 @code {
-
     public class CalendarInfo
     {
         public int DayFocused { get; set; }
@@ -201,43 +227,58 @@
     // Appointments for the date that the patient has selected.
     private Appointment[] appointmentsForDate = { };
     private int? chosenDay = null;
+
     private CalendarInfo CalendarInfoObj = new();
+
     private User userLoggedIn;
     private string successMsg = "";
     private string errorMsg = "";
     Dictionary<DayOfWeek, int> weekdayDictionary = new Dictionary<DayOfWeek, int>
-    {
-        { DayOfWeek.Monday, 0 },
-        { DayOfWeek.Tuesday, 1 },
-        { DayOfWeek.Wednesday, 2 },
-        { DayOfWeek.Thursday, 3 },
-        { DayOfWeek.Friday, 4 },
-        { DayOfWeek.Saturday, 5 },
-        { DayOfWeek.Sunday, 6 }
-    };
+{
+{ DayOfWeek.Monday, 0 },
+{ DayOfWeek.Tuesday, 1 },
+{ DayOfWeek.Wednesday, 2 },
+{ DayOfWeek.Thursday, 3 },
+{ DayOfWeek.Friday, 4 },
+{ DayOfWeek.Saturday, 5 },
+{ DayOfWeek.Sunday, 6 }
+};
     private ServiceEnum selectedService;
     private bool isAvailableAllDay;
+    private string AvailableHover = "";
+    private int? AvailableHoverDay = null;
     private void HandleServiceSelection(ServiceEnum service)
     {
         selectedService = service;
     }
-
     protected override async Task OnInitializedAsync()
     {
         yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}";
         UpdateDaysOfMonth(currentDate.Year, currentDate.Month);
-
         var authState = await authStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
-        var userEmail = user.FindFirst(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
+        var userEmail = user.FindFirst(c => c.Type ==
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
 
         if (userEmail != null)
         {
             userLoggedIn = userService.GetByEmail(userEmail);
         }
-
         appointmentService.AddSampleData();
+    }
+    public void OnMouseOverDate(int day, User user)
+    {
+        var dateToCheck = new DateTime(currentDate.Year, currentDate.Month, day);
+        if (user.Role == RoleEnum.Patient && AvailableHoverDay == null)
+        {
+            AvailableHoverDay = day;
+            AvailableHover = appointmentService.GetInitialAppointmentsByDate(dateToCheck).ToArray().Length.ToString();
+        }
+    }
+    private void OnMouseOut()
+    {
+        AvailableHoverDay = null;
     }
     private async Task ToggleAvailability(int doctorId, DateTime dateToToggle, string selectedTime)
     {
@@ -245,8 +286,8 @@
         {
             int timeSelected = int.Parse(selectedTime);
 
-            bool appointmentExists = await appointmentService.CheckAppointmentExists(doctorId, dateToToggle, new TimeSpan(timeSelected, 0, 0));
-
+            bool appointmentExists = await appointmentService.CheckAppointmentExists(doctorId, dateToToggle, new
+            TimeSpan(timeSelected, 0, 0));
             if (appointmentExists)
             {
                 await appointmentService.RemoveInitialAppointment(doctorId, dateToToggle, new TimeSpan(timeSelected, 0, 0));
@@ -255,44 +296,47 @@
             {
                 await appointmentService.AddInitialAppointment(doctorId, dateToToggle, new TimeSpan(timeSelected, 0, 0));
             }
-
             appointmentsForBooking = appointmentService.GetAvailabilityByDate(doctorId, dateToToggle).ToArray();
-        }        
+        }
     }
     private void ToggleAvailabilityForADay(int doctorId, DateTime dateToToggle)
     {
         if (isAvailableAllDay)
         {
             appointmentService.RemoveInitialAppointmentsForADay(doctorId, dateToToggle);
+
             appointmentsForBooking = appointmentService.GetAvailabilityByDate(doctorId, dateToToggle).ToArray();
         }
         else
         {
             appointmentService.AddInitialAppointmentsForADay(doctorId, dateToToggle);
+
             appointmentsForBooking = appointmentService.GetAvailabilityByDate(doctorId, dateToToggle).ToArray();
         }
-
         isAvailableAllDay = !isAvailableAllDay;
     }
     private void HandleChosenDate(int day, User user)
     {
         CalendarInfoObj.DayFocused = day;
-        var dateToCheck = new DateTime(currentDate.Year, currentDate.Month, day);
-        chosenDay = day;
-        CalendarInfoObj.Month = currentDate.Month;
 
+        var dateToCheck = new DateTime(currentDate.Year, currentDate.Month, day);
+
+        chosenDay = day;
+
+        CalendarInfoObj.Month = currentDate.Month;
         if (user.Role == RoleEnum.Patient)
         {
             appointmentsForDate = appointmentService.GetInitialAppointmentsByDate(dateToCheck).ToArray();
         }
         else if (user.Role == RoleEnum.Doctor)
         {
-                appointmentsForBooking = appointmentService.GetAvailabilityByDate(user.Id, dateToCheck).ToArray();
+            appointmentsForBooking = appointmentService.GetAvailabilityByDate(user.Id, dateToCheck).ToArray();
         }
     }
     private void HandleBooking(Appointment appointment)
     {
         var success = appointmentService.AddBooking(appointment, userLoggedIn.Id, selectedService);
+
         bool emailSentSuccess = false;
         if (success)
             emailSentSuccess = SendEmail(appointment, userLoggedIn);
@@ -301,7 +345,6 @@
             successMsg = "Your appointment was booked successfully! Please check your email for confirmation.";
             return;
         }
-
         errorMsg = "There was a problem booking your appointment, please try again";
     }
     public bool SendEmail(Appointment appointment, User user)
@@ -316,8 +359,10 @@
         var item1 = Enumerable.Range(1, daysInMonth).ToArray();
         CalendarInfoObj.Days.Clear();
         foreach (var item in item1)
+
             CalendarInfoObj.Days.Add(item);
     }
+
     private int GetStartDay(int year, int month)
     {
         DateTime firstDayOfMonth = new DateTime(year, month, 1);
