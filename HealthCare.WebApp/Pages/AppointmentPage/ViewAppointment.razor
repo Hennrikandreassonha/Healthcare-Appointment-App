@@ -3,8 +3,10 @@
 @inject AuthenticationStateProvider authStateProvider
 @inject UserService userService;
 @inject EmailService emailService
+@inject IJSRuntime JSRunTime
 @using System.Globalization;
 @using HealthCare.Core.Models.Appointment;
+@using Microsoft.JSInterop
 
 <div class="appointment-flex">
     <div class="calendar">
@@ -73,7 +75,6 @@
         {
             <div id="day-info">
                 <header>
-
                     <h3>
                         There are @appointmentsForDate.Length appointments available for booking @chosenDay of
                         @CalendarInfoObj.GetMonthName(CalendarInfoObj.Month);
@@ -247,6 +248,7 @@
     private bool isAvailableAllDay;
     private string AvailableHover = "";
     private int? AvailableHoverDay = null;
+    private bool? IsMobile = null;
     private void HandleServiceSelection(ServiceEnum service)
     {
         selectedService = service;
@@ -267,8 +269,24 @@
         }
         appointmentService.AddSampleData();
     }
-    public void OnMouseOverDate(int day, User user)
+   protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            //This is where we check is user is on mobile.
+            //Hover effect was making a mess on mobiles.
+            if (firstRender)
+            {
+                await Task.Delay(500); 
+                IsMobile = await JSRunTime.InvokeAsync<bool>("isDevice",  new object[] { });
+                Console.WriteLine();
+            }
+        }
+    public async void OnMouseOverDate(int day, User user)
     {
+        //Checking if user is on a mobile device.
+        //Hover effect doesn work well on smaller screens.
+        if(IsMobile != null && IsMobile.Value == true)
+            return;
+
         var dateToCheck = new DateTime(currentDate.Year, currentDate.Month, day);
         if (user.Role == RoleEnum.Patient && AvailableHoverDay == null)
         {

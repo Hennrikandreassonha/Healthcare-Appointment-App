@@ -12,6 +12,7 @@ header {
 
 #header-div {
     max-width: 700px;
+    min-width: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -66,7 +67,7 @@ ol.day-grid {
     background-color: #fff;
 }
 
-@media all and (max-width: 800px) {
+@media all and (max-width: 900px) {
 
     ul,
     ol {
@@ -136,9 +137,18 @@ tr {
     bottom: 5px;
     pointer-events: none;
 }
+
 .hover-div-text {
-    font-size: 16px;
+    white-space: nowrap;
 }
-.hover-div span{
+
+.hover-div span {
     display: block;
+    font-size: 1vw;
+    font-size: clamp(12px, 1vw, 16px);
+}
+@media all and (max-width: 1064px) {
+    .hover-div{
+        display: none;
+    }
 }
