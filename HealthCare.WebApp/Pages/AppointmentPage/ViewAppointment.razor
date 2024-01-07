@@ -5,6 +5,7 @@
 
 @using System.Globalization;
 @using HealthCare.Core.Models.Appointment;
+@using System.Text.RegularExpressions;
 @inject EmailService emailService
 
 <div class="appointment-flex">
@@ -77,6 +78,16 @@
                 {
                     <p class="alert alert-error">@successMsg</p>
                 }
+
+                @* filtering starts here *@
+
+                <input type="text" @bind="careGiverNameFilter" @oninput="FilterByName" placeholder="Filter by name" />
+
+                @* <select @onchange="FilterByRole"></select>
+                    <option value="">Filter by Role</option> *@
+
+                @* filtering ends here *@
+
                 <table>
                     <thead>
                         <tr>
@@ -216,6 +227,10 @@
         selectedService = service;
     }
 
+    // Array to save original appointments so that they can be returned after filtering
+    private Appointment[] resetFilteredAppointments = { };
+    private string careGiverNameFilter = "";
+
     protected override async Task OnInitializedAsync()
     {
         yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}";
@@ -276,6 +291,7 @@
         if (user.Role == RoleEnum.Patient)
         {
             appointmentsForDate = appointmentService.GetInitialAppointmentsByDate(dateToCheck).ToArray();
+            resetFilteredAppointments = appointmentService.GetAppointmentsByDate(dateToCheck).ToArray();
         }
         else if (user.Role == RoleEnum.Doctor)
         {
@@ -331,4 +347,43 @@
     {
         return currentDate.Month == DateTime.Now.Month && day == DateTime.Now.Day;
     }
+
+    private void FilterByName(ChangeEventArgs e)
+    {
+        careGiverNameFilter = e.Value.ToString();
+        FilterCareGivers();
+    }
+
+    // currently not working as we currently have no way of assigning specific roles to careGivers however might become relevant in the future
+
+    /*
+    private void FilterByRole(ChangeEventArgs e)
+        {
+        careGiverRoleFilter = e.Value.ToString();
+        FilterCareGivers();
+    }
+    */
+
+    private void FilterCareGivers()
+    {
+        if (!string.IsNullOrWhiteSpace(careGiverNameFilter))
+        {
+            string regexPattern = $"^{Regex.Escape(careGiverNameFilter)}.*";
+            appointmentsForDate = appointmentsForDate.Where(c =>
+                Regex.IsMatch($"{c.CareGiver.FirstName} {c.CareGiver.LastName}", regexPattern, RegexOptions.IgnoreCase)).ToArray();
+        }
+        else
+        {
+            appointmentsForDate = resetFilteredAppointments;
+        }
+
+        /*
+        if (!string.IsNullOrWhiteSpace(careGiverRoleFilter))
+        {
+            appointmentsForDate = appointmentsForDate.Where(c => c.CareGiver.Role.ToString() == careGiverRoleFilter).ToArray();
+        }
+        */
+    }
+
+
 }
