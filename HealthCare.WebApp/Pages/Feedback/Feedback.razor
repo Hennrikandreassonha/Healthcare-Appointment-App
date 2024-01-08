@@ -6,52 +6,52 @@
 
 
 
-<div class="">
-    <div class="">
-        <h3>Feedback</h3>
-        <p> Here is our feedback from previous clients. </p>
-        <label>Sort by</label>
-        <select @onchange="SortAppointments">
-            <option value="all">All</option>
-            <option value="fiveStars">Only 5 stars</option>
-            <option value="fourStars">Only 4 stars</option>
-            <option value="lowToHigh">Low to high</option>
-            <option value="highToLow">High to low</option>
-        </select>
-    </div>
 
-    <div class="feedback-table">
-        <table>
-            <thead>
-                <tr>
-                    <th>Patient</th>
-                    <th>Feedback</th>
-                    <th>Rating</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (Appointment appointments in sortedAppointments)
-                {
-                    <tr>
-                        <td> @GetFirstNameOfPatient(appointments.PatientId)</td>
-                        <td>@appointments.Feedback</td>
-                        <td>
-                            <p>
-                                @for (int i = 0; i < 5; i++)
-                                {
-                                    <span class="feedback-star @(i < appointments.Rating ? "feedback-gold-star" : "")">&#x2605;</span>
-
-                                }
-                            </p>
-                        </td>
-                    </tr>
-                }
-
-            </tbody>
-        </table>
-    </div>
-
+<div>
+    <h3>Feedback</h3>
+    <p> Here is our feedback from previous clients. </p>
+    <label for="sortSelected">Sort by</label>
+    <select id="sortSelected" @onchange="SortAppointments">
+        <option value="all">All</option>
+        <option value="fiveStars">Only 5 stars</option>
+        <option value="fourStars">Only 4 stars</option>
+        <option value="lowToHigh">Low to high</option>
+        <option value="highToLow">High to low</option>
+    </select>
 </div>
+
+<div class="feedback-table">
+    <table>
+        <thead>
+            <tr>
+                <th>Patient</th>
+                <th>Feedback</th>
+                <th>Rating</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Appointment appointments in sortedAppointments)
+            {
+                <tr>
+                    <td> @GetFirstNameOfPatient(appointments.PatientId)</td>
+                    <td>@appointments.Feedback</td>
+                    <td>
+                        <p>
+                            @for (int i = 0; i < 5; i++)
+                            {
+                                <span class="feedback-star @(i < appointments.Rating ? "feedback-gold-star" : "")">&#x2605;</span>
+
+                            }
+                        </p>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+
+
 
 
 
