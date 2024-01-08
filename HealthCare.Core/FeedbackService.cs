@@ -14,7 +14,7 @@ namespace HealthCare.Core
         }
         public bool SaveFeedback(Appointment appointmentFeedback, string feedbackText)
         {
-            if (appointmentFeedback.Rating >= 3)
+            if (appointmentFeedback.Rating >= 4)
             {
                 _context.Update(appointmentFeedback);
                 appointmentFeedback.Feedback = feedbackText;
