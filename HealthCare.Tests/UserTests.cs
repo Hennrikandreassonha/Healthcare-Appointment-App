@@ -134,7 +134,7 @@ namespace HealthCare.Tests
         public void Login_User_Update_Returs_Updated_Details()
         {
             //Arrange
-            User resultUserAccount = new();
+            User resultUserAccount = new User();
             var userToRegister = new RegisterDto("Test", "Password", "firstName", "lastName",
                 GenderEnum.Male, DateTime.Now, "123");
 

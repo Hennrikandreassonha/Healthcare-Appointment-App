@@ -8,8 +8,16 @@
 
 <div class="">
     <div class="">
-        <h2>Feedback</h2>
+        <h3>Feedback</h3>
         <p> Here is our feedback from previous clients. </p>
+        <label>Sort by</label>
+        <select @onchange="SortAppointments">
+            <option value="all">All</option>
+            <option value="fiveStars">Only 5 stars</option>
+            <option value="fourStars">Only 4 stars</option>
+            <option value="lowToHigh">Low to high</option>
+            <option value="highToLow">High to low</option>
+        </select>
     </div>
 
     <div class="feedback-table">
@@ -22,7 +30,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (Appointment appointments in feedbackAppointments)
+                @foreach (Appointment appointments in sortedAppointments)
                 {
                     <tr>
                         <td> @GetFirstNameOfPatient(appointments.PatientId)</td>
@@ -51,10 +59,13 @@
 
 @code {
     List<Appointment> feedbackAppointments = new List<Appointment>();
+    List<Appointment> sortedAppointments = new List<Appointment>();
+
 
     protected override async Task OnInitializedAsync()
     {
         feedbackAppointments = feedbackService.GetAllFeedBack();
+        sortedAppointments.AddRange(feedbackAppointments);
     }
 
     public string GetFirstNameOfPatient(int? id)
@@ -62,5 +73,35 @@
         var patient = dbContext.Patient.FirstOrDefault(x => x.Id == id);
 
         return patient.FirstName;
+    }
+
+    public void SortAppointments(ChangeEventArgs options)
+    {
+        string selectedOptions = options.Value.ToString();
+
+        if (selectedOptions == "fiveStars")
+        {
+
+            sortedAppointments = feedbackAppointments.Where(r => r.Rating == 5).ToList();
+        }
+        else if (selectedOptions == "fourStars")
+        {
+
+            sortedAppointments = feedbackAppointments.Where(r => r.Rating == 4).ToList();
+        }
+        else if (selectedOptions == "lowToHigh")
+        {
+
+            sortedAppointments = feedbackAppointments.OrderBy(r => r.Rating).ToList();
+        }
+        else if (selectedOptions == "highToLow")
+        {
+
+            sortedAppointments = feedbackAppointments.OrderByDescending(r => r.Rating).ToList();
+        }
+        else
+        {
+            sortedAppointments = feedbackService.GetAllFeedBack();
+        }
     }
 }
