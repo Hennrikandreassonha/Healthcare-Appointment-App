@@ -12,22 +12,26 @@
         <p> Here is our feedback from previous clients. </p>
     </div>
 
-    <div>
+    <div class="feedback-table">
         <table>
-            <tr>
-                <th>Patient</th>
-                <th>Feedback</th>
-                <th>Rating</th>
-            </tr>
-            @foreach (Appointment appointments in feedbackAppointments)
-            {
+            <thead>
                 <tr>
-                    <td> @GetFirstNameOfPatient(appointments.PatientId)</td>
-                    <td>@appointments.Feedback</td>
-                    <td>@appointments.Rating</td>
+                    <th>Patient</th>
+                    <th>Feedback</th>
+                    <th>Rating</th>
                 </tr>
-            }
+            </thead>
+            <tbody>
+                @foreach (Appointment appointments in feedbackAppointments)
+                {
+                    <tr>
+                        <td> @GetFirstNameOfPatient(appointments.PatientId)</td>
+                        <td>@appointments.Feedback</td>
+                        <td>@appointments.Rating</td>
+                    </tr>
+                }
 
+            </tbody>
         </table>
     </div>
 
