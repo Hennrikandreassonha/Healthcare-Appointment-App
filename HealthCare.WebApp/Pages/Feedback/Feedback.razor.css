@@ -55,5 +55,12 @@ select {
     margin-bottom: 1rem;
 }
 
- 
+
+    option:checked {
+        background-color: gold;
+        color: white;
+       
+    }
+
+
 
