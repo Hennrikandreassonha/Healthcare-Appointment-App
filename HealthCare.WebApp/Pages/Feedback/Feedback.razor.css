@@ -55,12 +55,5 @@ select {
     margin-bottom: 1rem;
 }
 
-    
-    select option:checked {
-        background-color: #4CAF50;
-        color: white;
-    }
+ 
 
-    select option:hover {
-        background-color: gold; /* Change background color on hover */
-    }
