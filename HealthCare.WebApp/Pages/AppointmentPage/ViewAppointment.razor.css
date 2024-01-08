@@ -16,7 +16,6 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
-
 }
 
 #year-month {
@@ -27,8 +26,17 @@ header {
     outline: 2px solid #1474bb;
 }
 
-#day-info {
-    margin: 1rem 0;
+.day-info {
+    margin: 1rem auto;
+}
+
+.day-info button,
+.day-info select {
+    margin-right: 1rem;
+}
+
+.day-info table {
+    margin-top: 1rem;
 }
 
 ul,
@@ -68,7 +76,6 @@ ol.day-grid {
 }
 
 @media all and (max-width: 900px) {
-
     ul,
     ol {
         grid-gap: .25em;
@@ -99,7 +106,6 @@ ol.day-grid {
     background-color: #1474bb !important;
     color: white !important;
     cursor: pointer;
-
 }
 
 .date-day-focus {
@@ -111,7 +117,6 @@ ol.day-grid {
     display: flex;
     margin-bottom: 1rem;
     flex-direction: column;
-
 }
 
 table {
