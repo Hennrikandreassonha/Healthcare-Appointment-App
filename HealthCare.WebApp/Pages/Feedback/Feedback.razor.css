@@ -8,10 +8,8 @@
 
     .feedback-table table {
         width: 100%;
-        table-layout: fixed;
         border-collapse: collapse;
     }
-
 
 
     .feedback-table th, .feedback-table td {
@@ -22,6 +20,7 @@
 
     .feedback-table th {
         background-color: #1474bb;
+        color: white;
     }
 
         .feedback-table th:nth-child(1),
@@ -31,10 +30,19 @@
 
         .feedback-table th:nth-child(2),
         .feedback-table td:nth-child(2) {
-            width: 85%;
+            width: 80%;
         }
 
         .feedback-table th:nth-child(3),
         .feedback-table td:nth-child(3) {
-            width: 5%;
+            width: 10%;
         }
+
+.feedback-star {
+    color: black;
+    font-size: 35px;
+}
+
+.feedback-gold-star {
+    color: gold;
+}
