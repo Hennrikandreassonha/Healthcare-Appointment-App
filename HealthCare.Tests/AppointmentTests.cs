@@ -91,6 +91,118 @@ namespace HealthCare.Tests
             _dbContext.Database.EnsureDeleted();
         }
 
+        [Fact]
+        public async Task AddInitialAppointment_Should_Add_Appointment()
+        {
+            // Arrange
+            var appointmentService = new AppointmentService(_dbContext);
+            int caregiverId = 1;
+            DateTime testDate = new DateTime(2024, 1, 8);
+            TimeSpan testTime = new TimeSpan(8, 0, 0);
+
+            // Act
+            var result = await appointmentService.AddInitialAppointment(caregiverId, testDate, testTime);
+
+            // Assert
+            // Checks that the appointment was added
+            Assert.True(result);
+
+            // Checks that the added appointment show in the database
+            var addedAppointment = await _dbContext.Appointment.FirstOrDefaultAsync(a =>
+            a.CareGiverId == caregiverId && a.DateTime == testDate.Add(testTime));
+            Assert.NotNull(addedAppointment);
+
+            _dbContext.Database.EnsureDeleted();
+        }
+
+        [Fact]
+        public void AddInitialAppointmentsForADay_Should_Return_Appointments()
+        {
+            // Arrange
+            var appointmentService = new AppointmentService(_dbContext);
+            int caregiverId = 1;
+            DateTime testDate = new DateTime(2024, 1, 8);
+
+            // Act
+            var result = appointmentService.AddInitialAppointmentsForADay(caregiverId, testDate);
+
+            // Assert
+            // Checks that the appointments were added
+            Assert.True(result);
+
+            // Checks that the appointments were added to the database
+            var appointments = _dbContext.Appointment
+                    .Where(a => a.CareGiverId == caregiverId &&
+                    a.DateTime.Year == testDate.Year &&
+                    a.DateTime.Month == testDate.Month &&
+                    a.DateTime.Day == testDate.Day)
+                    .ToList();
+
+            Assert.NotEmpty(appointments);
+
+            _dbContext.Database.EnsureDeleted();
+        }
+
+        [Fact]
+        public async Task RemoveInitialAppointment_Should_Remove_Appointment()
+        {
+            // Arrange
+            var appointmentService = new AppointmentService(_dbContext);
+            int caregiverId = 1;
+            DateTime testDate = new DateTime(2024, 1, 8);
+            TimeSpan testTime = new TimeSpan(8, 0, 0);
+
+            var appointments = new List<Appointment>
+            {
+                new Appointment { Id = 1, CareGiverId = caregiverId, DateTime = testDate.Add(testTime) },
+                new Appointment { Id = 2, CareGiverId = caregiverId, DateTime = testDate.AddHours(2) }
+            };
+
+            _dbContext.AddRange(appointments);
+            _dbContext.SaveChanges();
+
+            // Act
+            var result = await appointmentService.RemoveInitialAppointment(caregiverId, testDate, testTime);
+
+            // Assert
+            // Checks that the appointment was removed
+            Assert.True(result);
+
+            // Checks that the removed appointment doesn´t show in the database
+            var removedAppointment = await _dbContext.Appointment.FirstOrDefaultAsync(a =>
+                    a.CareGiverId == caregiverId && a.DateTime == testDate.Add(testTime));
+            
+            Assert.Null(removedAppointment);
+
+            _dbContext.Database.EnsureDeleted();
+        }
+        [Fact]
+        public void RemoveInitialAppointmentsForADay_Should_Remove_Appointments()
+        {
+            // Arrange
+            var appointmentService = new AppointmentService(_dbContext);
+            int caregiverId = 1;
+            DateTime testDate = new DateTime(2024, 1, 8);
+
+            // Act
+            var result = appointmentService.RemoveInitialAppointmentsForADay(caregiverId, testDate);
+
+            // Assert
+            // Checks that the appointments were removed
+            Assert.True(result);
+
+            // Checks that the appointments were removed from the database
+            var appointments = _dbContext.Appointment
+                    .Where(a => a.CareGiverId == caregiverId &&
+                    a.DateTime.Year == testDate.Year &&
+                    a.DateTime.Month == testDate.Month &&
+                    a.DateTime.Day == testDate.Day)
+                    .ToList();
+
+            Assert.Empty(appointments);
+
+            _dbContext.Database.EnsureDeleted();
+        }
     }
 
     // Arrange
