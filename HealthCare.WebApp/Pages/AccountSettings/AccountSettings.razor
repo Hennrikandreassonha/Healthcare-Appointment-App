@@ -5,39 +5,39 @@
     <Authorized>
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-md-6 border p-3">
+                <div class="col-md-6 border p-3 mw-336">
                     <div class="mb-3">
                         <h3>Account Settings</h3>
                     </div>
 
                     <div class="mb-3">
                         <label>Email: </label>
-                        <p class="border p-2 w-100" style="max-width: 300px"> @userAccount.Email</p>
+                        <p class="border p-2 mw-300"> @userAccount.Email</p>
                     </div>
                     <div class="mb-3">
                         <label>First Name: </label>
-                        <p class="border p-2 w-100" style="max-width: 300px">@userAccount.FirstName</p>
+                        <p class="border p-2 mw-300">@userAccount.FirstName</p>
                     </div>
                     <div class="mb-3">
                         <label>Last Name: </label>
-                        <p class="border p-2 w-100" style="max-width: 300px">@userAccount.LastName</p>
+                        <p class="border p-2 mw-300">@userAccount.LastName</p>
                     </div>
                     <div class="mb-3">
                         <label>Date of birth: </label>
-                        <p class="border p-2 w-100" style="max-width: 300px">@userAccount.BirthDate</p>
+                        <p class="border p-2 mw-300">@userAccount.BirthDate</p>
                     </div>
                     @if (userAccount is Patient)
                     {
                         <div class="mb-3">
                             <label>Gender: </label>
-                            <p class="border p-2 w-100" style="max-width: 300px">@userAccount.Gender</p>
+                            <p class="border p-2 mw-300">@userAccount.Gender</p>
                         </div>
                     }
                     else
                     {
                         <div class="mb-3">
                             <label>Role: </label>
-                            <p class="border p-2 w-100" style="max-width: 300px">@userAccount.Role</p>
+                            <p class="border p-2 mw-300">@userAccount.Role</p>
                         </div>
                     }
                     <NavLink class="nav-link" href="/edit">
