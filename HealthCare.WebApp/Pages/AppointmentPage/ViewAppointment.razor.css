@@ -145,7 +145,7 @@ tr {
 .hover-div span {
     display: block;
     font-size: 1vw;
-    font-size: clamp(12px, 1vw, 16px);
+    font-size: clamp(14px, 1vw, 16px);
 }
 @media all and (max-width: 1064px) {
     .hover-div{
