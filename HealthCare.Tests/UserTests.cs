@@ -46,7 +46,7 @@ namespace HealthCare.Tests
             //Arrange
             //Note that this user has a code to be a doctor.
             //Also note that we need to use a different email from first test.
-            var userForTest = new RegisterDto("Test", "Password", "firstname", "lastname", GenderEnum.Male, DateTime.Now, "123");
+            var userForTest = new RegisterDto("Test", "Password", "firstname", "lastname", GenderEnum.Male, DateTime.Now, "Steve123");
 
             //Act
             var result = _authService.RegisterUser(userForTest);
@@ -61,8 +61,8 @@ namespace HealthCare.Tests
         {
             //Arrange
             //Adding user with same email 2 times. Resulting in error.
-            var userForTest1 = new RegisterDto("Test", "Password", "firstname", "lastname", GenderEnum.Male, DateTime.Now, "123");
-            var userForTest2 = new RegisterDto("Test", "Password", "firstname", "lastname", GenderEnum.Male, DateTime.Now, "123");
+            var userForTest1 = new RegisterDto("Test", "Password", "firstname", "lastname", GenderEnum.Male, DateTime.Now, "Steve123");
+            var userForTest2 = new RegisterDto("Test", "Password", "firstname", "lastname", GenderEnum.Male, DateTime.Now, "Steve123");
 
             //Act
             var result = _authService.RegisterUser(userForTest1);
@@ -81,7 +81,7 @@ namespace HealthCare.Tests
         public void Login_User_Should_Return_User()
         {
             //Arrange
-            var userToRegister = new RegisterDto("TestEmail123", "Password", "firstname", "lastname", GenderEnum.Male, DateTime.Now, "123");
+            var userToRegister = new RegisterDto("TestEmail123", "Password", "firstname", "lastname", GenderEnum.Male, DateTime.Now, "Steve123");
 
             //Act
             _authService.RegisterUser(userToRegister);
@@ -113,7 +113,7 @@ namespace HealthCare.Tests
             //Arrange
             User resultUserAccount = new();
             var userToRegister = new RegisterDto("Test", "Password", "firstName", "lastName",
-                GenderEnum.Male, DateTime.Now, "123");
+                GenderEnum.Male, DateTime.Now, "Steve123");
 
             //Act
             _authService.RegisterUser(userToRegister);
@@ -134,9 +134,9 @@ namespace HealthCare.Tests
         public void Login_User_Update_Returs_Updated_Details()
         {
             //Arrange
-            User resultUserAccount = new User();
+            User resultUserAccount = new();
             var userToRegister = new RegisterDto("Test", "Password", "firstName", "lastName",
-                GenderEnum.Male, DateTime.Now, "123");
+                GenderEnum.Male, DateTime.Now, "Steve123");
 
             //Act
             _authService.RegisterUser(userToRegister);
