@@ -111,10 +111,14 @@
                                             <td>@GetNameOfPatient(appointment.PatientId)</td>
                                         }
                                                   <td>
-                                                       @if(appointment.Feedback == null){
+                                                       @if(appointment.Feedback == null && LoggedInUser.Role == RoleEnum.Patient){
                                                        <button class="btn btn-primary feedback-btn"
                                                             @onclick="(e) => LeaveFeedback(appointment)">Leave
                                                             feedback</button>
+                                                       }
+                                                       @if(appointment.Feedback == null && LoggedInUser.Role == RoleEnum.Doctor){
+                                                            <button class="btn btn-primary feedback-btn" disabled
+                                                            >No feedback available</button>
                                                        }
                                                        @if(appointment.Feedback != "" && appointment.Feedback != null)
                                                        {
