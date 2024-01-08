@@ -1,3 +1,7 @@
 ﻿.feedback {
     margin-top: 7rem;
 }
+
+.feedback-center{
+    text-align:center;
+}

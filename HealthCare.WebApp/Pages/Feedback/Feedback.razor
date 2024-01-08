@@ -1,22 +1,54 @@
 ﻿@*the AppointmentService is added in program.cs *@
 @inject FeedbackService feedbackService
+@inject HealthCare.Core.Data.HealthcareContext dbContext
 @*sets the component as a route, nav is changes to this route => see NavMenu*@
 @page "/feedback"
 
-<h3>Leave Feedback</h3>
-<input @bind="userFeedback" />
-<button @onclick="SubmitFeedback">Submit Feedback</button>
 
-<h3 class="feedback">All Feedback</h3>
-@* @foreach (var feedback in feedbackService.GetAllFeedback()) *@
+
+<div class="">
+    <div class="">
+        <h2>Feedback</h2>
+        <p> Here is our feedback from previous clients. </p>
+    </div>
+
+    <div>
+        <table>
+            <tr>
+                <th>Patient</th>
+                <th>Feedback</th>
+                <th>Rating</th>
+            </tr>
+            @foreach (Appointment appointments in feedbackAppointments)
+            {
+                <tr>
+                    <td> @GetFirstNameOfPatient(appointments.PatientId)</td>
+                    <td>@appointments.Feedback</td>
+                    <td>@appointments.Rating</td>
+                </tr>
+            }
+
+        </table>
+    </div>
+
+</div>
+
+
+
+
 
 @code {
-    private string userFeedback;
+    List<Appointment> feedbackAppointments = new List<Appointment>();
 
-    private void SubmitFeedback()
+    protected override async Task OnInitializedAsync()
     {
-        @* feedbackService.SaveFeedback(userFeedback); *@
-        // reset the input field
-        userFeedback = string.Empty; 
+        feedbackAppointments = feedbackService.GetAllFeedBack();
+    }
+
+    public string GetFirstNameOfPatient(int? id)
+    {
+        var patient = dbContext.Patient.FirstOrDefault(x => x.Id == id);
+
+        return patient.FirstName;
     }
 }

@@ -23,6 +23,16 @@ namespace HealthCare.Core
             }
             return false;
         }
+
+        public List<Appointment> GetAllFeedBack()
+        {
+            //    List<Appointment> list = new ();
+
+            //    list =
+
+
+            return _context.Appointment.Where(x => x.Rating != null).ToList();
+        }
     }
 }
 
