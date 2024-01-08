@@ -61,6 +61,15 @@ header {
     justify-content: space-around;
 }
 
+.header-div-welcome {
+    font-size: calc(16px + (26 - 16) * ((100vw - 300px) / (1600 - 300)));
+    margin-bottom: 1rem;
+    background: #1474bb;
+    color: #fff;
+    min-height: 10vh;
+    padding: 0.5rem 1rem;
+}
+
 .feedback-flex {
     display: flex;
     flex-direction: column
@@ -151,7 +160,8 @@ header {
 }
 
 .rating label:hover,
-.rating label:hover~label {
+.rating label:hover~label,
+.gold-text {
     color: gold;
 }
 
@@ -173,8 +183,8 @@ header {
     /* align */
 }
 
-.feedback-inner-section{
-    width:70%;
+.feedback-inner-section {
+    width: 70%;
 }
 
 .feedback-div {
@@ -197,9 +207,75 @@ header {
     margin-right: 0;
     margin-bottom: 3px
 }
-.star-div{
+
+.star-div {
     margin-top: -10px;
     margin-bottom: 10px;
     display: flex;
     justify-content: center;
+}
+
+.text-bolder {
+    font-weight: 600;
+}
+
+.wow-text {
+    transform: rotate(-50deg);
+    color: red;
+    font-weight: bolder;
+    font-size: x-large;
+}
+
+@keyframes pulsate {
+    0% {
+        transform: rotate(-25deg) scale(1);
+    }
+
+    50% {
+        transform: rotate(-25deg) scale(1.18);
+    }
+
+    100% {
+        transform: rotate(-25deg) scale(1);
+    }
+}
+
+@keyframes pulsatetext {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.18);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.wow-text {
+    animation: pulsate 2s infinite;
+    color: red;
+    font-weight: bolder;
+    font-size: x-large;
+    margin-left: 40px;
+    margin-top: 30px;
+}
+@media all and (max-width: 616px) {
+    .wow-text {
+        display: none;
+    }
+    .welcome-text-flex{
+        flex-direction: column;
+    }
+}
+
+.welcome-text-flex {
+    display: flex;
+}
+
+.rating-text {
+    margin-left: 10px;
+    color: #0d6efd;
 }

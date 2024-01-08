@@ -5,36 +5,52 @@
 <PageTitle>HealthCare.WebApp</PageTitle>
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+        <div class="sidebarbig">
+            <NavMenu />
+        </div>
 
     <main>
         <div class="top-row px-4">
-            <AuthorizeView>
-                <Authorized>
-                    <NavLink href="">
-                        <button class="btn btn-primary" @onclick=Logout>Log out</button>
-                    </NavLink>
-                </Authorized>
-                <NotAuthorized>
-                    <NavLink href="/login">
-                        <button class="btn btn-primary">Log in</button>
-                    </NavLink>
-                    <NavLink href="/register">
-                        <button class="btn btn-success">Register</button>
-                    </NavLink>
-                </NotAuthorized>
-            </AuthorizeView>
+            <img src="\logo.png" alt="Healhcare logo" class="logo nav-logo">
+
+            <div class="nav-right-section">
+                <img src="\menu.png" alt="Hamburger menu" class="nav-logo-toggle"
+                @onclick="ToggleNavMenu">
+                <AuthorizeView>
+                    <Authorized>
+                        <NavLink href="">
+                            <button class="btn btn-primary" @onclick=Logout>Log out</button>
+                        </NavLink>
+                    </Authorized>
+                    <NotAuthorized>
+                        <NavLink href="/login">
+                            <button class="btn btn-primary">Log in</button>
+                        </NavLink>
+                        <NavLink href="/register">
+                            <button class="btn btn-success">Register</button>
+                        </NavLink>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </div>
+        </div>
+        <div class="@NavMenuCssClass">
+            <NavMenuSmall />
         </div>
 
         <article class="content px-4">
             @Body
-        </article> 
+        </article>
     </main>
 </div>
 
 @code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "hide-nav" : "show-nav";
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
     private async Task Logout()
     {
         var customAuthStateProvider = (AuthStateProvider)authStateProvider;
