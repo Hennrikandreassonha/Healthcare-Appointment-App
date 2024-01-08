@@ -3,6 +3,7 @@
 @inject IHttpContextAccessor _httpContextAccessor;
 @inject HealthCare.Core.UserService.IUserService userService
 @using HealthCare.Core.Data
+@using HealthCare.Core.Models.Appointment
 @using HealthCare.Core.Models.AppointmentModels
 @inject HealthcareContext _context
 @inject EmailService emailService;
@@ -53,14 +54,13 @@
                                         {
                                              <tr>
                                                   <td>@appointment.DateTime</td>
-                                                  <td>@appointment.Service</td>
+                                                  <td>@(appointment.Service != null ? GetDisplayNameForService(appointment.Service.Value) : "Unknown")</td>
                                                   @if (LoggedInUser is Patient)
                                                   {
                                                        <td>@GetNameOfDoctor(appointment.CareGiverId)</td>
 
                                                   }
-                                                                                                                                                 @if (LoggedInUser is CareGiver)
-
+                                                  @if (LoggedInUser is CareGiver)
                                                   {
                                                        <td>@GetNameOfPatient(appointment.PatientId)</td>
                                                   }
@@ -100,7 +100,7 @@
                                         {
                                              <tr>
                                                   <td>@appointment.DateTime</td>
-                                                  <td>@appointment.Service</td>
+                                                  <td>@(appointment.Service != null ? GetDisplayNameForService(appointment.Service.Value) : "Unknown")</td>
 
                                         @if (LoggedInUser is Patient)
                                         {
@@ -166,7 +166,7 @@
         <strong>Date:</strong> @LeavingFeedback.DateTime
     </li>
     <li>
-        <strong>Service:</strong> @LeavingFeedback.Service
+        <strong>Service:</strong> @(LeavingFeedback.Service != null ? GetDisplayNameForService(LeavingFeedback.Service.Value) : "Unknown")
     </li>
 </ul>
 }
@@ -181,7 +181,7 @@
     <tr>
         <td>@($"{ViewingFeedback.CareGiver.FirstName} {ViewingFeedback.CareGiver.LastName}")</td>
         <td>@ViewingFeedback.DateTime</td>
-        <td>@ViewingFeedback.Service</td>
+        <td>@(ViewingFeedback.Service != null ? GetDisplayNameForService(ViewingFeedback.Service.Value) : "Unknown")</td>
   </tr>
 </table>
 }
@@ -261,7 +261,11 @@
           LoggedInUser = userService.GetByEmail(userName);
           GetAllMeetings(LoggedInUser);
      }
-     public void SubmitRating(int rating)
+    private string GetDisplayNameForService(ServiceEnum service)
+    {
+        return service.GetDisplayName();
+    }
+    public void SubmitRating(int rating)
      {
           if (LeavingFeedback == null)
           {

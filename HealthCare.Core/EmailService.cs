@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using HealthCare.Core.Models.Appointment;
 using HealthCare.Core.Models.AppointmentModels;
 using Humanizer;
 
@@ -14,17 +15,17 @@ namespace HealthCare.Core
         //PW EMAIL: HealthCare1337123
         public string SenderEmail { get; set; }
         public string Password { get; set; }
-        public string RecieverEmail { get; set; }
+        public string ReceiverEmail { get; set; }
         public Appointment AppointmentDetails { get; set; }
         public EmailService()
         {
         }
-        public EmailService(string recieverEmail, Appointment appointment)
+        public EmailService(string receiverEmail, Appointment appointment)
         {
             //Förvara lösen och email på annat ställe
             SenderEmail = "healthcareappointmentapp@gmail.com";
             Password = "erhr ikni jexy odet";
-            RecieverEmail = recieverEmail;
+            ReceiverEmail = receiverEmail;
             AppointmentDetails = appointment;
         }
         public bool SendEmail(bool isConfirmation = true)
@@ -45,7 +46,7 @@ namespace HealthCare.Core
                 };
                 message.Body = isConfirmation ? BuildEmailContentConfirmation() : BuildEmailContentCanceling();
                 message.IsBodyHtml = true;
-                message.To.Add(RecieverEmail);
+                message.To.Add(ReceiverEmail);
                 smtpClient.Send(message);
             }
             catch (Exception ex)
@@ -57,6 +58,8 @@ namespace HealthCare.Core
         }
         public string BuildEmailContentConfirmation()
         {
+            string serviceDisplayName = ServiceEnumExtensions.GetDisplayName(AppointmentDetails.Service ?? ServiceEnum.GeneralCheckup);
+
             return $@"
         <html>
             <body style='max-width: 600px; font-family: Arial, sans-serif;'>
@@ -83,6 +86,8 @@ namespace HealthCare.Core
         }
         public string BuildEmailContentCanceling()
         {
+            string serviceDisplayName = ServiceEnumExtensions.GetDisplayName(AppointmentDetails.Service ?? ServiceEnum.GeneralCheckup);
+
             return $@"
                 <html>
                     <body style='max-width: 600px; font-family: Arial, sans-serif;'>
@@ -92,7 +97,7 @@ namespace HealthCare.Core
                             <p>Your appointment has been successfully canceled. Below are the details:</p>
                             <ul>
                                 <li><strong>Doctor:</strong> {AppointmentDetails.CareGiver.FirstName} {AppointmentDetails.CareGiver.LastName}</li>
-                                <li><strong>Service:</strong> {AppointmentDetails.Service}</li>
+                                <li><strong>Service:</strong> {serviceDisplayName}</li>
                                 <li><strong>Date:</strong> {AppointmentDetails.DateTime.ToShortDateString()}</li>
                                 <li><strong>Time:</strong> {AppointmentDetails.DateTime.Hour:00}:{AppointmentDetails.DateTime.Minute:00}</li>
                             </ul>

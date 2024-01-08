@@ -6,7 +6,8 @@
 @inject IJSRuntime JSRunTime
 @using System.Globalization;
 @using HealthCare.Core.Models.Appointment;
-@using Microsoft.JSInterop
+@using System.Text.RegularExpressions;
+@inject EmailService emailService
 
 <div class="appointment-flex">
     <div class="calendar">
@@ -90,6 +91,23 @@
                 {
                     <p class="alert alert-error">@successMsg</p>
                 }
+
+
+                @* filtering starts here *@
+                <div class="filter-container">
+                    <input class="name-filter" type="text" @bind="careGiverNameFilter" @oninput="FilterByName" placeholder="Filter by name" />
+
+                    <label for="time-slot-filter">Select Time Slot:</label>
+                    <select id="time-slot-filter" @onchange="FilterByTime">
+                        @foreach (var timeSlot in Enum.GetValues(typeof(TimeSlots)).Cast<TimeSlots>())
+                        {
+                            <option value="@timeSlot">@timeSlot.ToString()</option>
+                        }
+                    </select>
+                </div>
+
+                @* filtering ends here *@
+
                 <table>
                     <thead>
                         <tr>
@@ -113,7 +131,7 @@
                                         @foreach (ServiceEnum service in Enum.GetValues(typeof(ServiceEnum)))
 
                                         {
-                                            <option value="@service">@service</option>
+                                            <option value="@service">@service.GetDisplayName()</option>
                                         }
                                     </select>
                                 </td>
@@ -253,6 +271,22 @@
     {
         selectedService = service;
     }
+    // Array to save original appointments so that they can be returned after filtering
+    private Appointment[] resetFilteredAppointments = { };
+    private string careGiverNameFilter = "";
+    private TimeSlots appointmentTimeFilter;
+    public enum TimeSlots
+    {
+        All,
+        Slot_08_00 = 8,
+        Slot_09_00 = 9,
+        Slot_10_00 = 10,
+        Slot_11_00 = 11,
+        Slot_12_00 = 12,
+        Slot_13_00 = 13,
+        Slot_14_00 = 14,
+        Slot_15_00 = 15
+    }
     protected override async Task OnInitializedAsync()
     {
         yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}";
@@ -345,9 +379,11 @@
         if (user.Role == RoleEnum.Patient)
         {
             appointmentsForDate = appointmentService.GetInitialAppointmentsByDate(dateToCheck).ToArray();
+            resetFilteredAppointments = appointmentService.GetAppointmentsByDate(dateToCheck).ToArray();
         }
         else if (user.Role == RoleEnum.Doctor)
         {
+            appointmentsForBooking = appointmentService.GetAvailabilityByDate(user.Id, dateToCheck).ToArray();
             appointmentsForBooking = appointmentService.GetAvailabilityByDate(user.Id, dateToCheck).ToArray();
         }
     }
@@ -402,4 +438,41 @@
     {
         return currentDate.Month == DateTime.Now.Month && day == DateTime.Now.Day;
     }
+
+    private void FilterByName(ChangeEventArgs e)
+    {
+        careGiverNameFilter = e.Value.ToString();
+        FilterCareGivers();
+    }
+
+    private void FilterByTime(ChangeEventArgs e)
+    {
+        if (Enum.TryParse<TimeSlots>(e.Value.ToString(), out var selectedSlot))
+        {
+            appointmentTimeFilter = selectedSlot;
+            FilterCareGivers();
+        }
+    }
+
+    private void FilterCareGivers()
+    {
+        if (!string.IsNullOrWhiteSpace(careGiverNameFilter))
+        {
+            string regexPattern = $"^{Regex.Escape(careGiverNameFilter)}.*";
+            appointmentsForDate = appointmentsForDate.Where(n =>
+                Regex.IsMatch($"{n.CareGiver.FirstName} {n.CareGiver.LastName}", regexPattern, RegexOptions.IgnoreCase)).ToArray();
+        }
+        else
+        {
+            appointmentsForDate = resetFilteredAppointments;
+        }
+
+        if (appointmentTimeFilter != TimeSlots.All)
+        {
+            int hourToFilter = (int)appointmentTimeFilter;
+            appointmentsForDate = appointmentsForDate.Where(a => a.DateTime.Hour == hourToFilter).ToArray();
+        }
+    }
+
+
 }
