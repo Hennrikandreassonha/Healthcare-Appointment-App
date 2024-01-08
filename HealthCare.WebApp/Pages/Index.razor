@@ -133,8 +133,27 @@
                </div>
           </Authorized>
           <NotAuthorized>
-               <h1>Hello, Guest!</h1>
-               <p> You'll need to <a href="/login">log in</a> to see any information.</p>
+               <div class="header-div-welcome">
+
+               <h1>Hello stranger! Welcome to the best <br><span class="gold-text">Health Care App</span> ever</h1>
+               </div>
+               <div class="welcome-text-flex">
+                    <div>
+                         <p>Please <a href="/login">log in</a> to book your appointment.</p>
+                         <p>Feel free to view our <a href="/feedback">reviews</a> from other patients</p>
+                         <p class="text-bolder">Note that we <i>always</i> have a <strong><u class="gold-text" style='font-size: x-large;'>4</u></strong> star rating or MORE!</p>
+                    </div>
+                    <span class="pulsating-text wow-text">← WOW!</span>
+                    <div>
+                         <p class="rating-text">That is a <u class="text-bolder">really</u> good rating!</p>
+                         <p style='text-align: center; margin-bottom: 0;' class="text-bolder"><u>At least</u></p>
+                         <div style='display:flex; flex-wrap: nowrap; justify-content: center;'>
+                              @for(int i = 0; i < 4; i++){
+                                   <label class="leaving-feedback-star">&#x2605;</label>
+                              }
+                         </div>
+                    </div>
+               </div>
           </NotAuthorized>
      </AuthorizeView>
 </div>
