@@ -4,58 +4,63 @@
 @*sets the component as a route, nav is changes to this route => see NavMenu*@
 @page "/feedback"
 
-
-
-
 <div>
-    <h3>Feedback</h3>
-    <p> Here is our feedback from previous clients. </p>
-    <label for="sortSelected">Sort by</label>
-    <select id="sortSelected" @onchange="SortAppointments">
-        <option value="all" class="hover-background">All</option>
-        <option value="fiveStars" class="hover-background">Only 5 stars</option>
-        <option value="fourStars" class="hover-background">Only 4 stars</option>
-        <option value="lowToHigh" class="hover-background">Low to high</option>
-        <option value="highToLow" class="hover-background">High to low</option>
-    </select>
-</div>
+    <div>
+        <header>
+            <h1>Feedback</h1>
+        </header>
 
-<div class="feedback-table">
-    <table>
-        <thead>
-            <tr>
-                <th>Patient</th>
-                <th>Feedback</th>
-                <th>Rating</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (Appointment appointments in sortedAppointments)
-            {
+        <div class="dropdown-flex">
+            <span>Feedback from previous clients:</span>
+            <div class="btn-group dropleft dropdown">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    Sort by
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" onclick="@(() => SortAppointments("All"))">All</a>
+                    <a class="dropdown-item" onclick="@(() => SortAppointments("fiveStars"))">Only 5 stars</a>
+                    <a class="dropdown-item" onclick="@(() => SortAppointments("fourStars"))">Only 4 stars</a>
+                    <a class="dropdown-item" onclick="@(() => SortAppointments("lowToHigh"))">Low to high</a>
+                    <a class="dropdown-item" onclick="@(() => SortAppointments("highToLow"))">High to low</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="feedback-table">
+        <table>
+            <thead>
                 <tr>
-                    <td> @GetFirstNameOfPatient(appointments.PatientId)</td>
-                    <td>@appointments.Feedback</td>
-                    <td>
-                        <p>
-                            @for (int i = 0; i < 5; i++)
-                            {
-                                <span class="feedback-star @(i < appointments.Rating ? "feedback-gold-star" : "")">&#x2605;</span>
-
-                            }
-                        </p>
-                    </td>
+                    <th>Patient</th>
+                    <th>Feedback</th>
+                    <th>Rating</th>
                 </tr>
-            }
+            </thead>
+            <tbody>
+                @foreach (Appointment appointments in sortedAppointments)
+                {
+                    <tr>
+                        <td> @GetFirstNameOfPatient(appointments.PatientId)</td>
+                        <td>@appointments.Feedback</td>
+                        <td>
+                            <p>
+                                @for (int i = 0; i < 5; i++)
+                                {
+                                    <span
+                                        class="feedback-star @(i < appointments.Rating ? "feedback-gold-star" : "")">&#x2605;</span>
 
-        </tbody>
-    </table>
+                                }
+                            </p>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
 </div>
-
-
-
-
-
-
 
 @code {
     List<Appointment> feedbackAppointments = new List<Appointment>();
@@ -74,11 +79,8 @@
 
         return patient.FirstName;
     }
-
-    public void SortAppointments(ChangeEventArgs options)
+    public void SortAppointments(string selectedOptions)
     {
-        string selectedOptions = options.Value.ToString();
-
         if (selectedOptions == "fiveStars")
         {
 

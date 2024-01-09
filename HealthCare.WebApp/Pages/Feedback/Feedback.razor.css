@@ -3,7 +3,7 @@
 }
 
 .feedback-table {
-    width: 90%;
+    width: 100%;
 }
 
     .feedback-table table {
@@ -60,7 +60,15 @@ option:checked {
     background-color: #1474bb;
     color: white;
 }
-
-
-
-
+.dropdown-flex{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.dropdown{
+    margin: 0.5rem 1rem;
+    margin-right: 0;
+}
+h3{
+    margin-left: 1rem;
+}
