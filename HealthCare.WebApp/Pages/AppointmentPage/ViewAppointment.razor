@@ -184,15 +184,19 @@
                         Set available all day
                     </button>
                 }
-                <select @onchange="@(async (args) => await ToggleAvailability(userLoggedIn.Id, new DateTime(currentDate.Year, CalendarInfoObj.Month,
-                        CalendarInfoObj.DayFocused), args.Value.ToString()))">
-                    <option value="">Select Time Slot To Add or Remove</option>
-                    @foreach (var time in appointmentService.GetAvailableTimes())
-
-                    {
-                        <option value="@time">@time:00</option>
-                    }
-                </select>
+                <div class="dropdown">
+                    <select @onchange="(args) => selectedTime = args.Value.ToString()">
+                        <option value="">Select time slot to add or remove</option>
+                        @foreach (var time in appointmentService.GetAvailableTimes())
+                        {
+                            <option value="@time">@time:00</option>
+                        }
+                    </select>
+                    <button class="btn btn-primary" @onclick="@(async () => await ToggleAvailability(userLoggedIn.Id,
+                        new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), selectedTime))" disabled="@string.IsNullOrEmpty(selectedTime)">
+                        Confirm time slot
+                    </button>
+                </div>
                 <table>
                     <thead>
                         <tr>
@@ -296,7 +300,7 @@
         Slot_15_00 = 15
     }
     private string testt = "123";
-
+    private string selectedTime = "";
     protected override async Task OnInitializedAsync()
     {
         yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}";
