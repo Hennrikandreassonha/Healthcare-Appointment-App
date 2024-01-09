@@ -28,7 +28,8 @@ namespace HealthCare.Core
         }
         public bool AddInitialAppointmentsForADay(int caregiverId, DateTime date)
         {
-            List<int> availableTimes = GetAvailableTimes().ToList();
+            List<int> availableTimes = GetAvailableTimes()
+            .Where(x => x > DateTime.Now.Hour).ToList();
 
             List<Appointment> initialAppointments = new List<Appointment>();
 
