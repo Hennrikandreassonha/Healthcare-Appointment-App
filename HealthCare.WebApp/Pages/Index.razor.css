@@ -50,17 +50,6 @@ tr {
 
 }
 
-header {
-    display: flex;
-    align-items: center;
-    font-size: calc(16px + (26 - 16) * ((100vw - 300px) / (1600 - 300)));
-    background: #1474bb;
-    color: #fff;
-    min-height: 6.5vh;
-    text-align: center;
-    justify-content: space-around;
-}
-
 .header-div-welcome {
     font-size: calc(16px + (26 - 16) * ((100vw - 300px) / (1600 - 300)));
     margin-bottom: 1rem;
@@ -68,6 +57,19 @@ header {
     color: #fff;
     min-height: 10vh;
     padding: 0.5rem 1rem;
+}
+
+.small-header {
+    display: flex;
+    align-items: center;
+    font-size: calc(16px + (26 - 16) * ((100vw - 300px) / (1600 - 300)));
+    margin-bottom: 1rem;
+    background: #1474bb;
+    color: #fff;
+    height: 3.5rem;
+    text-align: center;
+    justify-content: space-around;
+
 }
 
 .feedback-flex {
@@ -262,11 +264,13 @@ header {
     margin-left: 40px;
     margin-top: 30px;
 }
+
 @media all and (max-width: 616px) {
     .wow-text {
         display: none;
     }
-    .welcome-text-flex{
+
+    .welcome-text-flex {
         flex-direction: column;
     }
 }

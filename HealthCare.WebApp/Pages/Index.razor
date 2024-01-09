@@ -15,11 +15,11 @@
      <AuthorizeView>
           <Authorized>
                <div class="header-div">
-                    <h1>Hello, @context.User.Identity.Name! Welcome to <span class="color-blue">Health Care AB</span>
+                    <header>
+                    <h1>Hello, @context.User.Identity.Name! Welcome to <span class="gold-text">Health Care AB</span>
                     </h1>
-                    <p>
-                         you have <u>@UpcomingAppointments.Count</u> upcoming appointments
-                    </p>
+                    </header>
+                   
                     @if (successMsg != "")
                     {
                          <p class="alert alert-success">@successMsg</p>
@@ -28,9 +28,12 @@
 
                <div class="container-flex">
                     <div class="upcoming-div">
-                         <header>
+                         <div class="small-header">
                               <h3>Upcoming appointments</h3>
-                         </header>
+                         </div>
+                          <p>
+                         You have <u>@UpcomingAppointments.Count</u> upcoming appointments
+                    </p>
                          @if (UpcomingAppointments != null)
                          {
                               <table>
@@ -75,9 +78,15 @@
                          }
                     </div>
                     <div class="passed-div">
-                         <header>
+                         <div class="small-header">
                               <h3>Previous appointments</h3>
-                         </header>
+                         </div>
+                         @if(@PreviousAppointments.Where(x => x.Feedback == null).Count() == 0){
+                              <p>All set! You have no feedbacks to submit!</p>
+                         }
+                         else{
+                         <p>You have <u>@PreviousAppointments.Where(x => x.Feedback == null).Count()</u> feedbacks to submit</p>
+                         }
                          <div class="feedback-flex">
                               <table>
                                    <thead>
@@ -139,23 +148,13 @@
           <NotAuthorized>
                <div class="header-div-welcome">
 
-               <h1>Hello stranger! Welcome to the best <br><span class="gold-text">Health Care App</span> ever</h1>
+               <h1>Hello stranger! Welcome to<br><span class="gold-text"> Healthcare App AB</span></h1>
                </div>
                <div class="welcome-text-flex">
                     <div>
                          <p>Please <a href="/login">log in</a> to book your appointment.</p>
                          <p>Feel free to view our <a href="/feedback">reviews</a> from other patients</p>
                          <p class="text-bolder">Note that we <i>always</i> have a <strong><u class="gold-text" style='font-size: x-large;'>4</u></strong> star rating or MORE!</p>
-                    </div>
-                    <span class="pulsating-text wow-text">← WOW!</span>
-                    <div>
-                         <p class="rating-text">That is a <u class="text-bolder">really</u> good rating!</p>
-                         <p style='text-align: center; margin-bottom: 0;' class="text-bolder"><u>At least</u></p>
-                         <div style='display:flex; flex-wrap: nowrap; justify-content: center;'>
-                              @for(int i = 0; i < 4; i++){
-                                   <label class="leaving-feedback-star">&#x2605;</label>
-                              }
-                         </div>
                     </div>
                </div>
           </NotAuthorized>
@@ -199,7 +198,7 @@
       <tr>
     <th><strong>Doctor:</strong></th>
      <th><strong>Date:</strong></th>
-     <th><strong>Date:</strong></th>
+     <th><strong>Service:</strong></th>
   </tr>
     <tr>
         <td>@($"{ViewingFeedback.CareGiver.FirstName} {ViewingFeedback.CareGiver.LastName}")</td>
@@ -311,7 +310,7 @@
                FeedbackSuccessText = "Your feedback has been saved, thank you for cooperating";
           }
           else{
-               FeedbackFailText = "Rating was below 3 stars and therefore not saved, thank you anyway!";
+               FeedbackFailText = "Rating was below 4 stars and therefore not saved, thank you anyway!";
           }
           FeedbackText = "";
      }
