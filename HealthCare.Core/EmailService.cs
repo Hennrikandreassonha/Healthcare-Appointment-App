@@ -69,7 +69,7 @@ namespace HealthCare.Core
                     <p>Your appointment has been successfully booked. Below are the details:</p>
                     <ul>
                         <li><strong>Doctor:</strong> {AppointmentDetails.CareGiver.FirstName} {AppointmentDetails.CareGiver.LastName}</li>
-                        <li><strong>Service:</strong> {AppointmentDetails.Service} </li>
+                        <li><strong>Service:</strong> {serviceDisplayName} </li>
                         <li><strong>Date:</strong> {AppointmentDetails.DateTime.ToShortDateString()}</li>
                         <li><strong>Time:</strong> {AppointmentDetails.DateTime.Hour:00}:{AppointmentDetails.DateTime.Minute:00}</li>
                     </ul>
@@ -94,7 +94,7 @@ namespace HealthCare.Core
                         <div style='border: 1px solid grey; padding: 0.5rem;'>
                             <h2>Appointment Canceled</h2>
                             <p>Dear {AppointmentDetails.Patient.FirstName} {AppointmentDetails.Patient.LastName},</p>
-                            <p>Your appointment has been successfully canceled. Below are the details:</p>
+                            <p>Your appointment has been successfully cancelled. Below are the details:</p>
                             <ul>
                                 <li><strong>Doctor:</strong> {AppointmentDetails.CareGiver.FirstName} {AppointmentDetails.CareGiver.LastName}</li>
                                 <li><strong>Service:</strong> {serviceDisplayName}</li>
