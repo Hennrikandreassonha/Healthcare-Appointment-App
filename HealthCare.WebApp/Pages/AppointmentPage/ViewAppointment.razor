@@ -128,7 +128,7 @@
                                 <td>@item.CareGiver.Email</td>
                                 <td>@item.DateTime.ToString("M/d/yyyy h:mm") - @item.DateTime.AddHours(1).ToString("h:mm")</td>
                                 <td>
-                                    <select id="selectedService"
+                                    <select class="form-select" id="selectedService" aria-label="Default select example"
                                         @onchange="@(e => HandleServiceSelection((ServiceEnum)Enum.Parse(typeof(ServiceEnum), e.Value.ToString())))">
                                         <option value="">Select Service</option>
                                         @foreach (ServiceEnum service in Enum.GetValues(typeof(ServiceEnum)))
