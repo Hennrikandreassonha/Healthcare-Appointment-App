@@ -28,6 +28,7 @@ header {
 
 .day-info{
     height: 100vw;
+    margin-top: 1rem;
 }
 
 .day-info button,
