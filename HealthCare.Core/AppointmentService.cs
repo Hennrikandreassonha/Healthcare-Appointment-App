@@ -130,7 +130,7 @@ namespace HealthCare.Core
         public IEnumerable<Appointment> GetInitialAppointmentsByDate(DateTime date)
         {
             return _context.Appointment.Where(x => x.DateTime.Year == date.Year && x.DateTime.DayOfYear == date.DayOfYear && x.PatientId == null)
-                .Include(x => x.CareGiver).ToList();
+                .Include(x => x.CareGiver).OrderBy(a => a.DateTime.Hour).ToList();
         }
         public bool RemoveInitialAppointmentsForADay(int caregiverId, DateTime date)
         {
