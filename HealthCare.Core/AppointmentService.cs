@@ -8,11 +8,9 @@ namespace HealthCare.Core
     public class AppointmentService
     {
         private readonly HealthcareContext _context;
-        private readonly EmailService _emailService;
-        public AppointmentService(HealthcareContext context, EmailService emailService)
+        public AppointmentService(HealthcareContext context)
         {
             _context = context;
-            _emailService = emailService;
         }
         public IEnumerable<int> GetAvailableTimes()
         {
