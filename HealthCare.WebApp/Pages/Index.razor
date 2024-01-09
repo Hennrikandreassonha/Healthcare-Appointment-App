@@ -81,11 +81,17 @@
                          <div class="small-header">
                               <h3>Previous appointments</h3>
                          </div>
-                         @if(@PreviousAppointments.Where(x => x.Feedback == null).Count() == 0){
+                         @if(LoggedInUser != null && @PreviousAppointments.Where(x => x.Feedback == null).Count() == 0 && LoggedInUser.Role == RoleEnum.Patient){
                               <p>All set! You have no feedbacks to submit!</p>
                          }
-                         else{
+                         else if(LoggedInUser != null && LoggedInUser.Role == RoleEnum.Patient){
                          <p>You have <u>@PreviousAppointments.Where(x => x.Feedback == null).Count()</u> feedbacks to submit</p>
+                         }
+                         else if(LoggedInUser != null && @PreviousAppointments.Where(x => x.Feedback == null).Count() == 0 && LoggedInUser.Role == RoleEnum.Doctor){
+                              <p>You have no feedbacks to view yet!</p>
+                         }
+                         else if(LoggedInUser != null && LoggedInUser.Role == RoleEnum.Doctor){
+                              <p>You have <u>@PreviousAppointments.Where(x => x.Feedback != null).Count()</u> feedbacks to view</p>
                          }
                          <div class="feedback-flex">
                               <table>
@@ -279,6 +285,7 @@
      private Appointment? ViewingFeedback = null;
      protected override async Task OnInitializedAsync()
      {
+
           userName = await userService.GetEmailAsync();
           LoggedInUser = userService.GetByEmail(userName);
           GetAllMeetings(LoggedInUser);
