@@ -14,10 +14,10 @@
         <header>
             <div id="header-div">
                 <img @onclick="DecreaseMonth" src="\calendar-arrow.png" title="Change month" alt="Healhcare logo"
-                    class="calendar-info-arrow">
+                     class="calendar-info-arrow">
                 <h1 id="year-month">@yearMonth</h1>
                 <img @onclick="IncreaseMonth" src="\calendar-arrow.png" title="Change month"
-                    class="calendar-info-arrow rotate-180">
+                     class="calendar-info-arrow rotate-180">
             </div>
         </header>
 
@@ -99,11 +99,12 @@
                             <option selected>Select Time</option>
                             @foreach (var timeSlot in Enum.GetValues(typeof(TimeSlots)).Cast<TimeSlots>())
                             {
-                                @if(timeSlot == TimeSlots.All)
+                                @if (timeSlot == TimeSlots.All)
                                 {
                                     <option value="@TimeSlots.All">All</option>
                                 }
-                                else{
+                                else
+                                {
                                     <option value="@timeSlot">@Convert.ToInt32(timeSlot)</option>
                                 }
                             }
@@ -128,9 +129,9 @@
                                 <td>@item.CareGiver.Email</td>
                                 <td>@item.DateTime.ToString("M/d/yyyy h:mm") - @item.DateTime.AddHours(1).ToString("h:mm")</td>
                                 <td>
-                                    <select class="form-select" id="selectedService" aria-label="Default select example"
-                                        @onchange="@(e => HandleServiceSelection((ServiceEnum)Enum.Parse(typeof(ServiceEnum), e.Value.ToString())))">
-                                        <option value="">Select Service</option>
+                                    <select placeholder="Select Service"class="form-select" id="selectedService" aria-label="Default select example"
+                                            @onchange="@(e => HandleServiceSelection((ServiceEnum)Enum.Parse(typeof(ServiceEnum), e.Value.ToString())))">
+                                        <option value="" disabled selected>Select Service</option>
                                         @foreach (ServiceEnum service in Enum.GetValues(typeof(ServiceEnum)))
 
                                         {
@@ -313,22 +314,22 @@
         }
         appointmentService.AddSampleData();
     }
-   protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        //This is where we check is user is on mobile.
+        //Hover effect was making a mess on mobiles.
+        if (firstRender)
         {
-            //This is where we check is user is on mobile.
-            //Hover effect was making a mess on mobiles.
-            if (firstRender)
-            {
-                await Task.Delay(500); 
-                IsMobile = await JSRunTime.InvokeAsync<bool>("isDevice",  new object[] { });
-                Console.WriteLine();
-            }
+            await Task.Delay(500);
+            IsMobile = await JSRunTime.InvokeAsync<bool>("isDevice", new object[] { });
+            Console.WriteLine();
         }
+    }
     public async void OnMouseOverDate(int day, User user)
     {
         //Checking if user is on a mobile device.
         //Hover effect doesn work well on smaller screens.
-        if(IsMobile != null && IsMobile.Value == true)
+        if (IsMobile != null && IsMobile.Value == true)
             return;
 
         var dateToCheck = new DateTime(currentDate.Year, currentDate.Month, day);
@@ -397,6 +398,8 @@
     private void HandleBooking(Appointment appointment)
     {
         var success = appointmentService.AddBooking(appointment, userLoggedIn.Id, selectedService);
+        string dayString = appointment.DateTime.ToString("dd");
+        int dayInt = int.Parse(dayString);
 
         bool emailSentSuccess = false;
         if (success)
@@ -404,6 +407,8 @@
         if (emailSentSuccess)
         {
             successMsg = "Your appointment was booked successfully! Please check your email for confirmation.";
+            HandleChosenDate(dayInt, userLoggedIn);
+            selectedService = ServiceEnum.None; 
             return;
         }
         errorMsg = "There was a problem booking your appointment, please try again";
