@@ -26,8 +26,8 @@ header {
     outline: 2px solid #1474bb;
 }
 
-.day-info {
-    margin: 1rem auto;
+.day-info{
+    height: 100vw;
 }
 
 .day-info button,
@@ -121,7 +121,7 @@ ol.day-grid {
 
 table {
     margin: auto;
-    width: 80%;
+    width: 100%;
 }
 
 table * {
@@ -160,10 +160,14 @@ tr {
 .filter-container {
     margin-bottom: 1rem;
     width: auto;
+    display: flex;
+    align-items: center;
 }
 
 .name-filter {
     padding: 0.5rem;
-    border: 1px solid black;
-    margin-left: 7.5rem;
+    width: 300px
+}
+.drop-down-time{
+    margin-left: 1rem;
 }

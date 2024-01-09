@@ -77,7 +77,7 @@
                 <header>
                     <h3>
                         There are @appointmentsForDate.Length appointments available for booking @chosenDay of
-                        @CalendarInfoObj.GetMonthName(CalendarInfoObj.Month);
+                        @CalendarInfoObj.GetMonthName(CalendarInfoObj.Month)
                     </h3>
                 </header>
                 @if (successMsg != "")
@@ -93,15 +93,22 @@
 
                 @* filtering starts here *@
                 <div class="filter-container">
-                    <input class="name-filter" type="text" @bind="careGiverNameFilter" @oninput="FilterByName" placeholder="Filter by name" />
-
-                    <label for="time-slot-filter">Select Time Slot:</label>
-                    <select id="time-slot-filter" @onchange="FilterByTime">
-                        @foreach (var timeSlot in Enum.GetValues(typeof(TimeSlots)).Cast<TimeSlots>())
-                        {
-                            <option value="@timeSlot">@timeSlot.ToString()</option>
-                        }
-                    </select>
+                    <input class="name-filter form-control" type="text" @bind="careGiverNameFilter" @oninput="FilterByName" placeholder="Filter by name" />
+                    <div class="drop-down-time">
+                        <select class="form-select" id="time-slot-filter" aria-label="Default select example" @onchange="FilterByTime">
+                            <option selected>Select Time</option>
+                            @foreach (var timeSlot in Enum.GetValues(typeof(TimeSlots)).Cast<TimeSlots>())
+                            {
+                                @if(timeSlot == TimeSlots.All)
+                                {
+                                    <option value="@TimeSlots.All">All</option>
+                                }
+                                else{
+                                    <option value="@timeSlot">@Convert.ToInt32(timeSlot)</option>
+                                }
+                            }
+                        </select>
+                    </div>
                 </div>
                 @* filtering ends here *@
 
@@ -275,7 +282,7 @@
     // Array to save original appointments so that they can be returned after filtering
     private Appointment[] resetFilteredAppointments = { };
     private string careGiverNameFilter = "";
-    private TimeSlots appointmentTimeFilter;
+    private TimeSlots appointmentTimeFilter = TimeSlots.All;
     public enum TimeSlots
     {
         All,
@@ -288,6 +295,8 @@
         Slot_14_00 = 14,
         Slot_15_00 = 15
     }
+    private string testt = "123";
+
     protected override async Task OnInitializedAsync()
     {
         yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}";
@@ -447,6 +456,15 @@
     {
         if (Enum.TryParse<TimeSlots>(e.Value.ToString(), out var selectedSlot))
         {
+            appointmentTimeFilter = selectedSlot;
+            FilterCareGivers();
+        }
+    }
+    private void FilterByTimee(string e)
+    {
+        if (Enum.TryParse<TimeSlots>(e, out var selectedSlot))
+        {
+            testt = TimeSlots.Slot_08_00.ToString();
             appointmentTimeFilter = selectedSlot;
             FilterCareGivers();
         }
