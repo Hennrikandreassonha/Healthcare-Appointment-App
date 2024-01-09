@@ -8,9 +8,11 @@ namespace HealthCare.Core
     public class AppointmentService
     {
         private readonly HealthcareContext _context;
-        public AppointmentService(HealthcareContext context)
+        private readonly EmailService _emailService;
+        public AppointmentService(HealthcareContext context, EmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
         }
         public IEnumerable<int> GetAvailableTimes()
         {
@@ -102,9 +104,27 @@ namespace HealthCare.Core
 
             if (appointmentToRemove != null)
             {
-                _context.Appointment.Remove(appointmentToRemove);
-                await _context.SaveChangesAsync();
-                return true;
+                if (appointmentToRemove.Patient != null)
+                {
+                    var caregiver = await _context.CareGiver.FirstOrDefaultAsync(c => c.Id == caregiverId);
+
+                    // Check if caregiver details exist and have an email
+                    if (caregiver != null && !string.IsNullOrEmpty(caregiver.Email))
+                    {
+                        var emailService = new EmailService(caregiver.Email, appointmentToRemove);
+                        emailService.SendEmail(false);
+                    }
+
+                    _context.Appointment.Remove(appointmentToRemove);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                else
+                {
+                    _context.Appointment.Remove(appointmentToRemove);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
             }
 
             return false;
