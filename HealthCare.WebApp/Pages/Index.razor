@@ -478,15 +478,13 @@
     }
     public bool SendCancelEmail(Appointment appointment, User user)
     {
-        emailService = new EmailService(user.Email, appointment,
-        "healthcareappointmentapp@gmail.com", "erhr ikni jexy odet");
+        emailService = new EmailService(user.Email, appointment);
         emailService.SendEmail(false);
         return true;
     }
     public bool SendCancelByDoctorEmail(Appointment appointment, User user)
     {
-        emailService = new EmailService(user.Email, appointment,
-        "healthcareappointmentapp@gmail.com", "erhr ikni jexy odet");
+        emailService = new EmailService(user.Email, appointment);
         emailService.SendCancelEmailByDoctor();
         return true;
     }
