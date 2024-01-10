@@ -1,4 +1,5 @@
 ﻿@page "/history/{patientId:int}"
+@using HealthCare.Core.Models.Appointment
 @inject HealthCare.Core.UserService.IUserService userService
 @inject HealthCare.Core.Data.HealthcareContext _context
 
@@ -52,7 +53,8 @@
                         {
                             <tr>
                                 <td>@appointments.DateTime</td>
-                                <td>@appointments.Service</td>
+                                <td>@(appointments.Service != null ? GetDisplayNameForService(appointments.Service.Value) : "Unknown")</td>
+                               
                             </tr>
                         }
                     </tbody>
@@ -101,5 +103,9 @@
         {
             return null;
         }
+    }
+    private string GetDisplayNameForService(ServiceEnum service)
+    {
+        return service.GetDisplayName();
     }
 }

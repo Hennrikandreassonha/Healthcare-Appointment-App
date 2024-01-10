@@ -14,8 +14,7 @@ namespace HealthCare.Core.Models.Appointment
         [Display(Name = "X-ray")]
         XRay,
         [Display(Name = "Eye exam")]
-        EyeExam,
-        None
+        EyeExam
     }
 }
 
