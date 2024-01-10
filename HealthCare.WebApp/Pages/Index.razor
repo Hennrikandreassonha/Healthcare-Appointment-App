@@ -67,7 +67,7 @@
                                         }
                                         @if (LoggedInUser is CareGiver)
                                         {
-                                            <td>@GetNameOfPatient(appointment.PatientId)</td>
+                                            <td><a href="/history/@appointment.PatientId">@GetNameOfPatient(appointment.PatientId)</a></td>
                                         }
                                         <td>
                                             <button class="btn btn-danger"
