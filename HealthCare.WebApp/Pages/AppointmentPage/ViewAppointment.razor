@@ -5,6 +5,7 @@
 @inject EmailService emailService
 @inject IJSRuntime JSRunTime
 @inject EmailService emailService
+@inject IConfiguration config
 @using System.Globalization;
 @using HealthCare.Core.Models.Appointment;
 @using System.Text.RegularExpressions;
@@ -110,14 +111,14 @@
                             <option selected>Select Time</option>
                             @foreach (var timeSlot in Enum.GetValues(typeof(TimeSlots)).Cast<TimeSlots>())
                             {
-                                    @if (timeSlot == TimeSlots.All)
-                                    {
-                                        <option value="@TimeSlots.All">All</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@timeSlot">@Convert.ToInt32(timeSlot)</option>
-                                    }
+                                @if (timeSlot == TimeSlots.All)
+                                {
+                                    <option value="@TimeSlots.All">All</option>
+                                }
+                                else
+                                {
+                                    <option value="@timeSlot">@Convert.ToInt32(timeSlot)</option>
+                                }
                             }
                         </select>
                     </div>
@@ -221,9 +222,11 @@
                         <option value="">Select time slot to add or remove</option>
                         @foreach (var time in appointmentService.GetAvailableTimes())
                         {
-                            @if(CalendarInfoObj.DayFocused == DateTime.Now.Date.Day && time <= DateTime.Now.Hour){
+                            @if (CalendarInfoObj.DayFocused == DateTime.Now.Date.Day && time <= DateTime.Now.Hour)
+                            {
                             }
-                            else{
+                            else
+                            {
                                 <option value="@time">@time:00</option>
                             }
                         }
@@ -477,7 +480,10 @@
     }
     public bool SendEmail(Appointment appointment, User user)
     {
-        emailService = new EmailService(user.Email, appointment);
+        var email = config.GetSection("Email:SenderEmail").Value;
+        var pass = config.GetSection("Email:Password").Value;
+
+        emailService = new EmailService(user.Email, appointment, email, pass);
         emailService.SendEmail();
         return true;
     }

@@ -3,14 +3,17 @@ using HealthCare.Core.Data;
 using HealthCare.Core.Models.Appointment;
 using HealthCare.Core.Models.AppointmentModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 namespace HealthCare.Core
 {
     public class AppointmentService
     {
         private readonly HealthcareContext _context;
-        public AppointmentService(HealthcareContext context)
+        private readonly IConfiguration _config;
+        public AppointmentService(HealthcareContext context, IConfiguration config)
         {
             _context = context;
+            _config = config;
         }
         public IEnumerable<int> GetAvailableTimes()
         {
@@ -109,7 +112,10 @@ namespace HealthCare.Core
                     // Check if caregiver details exist and have an email
                     if (caregiver != null && !string.IsNullOrEmpty(caregiver.Email))
                     {
-                        var emailService = new EmailService(caregiver.Email, appointmentToRemove);
+                        var email = _config.GetSection("Email:SenderEmail").Value;
+                        var pass = _config.GetSection("Email:Password").Value;
+                        
+                        var emailService = new EmailService(caregiver.Email, appointmentToRemove, email, pass);
                         emailService.SendEmail(false);
                     }
 

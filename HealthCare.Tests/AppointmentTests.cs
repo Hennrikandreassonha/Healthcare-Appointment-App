@@ -7,24 +7,27 @@ using System.Threading.Tasks;
 using HealthCare.Core.Models.AppointmentModels;
 using HealthCare.Core.Models.Appointment;
 using HealthCare.Core.Migrations;
+using Microsoft.Extensions.Configuration;
 
 namespace HealthCare.Tests
 {
     public class AppointmentTests
     {
         private readonly HealthcareContext _dbContext;
+        private readonly IConfiguration _config;
 
-        public AppointmentTests()
+        public AppointmentTests(IConfiguration config)
         {
             var optionsBuilder = new DbContextOptionsBuilder<HealthcareContext>().UseInMemoryDatabase(databaseName: "AppointmentTestDB");
             _dbContext = new HealthcareContext(optionsBuilder.Options);
+            _config = config;
         }
 
         [Fact]
         public void GetAvailableTimes_ShouldReturn_CorrectTimes()
         {
             // Arrange
-            var appointmentService = new AppointmentService(_dbContext);
+            var appointmentService = new AppointmentService(_dbContext, _config);
 
             // Act
             var availableTimes = appointmentService.GetAvailableTimes();
@@ -38,7 +41,7 @@ namespace HealthCare.Tests
         public void AddBooking_ShouldAdd_PatientToAppointment()
         {
             // Arrange
-            var appointmentService = new AppointmentService(_dbContext);
+            var appointmentService = new AppointmentService(_dbContext, _config);
             CareGiver careGiver = new CareGiver { Id = 1, Email = "test@test.com", FirstName = "test", LastName = "testing", PasswordHash = "hash"};
             Appointment appointment = new Appointment { Id = 1, CareGiverId = careGiver.Id, DateTime = DateTime.Now };
             _dbContext.Add(careGiver);
@@ -68,7 +71,7 @@ namespace HealthCare.Tests
         public void GetAppointmentsByDate_ShouldReturn_CorrectAppointments()
         {
             // Arrange
-            var appointmentService = new AppointmentService(_dbContext);
+            var appointmentService = new AppointmentService(_dbContext, _config);
             DateTime testDate = new DateTime(2024, 1, 8);
             CareGiver careGiver = new CareGiver { Id = 1, Email = "test@test.com", FirstName = "test", LastName = "testing", PasswordHash = "hash" };
 
@@ -95,7 +98,7 @@ namespace HealthCare.Tests
         public async Task AddInitialAppointment_Should_Add_Appointment()
         {
             // Arrange
-            var appointmentService = new AppointmentService(_dbContext);
+            var appointmentService = new AppointmentService(_dbContext, _config);
             int caregiverId = 1;
             DateTime testDate = new DateTime(2024, 1, 8);
             TimeSpan testTime = new TimeSpan(8, 0, 0);
@@ -119,7 +122,7 @@ namespace HealthCare.Tests
         public void AddInitialAppointmentsForADay_Should_Return_Appointments()
         {
             // Arrange
-            var appointmentService = new AppointmentService(_dbContext);
+            var appointmentService = new AppointmentService(_dbContext, _config);
             int caregiverId = 1;
             DateTime testDate = new DateTime(2024, 1, 8);
 
@@ -147,7 +150,7 @@ namespace HealthCare.Tests
         public async Task RemoveInitialAppointment_Should_Remove_Appointment()
         {
             // Arrange
-            var appointmentService = new AppointmentService(_dbContext);
+            var appointmentService = new AppointmentService(_dbContext, _config);
             int caregiverId = 1;
             DateTime testDate = new DateTime(2024, 1, 8);
             TimeSpan testTime = new TimeSpan(8, 0, 0);
@@ -180,7 +183,7 @@ namespace HealthCare.Tests
         public void RemoveInitialAppointmentsForADay_Should_Remove_Appointments()
         {
             // Arrange
-            var appointmentService = new AppointmentService(_dbContext);
+            var appointmentService = new AppointmentService(_dbContext, _config);
             int caregiverId = 1;
             DateTime testDate = new DateTime(2024, 1, 8);
 
