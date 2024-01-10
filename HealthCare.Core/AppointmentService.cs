@@ -148,7 +148,7 @@ namespace HealthCare.Core
 
             return true;
         }
-        public IEnumerable<Appointment> GetAvailabilityByDate(int doctorId, DateTime date)
+        public async Task<Appointment[]> GetAvailabilityByDate(int doctorId, DateTime date)
         {
             var availableAppointments = _context.Appointment
                 .Where(x => x.DateTime.Year == date.Year && x.DateTime.DayOfYear == date.DayOfYear && x.CareGiverId == doctorId &&
@@ -165,7 +165,7 @@ namespace HealthCare.Core
                 .OrderBy(appointment => appointment.DateTime.Hour)
                 .ToList();
 
-            return sortedAppointments;
+            return sortedAppointments.ToArray();
         }
         public bool AddBooking(Appointment appointment, int userId, ServiceEnum service)
         {
