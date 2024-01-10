@@ -1,0 +1,54 @@
+﻿.history-table {
+    width: 100%;
+}
+ 
+    .history-table table {
+        width: 50%;
+        border-collapse: collapse;
+    }
+
+    .history-table h3 {
+        margin-top:4rem;
+      
+    }
+
+
+    .history-table th, .history-table td {
+        text-align: left;
+        padding: 8px;
+        border: 1px solid black;
+    }
+
+    .history-table th {
+        background-color: #1474bb;
+        color: white;
+    }
+
+        .history-table th:nth-child(1),
+        .history-table td:nth-child(1) {
+            width: 25%;
+        }
+
+        .history-table th:nth-child(2),
+        .history-table td:nth-child(2) {
+            width: 50%;
+        }
+
+
+.patient-info {
+    width: 50%;
+    border: 1px solid;
+    margin-bottom: 8px;
+}
+    .patient-info thead {
+        background-color: #1474bb;
+        color: white;
+    }
+.margin-btn{
+
+    margin-top:1rem;
+}
+
+
+
+
