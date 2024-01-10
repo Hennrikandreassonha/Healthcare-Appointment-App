@@ -180,7 +180,7 @@
 
                     @if (appointmentsForBooking != null && appointmentsForBooking.Length > 0)
                     {
-                        @if (appointmentsForBooking.Length < 7)
+                        if (appointmentsForBooking.Length < availability.Length)
                         {
                             <button class="btn btn-danger" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
                             new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), true)">
@@ -358,7 +358,7 @@
         Slot_15_00 = 15
     }
     private string selectedTime = "";
-
+    private Appointment[] availability;
     protected override async Task OnInitializedAsync()
     {
         yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}";
@@ -421,10 +421,10 @@
             {
                 await appointmentService.AddInitialAppointment(doctorId, dateToToggle, new TimeSpan(timeSelected, 0, 0));
             }
-            appointmentsForBooking = appointmentService.GetAvailabilityByDate(doctorId, dateToToggle).ToArray();
+            appointmentsForBooking = await appointmentService.GetAvailabilityByDate(doctorId, dateToToggle);
         }
     }
-    private void ToggleAvailabilityForADay(int doctorId, DateTime dateToToggle, bool setUnavailable)
+    private async void ToggleAvailabilityForADay(int doctorId, DateTime dateToToggle, bool setUnavailable)
     {
         if (setUnavailable)
         {
@@ -435,9 +435,9 @@
             appointmentService.AddInitialAppointmentsForADay(doctorId, dateToToggle);
         }
 
-        appointmentsForBooking = appointmentService.GetAvailabilityByDate(doctorId, dateToToggle).ToArray();
+        appointmentsForBooking = await appointmentService.GetAvailabilityByDate(doctorId, dateToToggle);
     }
-    private void HandleChosenDate(int day, User user)
+    private async void HandleChosenDate(int day, User user)
     {
         CalendarInfoObj.DayFocused = day;
 
@@ -456,7 +456,8 @@
         else if (user.Role == RoleEnum.Doctor)
         {
             //appointmentsForBooking = appointmentService.GetAvailabilityByDate(user.Id, dateToCheck).ToArray();
-            appointmentsForBooking = appointmentService.GetAvailabilityByDate(user.Id, dateToCheck).ToArray();
+            appointmentsForBooking = await appointmentService.GetAvailabilityByDate(user.Id, dateToCheck);
+            availability = await appointmentService.GetAvailabilityByDate(userLoggedIn.Id, new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused));
         }
     }
     private async void HandleBooking(Appointment appointment)
