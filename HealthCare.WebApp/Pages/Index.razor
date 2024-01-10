@@ -9,6 +9,7 @@
 @inject EmailService emailService;
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
 @inject FeedbackService feedbackService
+@inject IConfiguration config
 
 <PageTitle>Index</PageTitle>
 <div class="@(LeavingFeedback != null  || ViewingFeedback != null ? "blur-filter" : "")">
@@ -478,13 +479,17 @@
     }
     public bool SendCancelEmail(Appointment appointment, User user)
     {
-        emailService = new EmailService(user.Email, appointment);
+        var email = config.GetSection("Email:SenderEmail").Value;
+        var pass = config.GetSection("Email:Password").Value;
+        emailService = new EmailService(user.Email, appointment, email, pass);
         emailService.SendEmail(false);
         return true;
     }
     public bool SendCancelByDoctorEmail(Appointment appointment, User user)
     {
-        emailService = new EmailService(user.Email, appointment);
+        var email = config.GetSection("Email:SenderEmail").Value;
+        var pass = config.GetSection("Email:Password").Value;
+        emailService = new EmailService(user.Email, appointment, email, pass);
         emailService.SendCancelEmailByDoctor();
         return true;
     }

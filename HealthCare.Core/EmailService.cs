@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using HealthCare.Core.Models.Appointment;
 using HealthCare.Core.Models.AppointmentModels;
 using Humanizer;
+using Microsoft.Extensions.Configuration;
 
 namespace HealthCare.Core
 {
@@ -18,13 +19,13 @@ namespace HealthCare.Core
         public string ReceiverEmail { get; set; }
         public Appointment AppointmentDetails { get; set; }
         public EmailService()
-        {
+        {   
         }
-        public EmailService(string receiverEmail, Appointment appointment)
+        public EmailService(string receiverEmail, Appointment appointment, string email, string password)
         {
             //Förvara lösen och email på annat ställe
-            SenderEmail = "healthcareappointmentapp@gmail.com";
-            Password = "erhr ikni jexy odet";
+            SenderEmail = email;
+            Password = password;
             ReceiverEmail = receiverEmail;
             AppointmentDetails = appointment;
         }
