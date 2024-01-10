@@ -26,12 +26,10 @@ namespace HealthCare.Core
 
         public List<Appointment> GetAllFeedBack()
         {
-            //    List<Appointment> list = new ();
-
-            //    list =
+            
 
 
-            return _context.Appointment.Where(x => x.Rating != null).ToList();
+            return _context.Appointment.Where(x => x.Rating != null).OrderByDescending(x=>x.DateTime).ToList();
         }
     }
 }

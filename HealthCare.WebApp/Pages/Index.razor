@@ -12,90 +12,33 @@
 
 <PageTitle>Index</PageTitle>
 <div class="@(LeavingFeedback != null  || ViewingFeedback != null ? "blur-filter" : "")">
-     <AuthorizeView>
-          <Authorized>
-               <div class="header-div">
-                    <header>
-                    <h1>Hello, @context.User.Identity.Name! Welcome to <span class="gold-text">Health Care AB</span>
+    <AuthorizeView>
+        <Authorized>
+            <div class="header-div">
+                <header>
+                    <h1>
+                        Hello, @context.User.Identity.Name! Welcome to <span class="gold-text">Health Care AB</span>
                     </h1>
-                    </header>
-                   
-                    @if (successMsg != "")
-                    {
-                         <p class="alert alert-success">@successMsg</p>
-                    }
-               </div>
+                </header>
 
-               <div class="container-flex">
-                    <div class="upcoming-div">
-                         <div class="small-header">
-                              <h3>Upcoming appointments</h3>
-                         </div>
-                          <p>
-                         You have <u>@UpcomingAppointments.Count</u> upcoming appointments
-                    </p>
-                         @if (UpcomingAppointments != null)
-                         {
-                              <table>
-                                  <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Service</th>
-                                    @if (LoggedInUser is Patient)
-                                    {
-                                        <th>Doctor</th>
+                @if (successMsg != "")
+                {
+                    <p class="alert alert-success">@successMsg</p>
+                }
+            </div>
 
-                                    }
-                                    @if (LoggedInUser is CareGiver)
-                                    {
-                                        <th>Patient</th>
-                                    }
-                                </tr>
-                            </thead>
-                                   <tbody>
-                                        @foreach (Appointment appointment in UpcomingAppointments)
-                                        {
-                                             <tr>
-                                                  <td>@appointment.DateTime</td>
-                                                  <td>@(appointment.Service != null ? GetDisplayNameForService(appointment.Service.Value) : "Unknown")</td>
-                                                  @if (LoggedInUser is Patient)
-                                                  {
-                                                       <td>@GetNameOfDoctor(appointment.CareGiverId)</td>
-
-                                                  }
-                                                  @if (LoggedInUser is CareGiver)
-                                                  {
-                                                       <td>@GetNameOfPatient(appointment.PatientId)</td>
-                                                  }
-                                                  <td>
-                                                       <button class="btn btn-danger"
-                                                            @onclick="(e) => RemoveAppointment(appointment)">Cancel</button>
-                                                  </td>
-                                             </tr>
-                                        }
-                                   </tbody>
-                              </table>
-                         }
+            <div class="container-flex">
+                <div class="upcoming-div">
+                    <div class="small-header">
+                        <h3>Upcoming appointments</h3>
                     </div>
-                    <div class="passed-div">
-                         <div class="small-header">
-                              <h3>Previous appointments</h3>
-                         </div>
-                         @if(LoggedInUser != null && @PreviousAppointments.Where(x => x.Feedback == null).Count() == 0 && LoggedInUser.Role == RoleEnum.Patient){
-                              <p>All set! You have no feedbacks to submit!</p>
-                         }
-                         else if(LoggedInUser != null && LoggedInUser.Role == RoleEnum.Patient){
-                         <p>You have <u>@PreviousAppointments.Where(x => x.Feedback == null).Count()</u> feedbacks to submit</p>
-                         }
-                         else if(LoggedInUser != null && @PreviousAppointments.Where(x => x.Feedback == null).Count() == 0 && LoggedInUser.Role == RoleEnum.Doctor){
-                              <p>You have no feedbacks to view yet!</p>
-                         }
-                         else if(LoggedInUser != null && LoggedInUser.Role == RoleEnum.Doctor){
-                              <p>You have <u>@PreviousAppointments.Where(x => x.Feedback != null).Count()</u> feedbacks to view</p>
-                         }
-                         <div class="feedback-flex">
-                              <table>
-                                   <thead>
+                    <p>
+                        You have <u>@UpcomingAppointments.Count</u> upcoming appointments
+                    </p>
+                    @if (UpcomingAppointments != null)
+                    {
+                        <table>
+                            <thead>
                                 <tr>
                                     <th>Date</th>
                                     <th>Service</th>
@@ -110,328 +53,439 @@
                                     }
                                 </tr>
                             </thead>
-                                   <tbody>
-                                        @foreach (Appointment appointment in PreviousAppointments)
+                            <tbody>
+                                @foreach (Appointment appointment in UpcomingAppointments)
+                                {
+                                    <tr>
+                                        <td>@appointment.DateTime</td>
+                                        <td>@(appointment.Service != null ? GetDisplayNameForService(appointment.Service.Value) : "Unknown")</td>
+                                        @if (LoggedInUser is Patient)
                                         {
-                                             <tr>
-                                                  <td>@appointment.DateTime</td>
-                                                  <td>@(appointment.Service != null ? GetDisplayNameForService(appointment.Service.Value) : "Unknown")</td>
+                                            <td>@GetNameOfDoctor(appointment.CareGiverId)</td>
+
+                                        }
+                                        @if (LoggedInUser is CareGiver)
+                                        {
+                                            <td>@GetNameOfPatient(appointment.PatientId)</td>
+                                        }
+                                        <td>
+                                            <button class="btn btn-danger"
+                                                    @onclick="(e) => RemoveAppointment(appointment)">
+                                                Cancel
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+                <div class="passed-div">
+                    <div class="small-header">
+                        <h3>Previous appointments</h3>
+                    </div>
+                    @if (LoggedInUser != null && @PreviousAppointments.Where(x => x.Feedback == null).Count() == 0 && LoggedInUser.Role == RoleEnum.Patient)
+                    {
+                        <p>All set! You have no feedbacks to submit!</p>
+                    }
+                    else if (LoggedInUser != null && LoggedInUser.Role == RoleEnum.Patient)
+                    {
+                        <p>You have <u>@PreviousAppointments.Where(x => x.Feedback == null).Count()</u> feedbacks to submit</p>
+                    }
+                    else if (LoggedInUser != null && @PreviousAppointments.Where(x => x.Feedback == null).Count() == 0 && LoggedInUser.Role == RoleEnum.Doctor)
+                    {
+                        <p>You have no feedbacks to view yet!</p>
+                    }
+                    else if (LoggedInUser != null && LoggedInUser.Role == RoleEnum.Doctor)
+                    {
+                        <p>You have <u>@PreviousAppointments.Where(x => x.Feedback != null).Count()</u> feedbacks to view</p>
+                    }
+                    <div class="feedback-flex">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Service</th>
+                                    @if (LoggedInUser is Patient)
+                                    {
+                                        <th>Doctor</th>
+
+                                    }
+                                    @if (LoggedInUser is CareGiver)
+                                    {
+                                        <th>Patient</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (Appointment appointment in PreviousAppointments)
+                                {
+                                    <tr>
+                                        <td>@appointment.DateTime</td>
+                                        <td>@(appointment.Service != null ? GetDisplayNameForService(appointment.Service.Value) : "Unknown")</td>
 
                                         @if (LoggedInUser is Patient)
                                         {
                                             <td>@GetNameOfDoctor(appointment.CareGiverId)</td>
                                         }
-                                        @if(LoggedInUser is CareGiver)
+                                        @if (LoggedInUser is CareGiver)
                                         {
                                             <td>@GetNameOfPatient(appointment.PatientId)</td>
                                         }
-                                                  <td>
-                                                       @if(appointment.Feedback == null && LoggedInUser.Role == RoleEnum.Patient){
-                                                       <button class="btn btn-primary feedback-btn"
-                                                            @onclick="(e) => LeaveFeedback(appointment)">Leave
-                                                            feedback</button>
-                                                       }
-                                                       @if(appointment.Feedback == null && LoggedInUser.Role == RoleEnum.Doctor){
-                                                            <button class="btn btn-primary feedback-btn" disabled
-                                                            >No feedback available</button>
-                                                       }
-                                                       @if(appointment.Feedback != "" && appointment.Feedback != null)
-                                                       {
-                                                             <button class="btn btn-success feedback-btn"
-                                                            @onclick="(e) => ViewFeedback(appointment)">View
-                                                            feedback</button>
-                                                       }
-                                                  </td>
-                                             </tr>
-                                        }
-                                   </tbody>
-                              </table>
-                         </div>
+                                        <td>
+                                            @if (appointment.Feedback == null && LoggedInUser.Role == RoleEnum.Patient)
+                                            {
+                                                <button class="btn btn-primary feedback-btn"
+                                                        @onclick="(e) => LeaveFeedback(appointment)">
+                                                    Leave
+                                                    feedback
+                                                </button>
+                                            }
+                                            @if (appointment.Feedback == null && LoggedInUser.Role == RoleEnum.Doctor)
+                                            {
+                                                <button class="btn btn-primary feedback-btn" disabled>
+                                                    No feedback available
+                                                </button>
+                                            }
+                                            @if (appointment.Feedback != "" && appointment.Feedback != null)
+                                            {
+                                                <button class="btn btn-success feedback-btn"
+                                                        @onclick="(e) => ViewFeedback(appointment)">
+                                                    View
+                                                    feedback
+                                                </button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
                     </div>
+                </div>
 
-               </div>
-          </Authorized>
-          <NotAuthorized>
-               <div class="header-div-welcome">
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            <div class="header-div-welcome">
 
-               <h1>Hello stranger! Welcome to<br><span class="gold-text"> Healthcare App AB</span></h1>
-               </div>
-               <div class="welcome-text-flex">
-                    <div>
-                         <p>Please <a href="/login">log in</a> to book your appointment.</p>
-                         <p>Feel free to view our <a href="/feedback">reviews</a> from other patients</p>
-                         <p class="text-bolder">Note that we <i>always</i> have a <strong><u class="gold-text" style='font-size: x-large;'>4</u></strong> star rating or MORE!</p>
-                    </div>
-               </div>
-          </NotAuthorized>
-     </AuthorizeView>
+                <h1>Hello stranger! Welcome to<br><span class="gold-text"> Healthcare App AB</span></h1>
+            </div>
+            <div class="welcome-text-flex">
+                <div>
+                    <p>Please <a href="/login">log in</a> to book your appointment.</p>
+                    <p>Feel free to view our <a href="/feedback">reviews</a> from other patients</p>
+                    <p class="text-bolder">Note that we <i>always</i> have a <strong><u class="gold-text" style='font-size: x-large;'>4</u></strong> star rating or MORE!</p>
+                </div>
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
 </div>
 @if (LeavingFeedback != null || ViewingFeedback != null)
 {
-     <div class="feedback-outer-div">
-          <div id="feedback-container">
-               <header>
-               @if(LeavingFeedback != null){
+    <div class="feedback-outer-div">
+        <div id="feedback-container">
+            <header>
+                @if (LeavingFeedback != null)
+                {
                     <h3>Leave Feedback</h3>
-}
-               @if(ViewingFeedback != null){
+                }
+                @if (ViewingFeedback != null)
+                {
                     <h3>Viewing Feedback</h3>
-}    
-                    <img @onclick="@CloseFeedback" src="\remove.png" id="close-btn" title="Close">
-               </header>
-               @if(LeavingFeedback != null){
-               <p class="feedback-text"><u>Please submit your feedback
+                }
+                <img @onclick="@CloseFeedback" src="\remove.png" id="close-btn" title="Close">
+            </header>
+            @if (LeavingFeedback != null)
+            {
+                <p class="feedback-text">
+                    <u>
+                        Please submit your feedback
                     </u><br> (Only feedbacks with 4 or more stars will be saved)
                     <br> <i>Thank you for cooperating</i>
-               </p>
-               }
-@if(LeavingFeedback != null){
-               <ul>
-    <li>
-        <strong>Doctor:</strong> @($"{LeavingFeedback.CareGiver.FirstName} {LeavingFeedback.CareGiver.LastName}")
-    </li>
-    <li>
-        <strong>Date:</strong> @LeavingFeedback.DateTime
-    </li>
-    <li>
-        <strong>Service:</strong> @(LeavingFeedback.Service != null ? GetDisplayNameForService(LeavingFeedback.Service.Value) : "Unknown")
-    </li>
-</ul>
-}
-@if (ViewingFeedback != null)
-{
-<table class="review-feedback-table">
-      <tr>
-    <th><strong>Doctor:</strong></th>
-     <th><strong>Date:</strong></th>
-     <th><strong>Service:</strong></th>
-  </tr>
-    <tr>
-        <td>@($"{ViewingFeedback.CareGiver.FirstName} {ViewingFeedback.CareGiver.LastName}")</td>
-        <td>@ViewingFeedback.DateTime</td>
-        <td>@(ViewingFeedback.Service != null ? GetDisplayNameForService(ViewingFeedback.Service.Value) : "Unknown")</td>
-  </tr>
-</table>
-}
+                </p>
+            }
+            @if (LeavingFeedback != null)
+            {
+                <ul>
+                    <li>
+                        <strong>Doctor:</strong> @($"{LeavingFeedback.CareGiver.FirstName} {LeavingFeedback.CareGiver.LastName}")
+                    </li>
+                    <li>
+                        <strong>Date:</strong> @LeavingFeedback.DateTime
+                    </li>
+                    <li>
+                        <strong>Service:</strong> @(LeavingFeedback.Service != null ? GetDisplayNameForService(LeavingFeedback.Service.Value) : "Unknown")
+                    </li>
+                </ul>
+            }
+            @if (ViewingFeedback != null)
+            {
+                <table class="review-feedback-table">
+                    <tr>
+                        <th><strong>Doctor:</strong></th>
+                        <th><strong>Date:</strong></th>
+                        <th><strong>Service:</strong></th>
+                    </tr>
+                    <tr>
+                        <td>@($"{ViewingFeedback.CareGiver.FirstName} {ViewingFeedback.CareGiver.LastName}")</td>
+                        <td>@ViewingFeedback.DateTime</td>
+                        <td>@(ViewingFeedback.Service != null ? GetDisplayNameForService(ViewingFeedback.Service.Value) : "Unknown")</td>
+                    </tr>
+                </table>
+            }
 
-               @if(LeavingFeedback != null){
-               <div class="feedbackform">
+            @if (LeavingFeedback != null)
+            {
+                <div class="feedbackform">
                     <EditForm Model="LeavingFeedback" OnSubmit="SubmitFeedback">
-                         <textarea class="form-control" @bind="FeedbackText"
-                              placeholder="Greatest service ever" required>  </textarea>
-                         <div class="rating">
-                              @* Funkar inte med en loop eller InputRadio *@
-                              <input type="radio" id="star5" name="rating">
-                              <label for="star5" @onclick="(e) => SubmitRating(5)"></label>
-                              <input type="radio" id="star4" name="rating">
-                              <label for="star4" @onclick="(e) => SubmitRating(4)"></label>
-                              <input type="radio" id="star3" name="rating">
-                              <label for="star3" @onclick="(e) => SubmitRating(3)"></label>
-                              <input type="radio" id="star2" name="rating">
-                              <label for="star2" @onclick="(e) => SubmitRating(2)"></label>
-                              <input type="radio" id="star1" name="rating">
-                              <label for="star1" @onclick="(e) => SubmitRating(1)"></label>
-                         </div>
-                         <div class="submit-feedback-flex">
-                              <button class="btn btn-primary submit-feedback" type="submit">Leave
-                                   feedback</button>
-                         </div>
+                        <textarea class="form-control" @bind="FeedbackText"
+                                  placeholder="Greatest service ever" required>  </textarea>
+                        <div class="rating">
+                            @* Funkar inte med en loop eller InputRadio *@
+                            <input type="radio" id="star5" name="rating">
+                            <label for="star5" @onclick="(e) => SubmitRating(5)"></label>
+                            <input type="radio" id="star4" name="rating">
+                            <label for="star4" @onclick="(e) => SubmitRating(4)"></label>
+                            <input type="radio" id="star3" name="rating">
+                            <label for="star3" @onclick="(e) => SubmitRating(3)"></label>
+                            <input type="radio" id="star2" name="rating">
+                            <label for="star2" @onclick="(e) => SubmitRating(2)"></label>
+                            <input type="radio" id="star1" name="rating">
+                            <label for="star1" @onclick="(e) => SubmitRating(1)"></label>
+                        </div>
+                        <div class="submit-feedback-flex">
+                            <button class="btn btn-primary submit-feedback" type="submit">
+                                Leave
+                                feedback
+                            </button>
+                        </div>
                     </EditForm>
-               </div>
-               }
-               @if(ViewingFeedback != null){
+                </div>
+            }
+            @if (ViewingFeedback != null)
+            {
 
-                    <div class="feedback-second-section">
+                <div class="feedback-second-section">
                     <div class="feedback-inner-section">
-                    <p><strong>Feedback:</strong></p>
-                    <textarea disabled>@ViewingFeedback.Feedback</textarea>
+                        <p><strong>Feedback:</strong></p>
+                        <textarea disabled>@ViewingFeedback.Feedback</textarea>
                     </div>
                     <div class="feedback-inner-section">
-                    
-                    <p><strong>Rating:</strong></p>
-                    <div class="star-div">
-                    @for(int i = 0; i <= ViewingFeedback.Rating; i++){
-                         <label class="leaving-feedback-star">&#x2605;</label>
-                    }
-                    </div>
-                    </div>
-                    </div>
-               }
 
-               @if (FeedbackSuccessText != "")
-               {
-                    <p class="alert alert-success" style="padding: 1rem; margin: 1rem;">@FeedbackSuccessText <br>
-                    <i>- The best healthcare company ever</i></p>
-               }
-               @if(FeedbackFailText != ""){
-                     <p class="alert alert-danger" style="padding: 1rem; margin: 1rem;">@FeedbackFailText <br>
-                    <i>- The best healthcare company ever</i></p>
-               }
-          </div>
-     </div>
+                        <p><strong>Rating:</strong></p>
+                        <div class="star-div">
+                            @for (int i = 0; i <= ViewingFeedback.Rating; i++)
+                            {
+                                <label class="leaving-feedback-star">&#x2605;</label>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (FeedbackSuccessText != "")
+            {
+                <p class="alert alert-success" style="padding: 1rem; margin: 1rem;">
+                    @FeedbackSuccessText <br>
+                    <i>- The best healthcare company ever</i>
+                </p>
+            }
+            @if (FeedbackFailText != "")
+            {
+                <p class="alert alert-danger" style="padding: 1rem; margin: 1rem;">
+                    @FeedbackFailText <br>
+                    <i>- The best healthcare company ever</i>
+                </p>
+            }
+        </div>
+    </div>
 }
 @code {
-     private string userName = "";
-     private User LoggedInUser;
-     private List<Appointment> UpcomingAppointments = new();
-     private List<Appointment> PreviousAppointments = new();
-     public string NameOfDoctor = "";
-     public string NameOfPatient = "";
-     string successMsg = "";
-     string FeedbackSuccessText = "";
-     string FeedbackFailText = "";
-     string FeedbackText = "";
-     private Appointment? LeavingFeedback = null;
-     private Appointment? ViewingFeedback = null;
-     protected override async Task OnInitializedAsync()
-     {
+    private string userName = "";
+    private User LoggedInUser;
+    private List<Appointment> UpcomingAppointments = new();
+    private List<Appointment> PreviousAppointments = new();
+    public string NameOfDoctor = "";
+    public string NameOfPatient = "";
+    string successMsg = "";
+    string FeedbackSuccessText = "";
+    string FeedbackFailText = "";
+    string FeedbackText = "";
+    private Appointment? LeavingFeedback = null;
+    private Appointment? ViewingFeedback = null;
+    protected override async Task OnInitializedAsync()
+    {
 
-          userName = await userService.GetEmailAsync();
-          LoggedInUser = userService.GetByEmail(userName);
-          GetAllMeetings(LoggedInUser);
-     }
+        userName = await userService.GetEmailAsync();
+        LoggedInUser = userService.GetByEmail(userName);
+        GetAllMeetings(LoggedInUser);
+    }
     private string GetDisplayNameForService(ServiceEnum service)
     {
         return service.GetDisplayName();
     }
     public void SubmitRating(int rating)
-     {
-          if (LeavingFeedback == null)
-          {
-               return;
-          }
-          LeavingFeedback.Rating = rating;
-     }
-     private void SubmitFeedback()
-     {
-          FeedbackSuccessText = "";
-          FeedbackFailText = "";
-          if(LeavingFeedback == null || LeavingFeedback.Rating == null || FeedbackText.IsNullOrEmpty()){
-               FeedbackFailText = "Error saving your feedback, please try again";
-               return;
-          }
+    {
+        if (LeavingFeedback == null)
+        {
+            return;
+        }
+        LeavingFeedback.Rating = rating;
+    }
+    private void SubmitFeedback()
+    {
+        FeedbackSuccessText = "";
+        FeedbackFailText = "";
+        if (LeavingFeedback == null || LeavingFeedback.Rating == null || FeedbackText.IsNullOrEmpty())
+        {
+            FeedbackFailText = "Error saving your feedback, please try again";
+            return;
+        }
 
-          var success = feedbackService.SaveFeedback(LeavingFeedback, FeedbackText);
-          if(success){
-                
-               FeedbackSuccessText = "Your feedback has been saved, thank you for cooperating";
-          }
-          else{
-               FeedbackFailText = "Rating was below 4 stars and therefore not saved, thank you anyway!";
-          }
-          FeedbackText = "";
-     }
+        var success = feedbackService.SaveFeedback(LeavingFeedback, FeedbackText);
+        if (success)
+        {
+
+            FeedbackSuccessText = "Your feedback has been saved, thank you for cooperating";
+        }
+        else
+        {
+            FeedbackFailText = "Rating was below 4 stars and therefore not saved, thank you anyway!";
+        }
+        FeedbackText = "";
+    }
     private void GetAllMeetings(User loggedInUser)
-   {
-       List<Appointment> appointments;
-       UpcomingAppointments.Clear();
-       PreviousAppointments.Clear();
+    {
+        List<Appointment> appointments;
+        UpcomingAppointments.Clear();
+        PreviousAppointments.Clear();
 
-       if (loggedInUser is Patient)
-       {
-           appointments = _context.Appointment.Where(x => x.PatientId == loggedInUser.Id)
-           .OrderBy(x => x.DateTime)
-           .ToList();
+        if (loggedInUser is Patient)
+        {
+            appointments = _context.Appointment.Where(x => x.PatientId == loggedInUser.Id)
+            .OrderBy(x => x.DateTime)
+            .ToList();
 
-           foreach (var appointment in appointments)
-           {
-               if (appointment.DateTime > DateTime.Now)
-               {
+            foreach (var appointment in appointments)
+            {
+                if (appointment.DateTime > DateTime.Now)
+                {
 
-                   UpcomingAppointments.Add(appointment);
-               }
-               else
-               {
-                   PreviousAppointments.Add(appointment);
-               }
-           }
-       }
-       else if (loggedInUser is CareGiver)
-       {
-           appointments = _context.Appointment.Where(x => x.CareGiverId == loggedInUser.Id)
-           .OrderBy(x => x.DateTime)
-           .ToList();
+                    UpcomingAppointments.Add(appointment);
+                }
+                else
+                {
+                    PreviousAppointments.Add(appointment);
+                }
+            }
+        }
+        else if (loggedInUser is CareGiver)
+        {
+            appointments = _context.Appointment.Where(x => x.CareGiverId == loggedInUser.Id)
+            .OrderBy(x => x.DateTime)
+            .ToList();
 
-           foreach (var appointment in appointments)
-           {
-               if (appointment.DateTime > DateTime.Now)
-               {
-                   if (appointment.PatientId != null)
-                   {
-                       UpcomingAppointments.Add(appointment);
-                   }
-               }
-               else
-               {
-                   if (appointment.PatientId != null)
-                   {
-                       PreviousAppointments.Add(appointment);
-                   }
-               }
-           }
-       }
-   }
-     private void CloseFeedback()
-     {
-          LeavingFeedback = null;
-          ViewingFeedback = null;
-          FeedbackText = "";
-     }
-     private string GetNameOfDoctor(int careGiverId)
-     {
-          var careGiver = _context.CareGiver.FirstOrDefault(x => x.Id == careGiverId);
+            foreach (var appointment in appointments)
+            {
+                if (appointment.DateTime > DateTime.Now)
+                {
+                    if (appointment.PatientId != null)
+                    {
+                        UpcomingAppointments.Add(appointment);
+                    }
+                }
+                else
+                {
+                    if (appointment.PatientId != null)
+                    {
+                        PreviousAppointments.Add(appointment);
+                    }
+                }
+            }
+        }
+    }
+    private void CloseFeedback()
+    {
+        LeavingFeedback = null;
+        ViewingFeedback = null;
+        FeedbackText = "";
+    }
+    private string GetNameOfDoctor(int careGiverId)
+    {
+        var careGiver = _context.CareGiver.FirstOrDefault(x => x.Id == careGiverId);
 
-          return NameOfDoctor = $"{careGiver.FirstName} {careGiver.LastName}";
-     }
+        return NameOfDoctor = $"{careGiver.FirstName} {careGiver.LastName}";
+    }
 
-     private string GetNameOfPatient(int? patientId)
- {
-     if (patientId != null)
-     {
-         var patient = _context.Patient.FirstOrDefault(x => x.Id == patientId);
+    private string GetNameOfPatient(int? patientId)
+    {
+        if (patientId != null)
+        {
+            var patient = _context.Patient.FirstOrDefault(x => x.Id == patientId);
 
-         return NameOfPatient = $"{patient.FirstName} {patient.LastName}";
-     }
-     else
-     {
-         return "No patient";
-     }
- }
+            return NameOfPatient = $"{patient.FirstName} {patient.LastName}";
+        }
+        else
+        {
+            return "No patient";
+        }
+    }
 
-     private void RemoveAppointment(Appointment appointment)
-     {
-          if (appointment != null)
-          {
-               SendCancelEmail(appointment, LoggedInUser);
-               appointment.PatientId = null;
-               appointment.Service = null;
+    private void RemoveAppointment(Appointment appointment)
+    {
+        if (LoggedInUser is Patient)
+        {
+            if (appointment != null)
+            {
+                SendCancelEmail(appointment, LoggedInUser);
+                appointment.PatientId = null;
+                appointment.Service = null;
 
-               _context.Update(appointment);
-               _context.SaveChanges();
+                _context.Update(appointment);
+                _context.SaveChanges();
 
-               successMsg = "Your booking has been cancelled!";
-               GetAllMeetings(LoggedInUser);
-          }
-     }
-     private void LeaveFeedback(Appointment appointment)
-     {
-          LeavingFeedback = appointment;
-          FeedbackSuccessText = "";
-          FeedbackFailText = "";
-          FeedbackText = "";
-          ViewingFeedback = null;
-     }
-     private void ViewFeedback (Appointment appointment){
-          ViewingFeedback = appointment;
-          LeavingFeedback = null;
-          FeedbackText = "";
-          FeedbackSuccessText = "";
-          FeedbackFailText = "";
-     }
-     public bool SendCancelEmail(Appointment appointment, User user)
-     {
-          emailService = new EmailService(user.Email, appointment);
-          emailService.SendEmail(false);
-          return true;
-     }
+                successMsg = "Your booking has been cancelled!";
+                GetAllMeetings(LoggedInUser);
+            }
+        }
+        if (LoggedInUser is CareGiver)
+        {
+            User patient = _context.Patient.FirstOrDefault(p => p.Id == appointment.PatientId);
+            SendCancelByDoctorEmail(appointment, patient);
+
+            _context.Remove(appointment);
+            _context.SaveChanges();
+
+            successMsg = "Your booking has been cancelled!";
+            GetAllMeetings(LoggedInUser);
+        }
+    }
+    private void LeaveFeedback(Appointment appointment)
+    {
+        LeavingFeedback = appointment;
+        FeedbackSuccessText = "";
+        FeedbackFailText = "";
+        FeedbackText = "";
+        ViewingFeedback = null;
+    }
+    private void ViewFeedback(Appointment appointment)
+    {
+        ViewingFeedback = appointment;
+        LeavingFeedback = null;
+        FeedbackText = "";
+        FeedbackSuccessText = "";
+        FeedbackFailText = "";
+    }
+    public bool SendCancelEmail(Appointment appointment, User user)
+    {
+        emailService = new EmailService(user.Email, appointment);
+        emailService.SendEmail(false);
+        return true;
+    }
+    public bool SendCancelByDoctorEmail(Appointment appointment, User user)
+    {
+        emailService = new EmailService(user.Email, appointment);
+        emailService.SendCancelEmailByDoctor();
+        return true;
+    }
 }

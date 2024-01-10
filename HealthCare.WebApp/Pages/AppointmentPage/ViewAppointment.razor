@@ -452,7 +452,7 @@
         }
         else if (user.Role == RoleEnum.Doctor)
         {
-            appointmentsForBooking = appointmentService.GetAvailabilityByDate(user.Id, dateToCheck).ToArray();
+            //appointmentsForBooking = appointmentService.GetAvailabilityByDate(user.Id, dateToCheck).ToArray();
             appointmentsForBooking = appointmentService.GetAvailabilityByDate(user.Id, dateToCheck).ToArray();
         }
     }
@@ -470,7 +470,7 @@
             successMsg = "Your appointment was booked successfully! Please check your email for confirmation.";
             HandleChosenDate(dayInt, userLoggedIn);
             selectedService = ServiceEnum.None;
-            await JSRunTime.InvokeAsync<bool>("SelectElementFix", new object[] { });
+            await JSRunTime.InvokeVoidAsync("SelectElementFix", new object[] { });
             return;
         }
         errorMsg = "There was a problem booking your appointment, please try again";
