@@ -5,6 +5,7 @@
 @inject EmailService emailService
 @inject IJSRuntime JSRunTime
 @inject EmailService emailService
+@inject IConfiguration configuration
 @using System.Globalization;
 @using HealthCare.Core.Models.Appointment;
 @using System.Text.RegularExpressions;
@@ -477,7 +478,8 @@
     }
     public bool SendEmail(Appointment appointment, User user)
     {
-        emailService = new EmailService(user.Email, appointment);
+
+        emailService = new EmailService(user.Email, appointment, "healthcareappointmentapp@gmail.com", "erhr ikni jexy odet");
         emailService.SendEmail();
         return true;
     }
