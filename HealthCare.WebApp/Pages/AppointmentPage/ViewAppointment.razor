@@ -473,7 +473,6 @@
         {
             successMsg = "Your appointment was booked successfully! Please check your email for confirmation.";
             HandleChosenDate(dayInt, userLoggedIn);
-            selectedService = ServiceEnum.None;
             await JSRunTime.InvokeVoidAsync("SelectElementFix", new object[] { });
             return;
         }

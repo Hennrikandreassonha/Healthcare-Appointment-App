@@ -1,0 +1,111 @@
+﻿@page "/history/{patientId:int}"
+@using HealthCare.Core.Models.Appointment
+@inject HealthCare.Core.UserService.IUserService userService
+@inject HealthCare.Core.Data.HealthcareContext _context
+
+
+<AuthorizeView>
+    <Authorized>
+        @if (LoggedInUser is CareGiver)
+        {
+            <header>
+                <h1>Overview patient</h1>
+            </header>
+            @if (Patient != null)
+            {
+                <table class="patient-info">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Personal Info</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>First name:</td>
+                            <td>@Patient.FirstName</td>
+                        </tr>
+                        <tr>
+                            <td>Last name:</td>
+                            <td>@Patient.LastName</td>
+                        </tr>
+                        <tr>
+                            <td>Birthday:</td>
+                            <td>@Patient.BirthDate</td>
+                        </tr>
+                    </tbody>
+                </table>
+            }
+
+            <div class="history-table">
+                    <h3>
+                        Previous Healthcare Occasions
+                    </h3>
+                <table>
+                    <thead>
+                       
+                        <tr>
+                            <th>Date</th>
+                            <th>Service</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Appointment appointments in PatientAppointments)
+                        {
+                            <tr>
+                                <td>@appointments.DateTime</td>
+                                <td>@(appointments.Service != null ? GetDisplayNameForService(appointments.Service.Value) : "Unknown")</td>
+                               
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <NavLink href="/">
+                    <button class="btn btn-primary margin-btn">Back</button>
+                </NavLink>
+            </div>
+        }
+        else
+        {
+            <NotAuthorizedComponent />
+        }
+    </Authorized>
+    <NotAuthorized>
+        <NotAuthorizedComponent />
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+    private string? userEmail;
+    private User LoggedInUser;
+    [Parameter]
+    public int patientId { get; set; }
+    List<Appointment> PatientAppointments = new List<Appointment>();
+    Patient Patient;
+
+    protected override async Task OnInitializedAsync()
+    {
+        userEmail = await userService.GetEmailAsync();
+        LoggedInUser = userService.GetByEmail(userEmail);
+        PatientAppointments = _context.Appointment.Where(x => x.PatientId == patientId && x.DateTime < DateTime.Now).OrderBy(d => d.DateTime).ToList();
+        Patient = GetPatient(patientId);
+    }
+    private Patient GetPatient(int? patientId)
+    {
+        if (patientId != null)
+        {
+            var patient = _context.Patient.FirstOrDefault(x => x.Id == patientId);
+
+            return patient;
+        }
+        else
+        {
+            return null;
+        }
+    }
+    private string GetDisplayNameForService(ServiceEnum service)
+    {
+        return service.GetDisplayName();
+    }
+}
