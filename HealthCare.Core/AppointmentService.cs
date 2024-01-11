@@ -180,9 +180,11 @@ namespace HealthCare.Core
                 .ToList();
 
             int[] timeSlots = { 8, 9, 10, 11, 13, 14, 15 };
+            // if(date != )
             timeSlots = timeSlots.Where(x => x > DateTime.Now.Hour).ToArray();
             var availableTimes = appointments.Select(appointment => appointment.DateTime.Hour).Distinct().ToList();
 
+            var test = timeSlots.Except(appointments.Select(x => x.DateTime.Hour).Where(x => x > DateTime.Now.Hour)).Any();
             return timeSlots.Except(appointments.Select(x => x.DateTime.Hour).Where(x => x > DateTime.Now.Hour)).Any();
         }
         public bool AddBooking(Appointment appointment, int userId, ServiceEnum service)
