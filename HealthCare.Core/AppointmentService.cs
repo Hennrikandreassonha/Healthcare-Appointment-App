@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography.X509Certificates;
 using HealthCare.Core.Data;
 using HealthCare.Core.Models.Appointment;
 using HealthCare.Core.Models.AppointmentModels;
@@ -37,7 +38,8 @@ namespace HealthCare.Core
                 availableTimes = GetAvailableTimes()
                 .Where(x => x > DateTime.Now.Hour).ToList();
             }
-            else{
+            else
+            {
                 availableTimes = GetAvailableTimes().ToList();
             }
 
@@ -114,7 +116,7 @@ namespace HealthCare.Core
                     {
                         var email = _config.GetSection("Email:SenderEmail").Value;
                         var pass = _config.GetSection("Email:Password").Value;
-                        
+
                         var emailService = new EmailService(caregiver.Email, appointmentToRemove, email, pass);
                         emailService.SendEmail(false);
                     }
@@ -166,6 +168,22 @@ namespace HealthCare.Core
                 .ToList();
 
             return sortedAppointments.ToArray();
+        }
+        public async Task<bool> IsAppointmentForBooking(int doctorId, DateTime date)
+        {
+            //Checking if there is any appointment that can be toggled to be available for doctor. Using it to set buttons disabled or not.
+            //Appointments that are available or booked.
+            var appointments = _context.Appointment
+                .Where(x => x.DateTime.Year == date.Year && x.DateTime.DayOfYear == date.DayOfYear && x.CareGiverId == doctorId &&
+                    (x.PatientId == null || x.PatientId != null))
+                .Include(x => x.Patient)
+                .ToList();
+
+            int[] timeSlots = { 8, 9, 10, 11, 13, 14, 15 };
+            timeSlots = timeSlots.Where(x => x > DateTime.Now.Hour).ToArray();
+            var availableTimes = appointments.Select(appointment => appointment.DateTime.Hour).Distinct().ToList();
+
+            return timeSlots.Except(appointments.Select(x => x.DateTime.Hour).Where(x => x > DateTime.Now.Hour)).Any();
         }
         public bool AddBooking(Appointment appointment, int userId, ServiceEnum service)
         {

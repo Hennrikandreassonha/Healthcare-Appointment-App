@@ -180,7 +180,7 @@
 
                     @if (appointmentsForBooking != null && appointmentsForBooking.Length > 0)
                     {
-                        if (appointmentsForBooking.Length < availability.Length)
+                        if (!availability)
                         {
                             <button class="btn btn-danger" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
                             new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), true)">
@@ -198,8 +198,7 @@
                                 Set unavailable all day
                             </button>
                             <button class="btn btn-success" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
-                    new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), false)"
-                                disabled>
+                    new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), false)">
                                 Set available all day
                             </button>
                         }
@@ -358,7 +357,7 @@
         Slot_15_00 = 15
     }
     private string selectedTime = "";
-    private Appointment[] availability;
+    private bool availability;
     protected override async Task OnInitializedAsync()
     {
         yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}";
@@ -422,6 +421,7 @@
                 await appointmentService.AddInitialAppointment(doctorId, dateToToggle, new TimeSpan(timeSelected, 0, 0));
             }
             appointmentsForBooking = await appointmentService.GetAvailabilityByDate(doctorId, dateToToggle);
+            availability = await appointmentService.IsAppointmentForBooking(userLoggedIn.Id, new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused));
         }
     }
     private async void ToggleAvailabilityForADay(int doctorId, DateTime dateToToggle, bool setUnavailable)
@@ -436,6 +436,7 @@
         }
 
         appointmentsForBooking = await appointmentService.GetAvailabilityByDate(doctorId, dateToToggle);
+        availability = await appointmentService.IsAppointmentForBooking(userLoggedIn.Id, new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused));
     }
     private async void HandleChosenDate(int day, User user)
     {
@@ -457,7 +458,7 @@
         {
             //appointmentsForBooking = appointmentService.GetAvailabilityByDate(user.Id, dateToCheck).ToArray();
             appointmentsForBooking = await appointmentService.GetAvailabilityByDate(user.Id, dateToCheck);
-            availability = await appointmentService.GetAvailabilityByDate(userLoggedIn.Id, new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused));
+            availability = await appointmentService.IsAppointmentForBooking(userLoggedIn.Id, new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused));
         }
     }
     private async void HandleBooking(Appointment appointment)
