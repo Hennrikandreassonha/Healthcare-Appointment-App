@@ -169,30 +169,33 @@ namespace HealthCare.Core
 
             return sortedAppointments.ToArray();
         }
-        public async Task<bool> IsAppointmentForBooking(int doctorId, DateTime date)
+        public async Task<int> AmountBooked(int doctorId, DateTime date)
         {
-            //Checking if there is any appointment that can be toggled to be available for doctor. Using it to set buttons disabled or not.
-            //Appointments that are available or booked.
-            var appointments = _context.Appointment
+            //Gets the amount that is already set available by doctor.
+            return _context.Appointment
                 .Where(x => x.DateTime.Year == date.Year && x.DateTime.DayOfYear == date.DayOfYear && x.CareGiverId == doctorId &&
                     (x.PatientId == null || x.PatientId != null))
-                .Include(x => x.Patient)
-                .ToList();
+                .Include(x => x.Patient).Count();
+        }
+        public async Task<int> AmountBookable(int doctorId, DateTime date)
+        {
+            // Gets the amount that CAN be set available for the doctor.
+            int[] timeSlots = GetAvailableTimes().ToArray();
 
-            //Maximum amount of times
-            int[] timeSlots = { 8, 9, 10, 11, 13, 14, 15 };
-            if (date.Day == DateTime.Now.Day)
+            if (date.Date == DateTime.Now.Date)
             {
                 timeSlots = timeSlots.Where(x => x > DateTime.Now.Hour).ToArray();
-                var availableTimes = appointments.Select(appointment => appointment.DateTime.Hour).Distinct().ToList();
             }
 
-            var hours = appointments.Select(x => x.DateTime.Hour);
-            if(timeSlots.Length == appointments.Count)
-                return false;
+            var appointmentsBookedHours = _context.Appointment
+                .Where(x => x.DateTime.Year == date.Year && x.DateTime.DayOfYear == date.DayOfYear && x.CareGiverId == doctorId &&
+                    (x.PatientId == null || x.PatientId != null))
+                .Include(x => x.Patient).Select(x => x.DateTime.Hour);
 
-            return timeSlots.Except(appointments.Select(x => x.DateTime.Hour).Where(x => x > DateTime.Now.Hour)).Any();
+            var amount = timeSlots.Except(appointmentsBookedHours).Count();
+            return amount;
         }
+
         public bool AddBooking(Appointment appointment, int userId, ServiceEnum service)
         {
             //By adding the patient this will complete the booking.

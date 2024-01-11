@@ -76,8 +76,9 @@
                         }
                     </li>
                 }
-                else{
-                     <li style='background-color: #8a8686;'>
+                else
+                {
+                    <li style='background-color: #8a8686;'>
                         @item
                     </li>
                 }
@@ -185,24 +186,36 @@
                 <div class="availability-flex">
 
                     @* If there are any available times for doctor. *@
-                    <button class="btn btn-danger" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
-                            new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), true)"
-                        disabled="@IsAvailableTimes">
-                        Set unavailable all day
-                    </button>
-                    @if (IsAvailableTimes)
+                    @if (AmountBookable == 0)
+                    {
+                         <button class="btn btn-success" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
+                            new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), false)" disabled>
+                            Set available all day
+                        </button>
+                        <button class="btn btn-danger" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
+                            new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), true)">
+                            Set unavailable all day
+                        </button>
+                    }
+                    else if(AmountBookable > 0 && AmountBooked == 0)
                     {
                         <button class="btn btn-success" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
                             new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), false)">
                             Set available all day
                         </button>
+                        <button class="btn btn-danger" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
+                            new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), true)" disabled>
+                            Set unavailable all day
+                        </button>
                     }
-                    else
-                    {
+                    else{
                         <button class="btn btn-success" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
-                            new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), false)"
-                            disabled>
+                            new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), false)">
                             Set available all day
+                        </button>
+                        <button class="btn btn-danger" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
+                            new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), true)">
+                            Set unavailable all day
                         </button>
                     }
 
@@ -347,7 +360,9 @@
         Slot_15_00 = 15
     }
     private string selectedTime = "";
-    private bool IsAvailableTimes;
+    private int AmountBooked;
+    private int AmountBookable;
+
     protected override async Task OnInitializedAsync()
     {
         yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}";
@@ -411,7 +426,10 @@
                 await appointmentService.AddInitialAppointment(doctorId, dateToToggle, new TimeSpan(timeSelected, 0, 0));
             }
             appointmentsForBooking = await appointmentService.GetAvailabilityByDate(doctorId, dateToToggle);
-            IsAvailableTimes = await appointmentService.IsAppointmentForBooking(userLoggedIn.Id, new DateTime(currentDate.Year,
+            AmountBooked = await appointmentService.AmountBooked(userLoggedIn.Id, new DateTime(currentDate.Year,
+            CalendarInfoObj.Month, CalendarInfoObj.DayFocused));
+
+            AmountBookable = await appointmentService.AmountBookable(userLoggedIn.Id, new DateTime(currentDate.Year,
             CalendarInfoObj.Month, CalendarInfoObj.DayFocused));
         }
     }
@@ -427,7 +445,9 @@
         }
 
         appointmentsForBooking = await appointmentService.GetAvailabilityByDate(doctorId, dateToToggle);
-        IsAvailableTimes = await appointmentService.IsAppointmentForBooking(userLoggedIn.Id, new DateTime(currentDate.Year,
+        AmountBooked = await appointmentService.AmountBooked(userLoggedIn.Id, new DateTime(currentDate.Year,
+        CalendarInfoObj.Month, CalendarInfoObj.DayFocused));
+        AmountBookable = await appointmentService.AmountBookable(userLoggedIn.Id, new DateTime(currentDate.Year,
         CalendarInfoObj.Month, CalendarInfoObj.DayFocused));
     }
     private async void HandleChosenDate(int day, User user)
@@ -450,7 +470,9 @@
         {
             //appointmentsForBooking = appointmentService.GetAvailabilityByDate(user.Id, dateToCheck).ToArray();
             appointmentsForBooking = await appointmentService.GetAvailabilityByDate(user.Id, dateToCheck);
-            IsAvailableTimes = await appointmentService.IsAppointmentForBooking(userLoggedIn.Id, new DateTime(currentDate.Year,
+            AmountBooked = await appointmentService.AmountBooked(userLoggedIn.Id, new DateTime(currentDate.Year,
+            CalendarInfoObj.Month, CalendarInfoObj.DayFocused));
+            AmountBookable = await appointmentService.AmountBookable(userLoggedIn.Id, new DateTime(currentDate.Year,
             CalendarInfoObj.Month, CalendarInfoObj.DayFocused));
         }
     }
