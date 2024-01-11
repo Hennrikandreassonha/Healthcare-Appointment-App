@@ -3,7 +3,7 @@
 }
  
     .history-table table {
-        width: 50%;
+        width: 100%;
         border-collapse: collapse;
     }
 
@@ -36,17 +36,22 @@
 
 
 .patient-info {
-    width: 50%;
     border: 1px solid;
-    margin-bottom: 8px;
 }
     .patient-info thead {
         background-color: #1474bb;
         color: white;
     }
+    .patient-info th {
+        padding: 3px 15px 3px 15px;
+    }
+    .patient-info td {
+        
+        padding: 3px 15px 3px 15px;
+    }
+    
 .margin-btn{
-
-    margin-top:1rem;
+    margin: 1rem 0 1rem 0;
 }
 
 
