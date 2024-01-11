@@ -187,7 +187,7 @@
                                 Set unavailable all day
                             </button>
                             <button class="btn btn-success" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
-                            new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), false)">
+                            new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), false)" disabled>
                                 Set available all day
                             </button>
                         }
