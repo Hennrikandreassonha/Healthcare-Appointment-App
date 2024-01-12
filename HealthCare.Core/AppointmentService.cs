@@ -119,6 +119,9 @@ namespace HealthCare.Core
 
                         var emailService = new EmailService(caregiver.Email, appointmentToRemove, email, pass);
                         emailService.SendEmail(false);
+
+                        emailService = new EmailService(appointmentToRemove.Patient.Email, appointmentToRemove, email, pass);
+                        emailService.SendCancelEmailByDoctor();
                     }
 
                     _context.Appointment.Remove(appointmentToRemove);

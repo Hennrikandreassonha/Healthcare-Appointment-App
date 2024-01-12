@@ -188,8 +188,9 @@
                     @* If there are any available times for doctor. *@
                     @if (AmountBookable == 0)
                     {
-                         <button class="btn btn-success" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
-                            new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), false)" disabled>
+                        <button class="btn btn-success" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
+                            new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), false)"
+                            disabled>
                             Set available all day
                         </button>
                         <button class="btn btn-danger" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
@@ -197,18 +198,20 @@
                             Set unavailable all day
                         </button>
                     }
-                    else if(AmountBookable > 0 && AmountBooked == 0)
+                    else if (AmountBookable > 0 && AmountBooked == 0)
                     {
                         <button class="btn btn-success" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
                             new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), false)">
                             Set available all day
                         </button>
                         <button class="btn btn-danger" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
-                            new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), true)" disabled>
+                            new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), true)"
+                            disabled>
                             Set unavailable all day
                         </button>
                     }
-                    else{
+                    else
+                    {
                         <button class="btn btn-success" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
                             new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), false)">
                             Set available all day
@@ -521,7 +524,17 @@
     private void DecreaseMonth()
     {
         currentDate = currentDate.AddMonths(-1);
-        CalendarInfoObj.Month -= 1;
+        if (CalendarInfoObj.Month == 1){
+            CalendarInfoObj.Month = 12;
+            currentDate.AddYears(-1);
+        }
+        else if(CalendarInfoObj.Month == 12){
+            CalendarInfoObj.Month = 1;
+            currentDate.AddYears(1);
+        }
+        else
+            CalendarInfoObj.Month -= 1;
+
         yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}.";
         UpdateDaysOfMonth(currentDate.Year, currentDate.Month);
     }
