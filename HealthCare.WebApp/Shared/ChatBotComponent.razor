@@ -1,0 +1,41 @@
+﻿@inject IJSRuntime JSRunTime
+
+<div class="popup-container">
+    <div class="test-div">Test Div</div>
+    <button @onclick="closePopup">Close</button>
+
+</div>
+<div class="popup-container" id="popup">
+    <div class="popup-content">
+        <!-- Your popup content goes here -->
+        <p>This is a chat popup!</p>
+        <button @onclick="closePopup">Close</button>
+    </div>
+</div>
+<button @onclick="open">Close</button>
+
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+    private async void closePopup()
+    {
+        await JSRunTime.InvokeAsync<Task>("closePopup", new object[] { });
+
+    }
+    private async void open()
+    {
+
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        if (firstRender)
+        {
+            await Task.Delay(1000);
+            await JSRunTime.InvokeAsync<Task>("openPopup", new object[] { });
+        }
+    }
+}
