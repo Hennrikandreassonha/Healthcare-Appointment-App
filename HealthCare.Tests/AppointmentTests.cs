@@ -68,7 +68,7 @@ namespace HealthCare.Tests
         }
 
         [Fact]
-        public void GetAppointmentsByDate_ShouldReturn_CorrectAppointments()
+        public void GetInitialAppointmentsByDate_ShouldReturn_CorrectAppointments()
         {
             // Arrange
             var appointmentService = new AppointmentService(_dbContext, _config);
@@ -85,7 +85,7 @@ namespace HealthCare.Tests
             _dbContext.SaveChanges();
 
             // Act
-            var result = appointmentService.GetAppointmentsByDate(testDate);
+            var result = appointmentService.GetInitialAppointmentsByDate(testDate);
 
             // Assert
             Assert.NotNull(result);

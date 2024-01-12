@@ -466,7 +466,7 @@
         {
             appointmentsForDate = appointmentService.GetInitialAppointmentsByDate(dateToCheck)
             .Where(x => x.DateTime > DateTime.Now).ToArray();
-            resetFilteredAppointments = appointmentService.GetAppointmentsByDate(dateToCheck).Where(x => x.DateTime >
+            resetFilteredAppointments = appointmentService.GetInitialAppointmentsByDate(dateToCheck).Where(x => x.DateTime >
             DateTime.Now).ToArray();
         }
         else if (user.Role == RoleEnum.Doctor)
@@ -535,7 +535,7 @@
         else
             CalendarInfoObj.Month -= 1;
 
-        yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}.";
+        yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}";
         UpdateDaysOfMonth(currentDate.Year, currentDate.Month);
     }
     private void IncreaseMonth()
