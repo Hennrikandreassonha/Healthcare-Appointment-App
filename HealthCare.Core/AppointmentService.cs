@@ -24,12 +24,12 @@ namespace HealthCare.Core
         {
             return _context.Appointment.Where(x => x.Patient.Id == userId).ToList();
         }
-        public IEnumerable<Appointment> GetAppointmentsByDate(DateTime date)
-        {
-            return _context.Appointment
-                .Where(x => x.DateTime.Year == date.Year && x.DateTime.DayOfYear == date.DayOfYear && x.PatientId == null).Include(x => x.CareGiver)
-                .ToList();
-        }
+        //public IEnumerable<Appointment> GetAppointmentsByDate(DateTime date)
+        //{
+        //    return _context.Appointment
+        //        .Where(x => x.DateTime.Year == date.Year && x.DateTime.DayOfYear == date.DayOfYear && x.PatientId == null).Include(x => x.CareGiver)
+        //        .ToList();
+        //}
         public bool AddInitialAppointmentsForADay(int caregiverId, DateTime date)
         {
             List<int> availableTimes = new();
