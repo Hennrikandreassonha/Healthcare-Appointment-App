@@ -14,8 +14,13 @@ namespace HealthCare.Core.Models.UserModels
 
         public DateTime DateTime { get; set; }
 
-        public Patient Patient { get; set; }
+        public int AppointmentId { get; set; }
 
+        /*public int PatientId { get; set; }
+
+        public int CareGiverId { get; set; }*/
+
+        public Patient Patient { get; set; }
         public CareGiver CareGiver { get; set; }
     }
 }
