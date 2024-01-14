@@ -1,4 +1,5 @@
 ﻿@inject IJSRuntime JSRunTime
+@using OpenAI
 
 <div class="popup-container">
     <div class="test-div">Test Div</div>
@@ -12,13 +13,45 @@
         <button @onclick="closePopup">Close</button>
     </div>
 </div>
-<button @onclick="open">Close</button>
-
+@* <button @onclick="open">Close</button>
+<button @onclick="test">Test</button> *@
 
 @code {
     protected override async Task OnInitializedAsync()
     {
+        var gpt3 = new OpenAI.Managers.OpenAIService(new OpenAI.OpenAiOptions()
+            {
+                ApiKey = "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"
+            });
+        var completionResult = await gpt3.ChatCompletion.CreateCompletion
+        (new OpenAI.ObjectModels.RequestModels.ChatCompletionCreateRequest()
+            {
+                Messages = new List<OpenAI.ObjectModels.RequestModels.ChatMessage>(new OpenAI.ObjectModels.RequestModels.ChatMessage[]
+            {   
+                new OpenAI.ObjectModels.RequestModels.ChatMessage("system", "You are a doctor that gives advice for patients"),
+                // User message
+                new OpenAI.ObjectModels.RequestModels.ChatMessage("user", "how to learn c# in 24 hours"),
+                Model = OpenAI.ObjectModels.Models.Gpt_3_5_Turbo,
+                Temperature = 0.5F,
+                MaxTokens = 100,
+                N = 3
+            });
 
+        if (completionResult.Successful)
+        {
+            foreach (var choice in completionResult.Choices)
+            {
+                Console.WriteLine(choice.Message.Content);
+            }
+        }
+        else
+        {
+            if (completionResult.Error == null)
+            {
+                throw new Exception("Unknown Error");
+            }
+            Console.WriteLine($"{completionResult.Error.Code}: {completionResult.Error.Message}");
+        }
     }
     private async void closePopup()
     {
@@ -27,7 +60,11 @@
     }
     private async void open()
     {
-
+        @* await JSRunTime.InvokeAsync<Task>("openPopup", new object[] { }); *@
+    }
+    private async void test()
+    {
+        await JSRunTime.InvokeAsync<Task>("main", new object[] { });
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -35,7 +72,8 @@
         if (firstRender)
         {
             await Task.Delay(1000);
-            await JSRunTime.InvokeAsync<Task>("openPopup", new object[] { });
+            @* await JSRunTime.InvokeAsync<Task>("openPopup", new object[] { }); *@
         }
+
     }
 }

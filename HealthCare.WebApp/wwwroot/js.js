@@ -1,3 +1,5 @@
+// import OpenAI from "openai";
+
 function isDevice() {
     return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile/i.test(navigator.userAgent);
 }
@@ -11,7 +13,7 @@ function SelectElementFix() {
 }
 
 //For the chatbot.
-
+// Api Key: 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
 function ShowChatPopup(){
     const chatpopUp = document.getElementById("chat-main-div");
     chatpopUp.classList.remove('display-none');
