@@ -1,5 +1,3 @@
-// import OpenAI from "openai";
-
 function isDevice() {
     return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile/i.test(navigator.userAgent);
 }
@@ -13,18 +11,17 @@ function SelectElementFix() {
 }
 
 //For the chatbot.
-// Api Key: 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
-function ShowChatPopup(){
+function ShowChatPopup() {
     const chatpopUp = document.getElementById("chat-main-div");
     chatpopUp.classList.remove('display-none');
     chatpopUp.classList.add('display-block');
 }
 function openPopup() {
-    var popup = document.getElementById("popup");
-    popup.classList.add("show");
+    var popup = document.getElementsByClassName("popup-container")[0];
+    popup.classList.toggle('show');
 }
 
-function closePopup() {
-    var popup = document.getElementById("popup");
-    popup.classList.remove("show");
+function scrollToBottom() {
+    var chatContainer = document.getElementById('chat-div');
+    chatContainer.scrollTop = chatContainer.scrollHeight;
 }

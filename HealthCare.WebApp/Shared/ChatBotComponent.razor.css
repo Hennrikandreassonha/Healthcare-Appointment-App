@@ -1,22 +1,188 @@
-.display-none{
-    display: none;
+.display-none {
+    padding: 0px !important;
+    border: 0px !important;
 }
-.display-block{
-    display: block;
+
+.display-block {
+    opacity: 1;
 }
+
+#chat-div {
+    width: 450px;
+    min-height: 400px;
+    overflow-y: scroll;
+    height: 500px;
+    margin-bottom: 54px;
+    background-color: #dedede;
+}
+
+#question-div {
+    display: flex;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+
+#question-area {
+    width: 100%;
+
+}
+
+.user-msg {
+    width: 50%;
+    border: 3px solid #1474bb;
+    position: relative;
+    margin: 10px;
+    border-radius: 10px;
+    padding: 10px;
+    float: right;
+    background-color: #1474bb;
+    color: white;
+}
+
+.bot-msg {
+    width: 50%;
+    border: 2px solid #74AA9C;
+    position: relative;
+    margin: 10px;
+    border-radius: 10px;
+    padding: 10px;
+    float: left;
+    background-color: #74AA9C;
+    color: white;
+}
+
 .popup-container {
     position: fixed;
     bottom: -100%;
-    background-color: #f0f0f0;
     transition: bottom 0.8s ease-in-out;
     z-index: 1;
-    width:120px;
-    height: 120px;
-    right:0;
+    min-width: 220px;
+    right: 0;
     margin-right: 80px;
-    border: 1px solid black;
+    border: 2px solid #1474bb;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom: 0px;
 }
 
-.popup-container.show {
+.show {
     bottom: 0;
+}
+
+.popup-container-closed {
+    height: 37px;
+    bottom: 0;
+    cursor: pointer;
+    transition: bottom 0.8s ease-in-out;
+}
+
+.closed-flex {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    height: 37px;
+    justify-content: space-evenly;
+    transition: bottom 0.8s ease-in-out;
+    cursor: pointer;
+}
+
+.popup-container-show {
+    bottom: 0;
+}
+
+.support-img {
+    width: 130px;
+}
+
+.support-img-mini {
+    width: 32px;
+}
+
+.info-text {
+    position: relative;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.info-text-div {
+    border: 2px solid transparent;
+    border-radius: 10px;
+    padding: 10px;
+    width: 220px;
+    padding-bottom: 0px;
+}
+
+#close-btn {
+    position: absolute;
+    width: 25px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.chat-btn {
+    background-color: #74AA9C !important;
+    border-color: #74AA9C !important;
+}
+
+
+/* SPINNER */
+
+.loader {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    position: relative;
+    animation: rotate 1s linear infinite;
+    display: block;
+    margin: auto;
+}
+
+.loader::before,
+.loader::after {
+    content: "";
+    box-sizing: border-box;
+    position: absolute;
+    inset: 0px;
+    border-radius: 50%;
+    border: 5px solid #FFF;
+    animation: prixClipFix 2s linear infinite;
+}
+
+.loader::after {
+    border-color: #FF3D00;
+    animation: prixClipFix 2s linear infinite, rotate 0.5s linear infinite reverse;
+    inset: 6px;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg)
+    }
+
+    100% {
+        transform: rotate(360deg)
+    }
+}
+
+@keyframes prixClipFix {
+    0% {
+        clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0)
+    }
+
+    25% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0)
+    }
+
+    50% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%)
+    }
+
+    75% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%)
+    }
+
+    100% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0)
+    }
 }

@@ -120,3 +120,6 @@ a, .btn-link {
     display: flex;
     align-items: center;
 }
+.test{
+    color:blue !important;
+}
