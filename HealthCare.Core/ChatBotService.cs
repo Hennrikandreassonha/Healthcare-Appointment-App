@@ -1,11 +1,12 @@
-﻿using OpenAI.;
-
-namespace HealthCare.Core;
+﻿namespace HealthCare.Core;
 
 public class ChatBotService
 {
     public string ApiKey { get; set; }
     public OpenAI.Managers.OpenAIService ChatService { get; set; }
+    public ChatBotService()
+    {
+    }
     public ChatBotService(string apiKey)
     {
         ApiKey = apiKey;
@@ -15,15 +16,15 @@ public class ChatBotService
             ApiKey = ApiKey
         });
     }
-    public async Task<string> SendQuestion()
+    public async Task<string> SendQuestion(string message)
     {
         var completionResult = await ChatService.ChatCompletion.CreateCompletion(
         new OpenAI.ObjectModels.RequestModels.ChatCompletionCreateRequest
         {
             Messages = new List<OpenAI.ObjectModels.RequestModels.ChatMessage>
             {
-                new OpenAI.ObjectModels.RequestModels.ChatMessage("system", "You are a doctor that gives advice for patients"),
-                new OpenAI.ObjectModels.RequestModels.ChatMessage("user", "how to learn c# in 24 hours"),
+                new OpenAI.ObjectModels.RequestModels.ChatMessage("assistant", "You are doctor DocBot that gives advice for patients. Do not start your sentence with I'm not a doctor. You should act like a doctor and only give advice"),
+                new OpenAI.ObjectModels.RequestModels.ChatMessage("user", message),
             },
             Model = OpenAI.ObjectModels.Models.Gpt_3_5_Turbo,
             Temperature = 0.5F,
@@ -33,10 +34,7 @@ public class ChatBotService
 
         if (completionResult.Successful)
         {
-            foreach (var choice in completionResult.Choices)
-            {
-                Console.WriteLine(choice.Message.Content);
-            }
+            return completionResult.Choices[0].Message.Content;
         }
         else
         {
