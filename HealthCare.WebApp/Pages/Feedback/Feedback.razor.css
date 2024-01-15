@@ -25,26 +25,37 @@
 
         .feedback-table th:nth-child(1),
         .feedback-table td:nth-child(1) {
-            width: 7%;
+            width: 8%;
         }
 
         .feedback-table th:nth-child(2),
         .feedback-table td:nth-child(2) {
-            width: 80%;
+            width: 82%;
         }
 
         .feedback-table th:nth-child(3),
-        .feedback-table td:nth-child(3) {
-            width: 100px;
+        .feedback-table td:nth-child(3)  {
+            width: 10%;
         }
 
 .feedback-star {
     color: black;
-    font-size: 25px;
+    font-size: 20px;
+   
 }
 
 .feedback-gold-star {
     color: gold;
+}
+
+@media (max-width: 1508px) {
+    .feedback-star {
+        font-size: 20px;
+    }
+    .feedback-table th:nth-child(3),
+    .feedback-table td:nth-child(3) p {
+        width: 60px;
+    }
 }
 
 #sortSelected {
