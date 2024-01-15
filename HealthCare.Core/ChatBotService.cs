@@ -27,9 +27,9 @@ public class ChatBotService
                 new OpenAI.ObjectModels.RequestModels.ChatMessage("user", message),
             },
             Model = OpenAI.ObjectModels.Models.Gpt_3_5_Turbo,
-            Temperature = 0.5F,
-            MaxTokens = 100,
-            N = 3
+            Temperature = 1.0F,
+            MaxTokens = 1000,
+            N = 1
         });
 
         if (completionResult.Successful)
