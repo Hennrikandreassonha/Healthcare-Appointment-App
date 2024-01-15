@@ -47,6 +47,8 @@
                         <tr>
                             <th>Date</th>
                             <th>Service</th>
+                            <th>Caregiver</th>
+                            <th>Patient Journal Entry</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,7 +57,8 @@
                             <tr>
                                 <td>@appointments.DateTime</td>
                                 <td>@(appointments.Service != null ? GetDisplayNameForService(appointments.Service.Value) : "Unknown")</td>
-                               
+                                <td>@GetCareGiverName(appointments)</td>
+                                <td>@GetJournalEntry(appointments)</td>
                             </tr>
                         }
                     </tbody>
@@ -108,5 +111,26 @@
     private string GetDisplayNameForService(ServiceEnum service)
     {
         return service.GetDisplayName();
+    }
+    private string GetCareGiverName(Appointment appointment)
+    {
+        CareGiver careGiver = _context.CareGiver.First(c => c.Id == appointment.CareGiverId);
+        string careGiverName = careGiver.FirstName + " " + careGiver.LastName;
+
+        return careGiverName;
+    }
+    private string GetJournalEntry(Appointment appointment)
+    {
+        try
+        {
+            MedicalJournalEntry journalEntry = _context.MedicalJournal.First(n => n.AppointmentId == appointment.Id);
+            string entryText = journalEntry.Entry;
+            return entryText;
+        }
+        catch
+        {
+            string entryText = "";
+            return entryText;
+        }
     }
 }
