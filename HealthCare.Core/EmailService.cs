@@ -121,7 +121,7 @@ namespace HealthCare.Core
                 <html>
                     <body style='max-width: 600px; font-family: Arial, sans-serif;'>
                         <div style='border: 1px solid grey; padding: 0.5rem;'>
-                            <h2>Appointment Canceled</h2>
+                            <h2>Appointment Cancelled</h2>
                             <p>Dear {AppointmentDetails.Patient.FirstName} {AppointmentDetails.Patient.LastName},</p>
                             <p>Your appointment has been successfully cancelled. Below are the details:</p>
                             <ul>
@@ -150,7 +150,7 @@ namespace HealthCare.Core
                 <html>
                     <body style='max-width: 600px; font-family: Arial, sans-serif;'>
                         <div style='border: 1px solid grey; padding: 0.5rem;'>
-                            <h2>Appointment Canceled</h2>
+                            <h2>Appointment Cancelled</h2>
                             <p>Dear {AppointmentDetails.Patient.FirstName} {AppointmentDetails.Patient.LastName},</p>
                             <p>Your appointment has been cancelled by your doctor. Below are the details:</p>
                             <ul>
