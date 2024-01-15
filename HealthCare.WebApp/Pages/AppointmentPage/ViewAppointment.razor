@@ -212,7 +212,7 @@
                         </button>
                     }
 
-                    <select style='width: 300px;' class="form-select" aria-label="Default select example"
+                    <select class="form-select" aria-label="Default select example"
                         @onchange="(args) => selectedTime = args.Value.ToString()">
                         <option value="">Select time slot to add or remove</option>
                         @foreach (var time in appointmentService.GetAvailableTimes())

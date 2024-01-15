@@ -182,6 +182,9 @@ tr {
     border: 1px solid #ccc; 
     padding: 16px; 
 }
+.appointment select{
+    width: 170px;
+}
 
     .appointment .doctor,
     .appointment .contact,
@@ -190,3 +193,26 @@ tr {
     .appointment .book-appointment {
         margin-bottom: 8px;
     }
+
+.availability-flex {
+    display: flex;
+    align-items: center;
+    flex-wrap:wrap;
+    
+}
+.availability-flex select{
+    width: 300px;
+}
+@media (max-width: 1170px){
+    .btn {
+        font-size: 15px;
+        margin-top: 5px;
+        height:38px;
+    }
+    .availability-flex select {
+        width: 240px;
+        font-size: 13px;
+        margin-top: 5px;
+        height: 38px;
+    }
+}
