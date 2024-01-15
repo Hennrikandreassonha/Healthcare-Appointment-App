@@ -7,6 +7,8 @@ namespace HealthCare.Core.Models.UserModels
 {
     public class Patient : User
     {
+        public List<MedicalJournalEntry> JournalEntries { get; set; }
+
         public Patient()
         {
 

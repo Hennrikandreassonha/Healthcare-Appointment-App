@@ -16,11 +16,12 @@ namespace HealthCare.Tests
         private readonly HealthcareContext _dbContext;
         private readonly IConfiguration _config;
 
-        public AppointmentTests(IConfiguration config)
+        public AppointmentTests()
         {
             var optionsBuilder = new DbContextOptionsBuilder<HealthcareContext>().UseInMemoryDatabase(databaseName: "AppointmentTestDB");
             _dbContext = new HealthcareContext(optionsBuilder.Options);
-            _config = config;
+
+            _config = new ConfigurationBuilder().Build();
         }
 
         [Fact]

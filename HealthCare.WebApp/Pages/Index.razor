@@ -144,16 +144,27 @@
                                             }
                                             @if (appointment.Feedback == null && LoggedInUser.Role == RoleEnum.Doctor)
                                             {
-                                                <button class="btn btn-primary feedback-btn" disabled>
-                                                    No feedback available
+                                                <button class="btn btn-primary feedback-btn" @onclick="(e) => HandlePatientJournal(appointment)">
+                                                    Update Patient Journal
                                                 </button>
                                             }
-                                            @if (appointment.Feedback != "" && appointment.Feedback != null)
+                                            @if (appointment.Feedback != "" && appointment.Feedback != null && LoggedInUser.Role == RoleEnum.Patient)
                                             {
                                                 <button class="btn btn-success feedback-btn"
                                                         @onclick="(e) => ViewFeedback(appointment)">
                                                     View
                                                     feedback
+                                                </button>
+                                            }
+                                            @if (appointment.Feedback != "" && appointment.Feedback != null && LoggedInUser.Role == RoleEnum.Doctor)
+                                            {
+                                                <button class="btn btn-success feedback-btn"
+                                                        @onclick="(e) => ViewFeedback(appointment)">
+                                                    View
+                                                    feedback
+                                                </button>
+                                                <button class="btn btn-primary feedback-btn" @onclick="(e) => HandlePatientJournal(appointment)">
+                                                    Update Patient Journal
                                                 </button>
                                             }
                                         </td>
@@ -301,6 +312,58 @@
         </div>
     </div>
 }
+@if (UpdatePatientJournal != null)
+{
+    <div class="feedback-outer-div">
+        <div id="feedback-container">
+            <header>
+               <h3>Update Patient Journal</h3>
+               <img @onclick="@ClosePatientJournal" src="\remove.png" id="close-btn" title="Close">
+            </header>
+            <p class="feedback-text">
+                <u>
+                    Post appointment patient journal entry
+                </u>
+            </p>
+            <table class="review-feedback-table">
+                <tr>
+                    <th><strong>Patient:</strong></th>
+                    <th><strong>Date:</strong></th>
+                    <th><strong>Service:</strong></th>
+                </tr>
+                <tr>
+                    <td>@($"{UpdatePatientJournal.Patient.FirstName} {UpdatePatientJournal.Patient.LastName}")</td>
+                    <td>@UpdatePatientJournal.DateTime</td>
+                    <td>@(UpdatePatientJournal.Service != null ? GetDisplayNameForService(UpdatePatientJournal.Service.Value) : "Unknown")</td>
+                </tr>
+            </table>
+           
+            <div class="feedbackform">
+                <EditForm Model="UpdatePatientJournal" OnSubmit="SubmitPatientJournal">
+                    <textarea class="form-control" @bind="PatientJournalText"
+                                placeholder="Post appointment patient journal" required>  </textarea>
+                    <div class="submit-feedback-flex">
+                        <button class="btn btn-primary submit-feedback" type="submit">
+                            Update Patient Journal
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+            @if (JournalUpdateSuccessText != "")
+            {
+                <p class="alert alert-success" style="padding: 1rem; margin: 1rem;">
+                    @JournalUpdateSuccessText <br>
+                </p>
+            }
+            @if (JournalUpdateFailText != "")
+            {
+                <p class="alert alert-danger" style="padding: 1rem; margin: 1rem;">
+                    @JournalUpdateFailText <br>
+                </p>
+            }
+        </div>
+    </div>
+}
 @code {
     private string userName = "";
     private User LoggedInUser;
@@ -314,6 +377,10 @@
     string FeedbackText = "";
     private Appointment? LeavingFeedback = null;
     private Appointment? ViewingFeedback = null;
+    string PatientJournalText = "";
+    string JournalUpdateSuccessText = "";
+    string JournalUpdateFailText = "";
+    private Appointment? UpdatePatientJournal = null;
     protected override async Task OnInitializedAsync()
     {
 
@@ -354,6 +421,37 @@
             FeedbackFailText = "Rating was below 4 stars and therefore not saved, thank you anyway!";
         }
         FeedbackText = "";
+    }
+
+    public void SubmitPatientJournal()
+    {
+        JournalUpdateSuccessText = "";
+        JournalUpdateFailText = "";
+        if (UpdatePatientJournal == null || PatientJournalText.IsNullOrEmpty())
+        {
+            JournalUpdateFailText = "Error saving journal entry, please try again!";
+            return;
+        }
+        else
+        {
+            JournalUpdateSuccessText = "Patient journal entry saved successfully!";
+            MedicalJournalEntry entry = _context.MedicalJournal.FirstOrDefault(n => n.AppointmentId == UpdatePatientJournal.Id);
+
+            if (entry == null)
+            {
+                entry = new MedicalJournalEntry
+                    {
+                        AppointmentId = UpdatePatientJournal.Id
+                    };
+                _context.MedicalJournal.Add(entry);
+            }
+
+            entry.Entry = PatientJournalText;
+            entry.DateTime = DateTime.Now;
+
+            _context.SaveChanges();
+            return;
+        }
     }
     private void GetAllMeetings(User loggedInUser)
     {
@@ -410,6 +508,11 @@
         LeavingFeedback = null;
         ViewingFeedback = null;
         FeedbackText = "";
+    }
+    private void ClosePatientJournal()
+    {
+        UpdatePatientJournal = null;
+        PatientJournalText = "";
     }
     private string GetNameOfDoctor(int careGiverId)
     {
@@ -492,5 +595,20 @@
         emailService = new EmailService(user.Email, appointment, email, pass);
         emailService.SendCancelEmailByDoctor();
         return true;
+    }
+    public void HandlePatientJournal(Appointment appointment)
+    {
+        UpdatePatientJournal = appointment;
+        PatientJournalText = "";
+        MedicalJournalEntry journalEntry = new MedicalJournalEntry
+        {
+            Entry = PatientJournalText,
+            DateTime = DateTime.Now,
+            AppointmentId = appointment.Id,
+            Patient = appointment.Patient,
+            CareGiver = appointment.CareGiver
+        };
+        _context.Add(journalEntry);
+        _context.SaveChanges();
     }
 }
