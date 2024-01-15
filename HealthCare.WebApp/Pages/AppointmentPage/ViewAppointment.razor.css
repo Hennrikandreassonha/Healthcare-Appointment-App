@@ -172,3 +172,21 @@ tr {
 .drop-down-time{
     margin-left: 1rem;
 }
+.appointments-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+    gap: 16px; 
+}
+
+.appointment {
+    border: 1px solid #ccc; 
+    padding: 16px; 
+}
+
+    .appointment .doctor,
+    .appointment .contact,
+    .appointment .appointment-date,
+    .appointment .select-service,
+    .appointment .book-appointment {
+        margin-bottom: 8px;
+    }

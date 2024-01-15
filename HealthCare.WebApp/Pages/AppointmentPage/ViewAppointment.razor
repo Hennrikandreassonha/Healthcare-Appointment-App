@@ -131,47 +131,37 @@
                     </div>
                 </div>
                 @* filtering ends here *@
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Doctor</th>
-                            <th>Contact</th>
-                            <th>Appointment date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (Appointment item in appointmentsForDate)
-                        {
-                            <tr>
-                                <td>@item.CareGiver.FirstName @item.CareGiver.LastName</td>
-                                <td>@item.CareGiver.Email</td>
-                                <td>
-                                    @{
-                                        DateTime startTime = item.DateTime;
-                                        DateTime endTime = item.DateTime.AddHours(1);
-                                        string formattedTimeRange = $"{startTime.ToString("H:mm")} - {endTime.ToString("H:mm")}";
-                                    }
-                                    @formattedTimeRange
-                                </td>
-                                <td>
-                                    <select placeholder="Select Service" class="form-select service-select" id="selectedService"
+                <div class="appointments-grid">
+                    @foreach (Appointment item in appointmentsForDate)
+                    {
+                        <div class="appointment">
+                            <div class="doctor">Doctor: @item.CareGiver.FirstName @item.CareGiver.LastName</div>
+                            <div class="contact">Email: @item.CareGiver.Email</div>
+                            <div class="appointment-date">
+                                @{
+                                    DateTime startTime = item.DateTime;
+                                    DateTime endTime = item.DateTime.AddHours(1);
+                                    string formattedTimeRange = $"{startTime.ToString("H:mm")} - {endTime.ToString("H:mm")}";
+                                }
+                                Time: @formattedTimeRange
+                            </div>
+                            <div class="select-service">
+                                <select class="form-select service-select" id="selectedService"
                                         aria-label="Default select example"
                                         @onchange="@(e => HandleServiceSelection((ServiceEnum)Enum.Parse(typeof(ServiceEnum), e.Value.ToString())))">
-                                        <option value="" disabled selected>Select Service</option>
-                                        @foreach (ServiceEnum service in Enum.GetValues(typeof(ServiceEnum)))
-                                        {
-                                            <option value="@service">@service.GetDisplayName()</option>
-                                        }
-                                    </select>
-                                </td>
-                                <td>
-                                    <button class="btn btn-primary" @onclick="() => HandleBooking(item)">Book</button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                                    <option value="" disabled selected>Select Service</option>
+                                    @foreach (ServiceEnum service in Enum.GetValues(typeof(ServiceEnum)))
+                                    {
+                                        <option value="@service">@service.GetDisplayName()</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="book-appointment">
+                                <button class="btn btn-primary" @onclick="() => HandleBooking(item)">Book</button>
+                            </div>
+                        </div>
+                    }
+                </div>
             </div>
         }
 
