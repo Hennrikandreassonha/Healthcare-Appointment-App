@@ -26,6 +26,7 @@
         .feedback-table th:nth-child(1),
         .feedback-table td:nth-child(1) {
             width: 6%;
+            
         }
 
         .feedback-table th:nth-child(2),
@@ -55,6 +56,15 @@
     .feedback-table th:nth-child(3),
     .feedback-table td:nth-child(3) p {
         width: 55px;
+    }
+    
+}
+@media (max-width: 900px) {
+    .feedback-star {
+        font-size: 18px;
+    }
+    .feedback-table td {
+        font-size:14px;
     }
 }
 
