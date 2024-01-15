@@ -8,12 +8,6 @@ namespace HealthCare.Core.Models.UserModels
 {
     public class CareGiver : User
     {
-
-        // public bool? IsAvaiable { get; set; }
-
-        [NotMapped]
-        public TimeSpan[]? AvailableTimes { get; set; }
-
         public CareGiver()
         {
         }

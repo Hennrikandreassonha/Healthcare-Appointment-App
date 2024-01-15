@@ -116,6 +116,7 @@ a, .btn-link {
 .color-blue{
     color: #1474bb;
 }
+<<<<<<< HEAD
 .availability-flex{
     display: flex;
     align-items: center;
@@ -123,3 +124,5 @@ a, .btn-link {
 .test{
     color:blue !important;
 }
+=======
+>>>>>>> 44e72c3aabc1b147204982183a1d7afc01fcde59

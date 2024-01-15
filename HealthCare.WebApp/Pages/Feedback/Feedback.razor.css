@@ -25,26 +25,47 @@
 
         .feedback-table th:nth-child(1),
         .feedback-table td:nth-child(1) {
-            width: 8%;
+            width: 6%;
+            
         }
 
         .feedback-table th:nth-child(2),
         .feedback-table td:nth-child(2) {
-            width: 80%;
+            width: 82%;
         }
 
         .feedback-table th:nth-child(3),
-        .feedback-table td:nth-child(3) {
-            width: 8%;
+        .feedback-table td:nth-child(3)  {
+            width: 10%;
         }
 
 .feedback-star {
     color: black;
-    font-size: 25px;
+    font-size: 18px;
+   
 }
 
 .feedback-gold-star {
     color: gold;
+}
+
+@media (max-width: 1508px) {
+    .feedback-star {
+        font-size: 18px;
+    }
+    .feedback-table th:nth-child(3),
+    .feedback-table td:nth-child(3) p {
+        width: 55px;
+    }
+    
+}
+@media (max-width: 900px) {
+    .feedback-star {
+        font-size: 18px;
+    }
+    .feedback-table td {
+        font-size:14px;
+    }
 }
 
 #sortSelected {

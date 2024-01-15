@@ -1,10 +1,11 @@
 ﻿@inject IJSRuntime JSRunTime
 @using OpenAI
 @inject IConfiguration config
-
+@inject UserService userService
 <div class="popup-container" id="popup">
     @if (Chatting)
     {
+        <p class="header-msg">Powered by <u><strong><span style="color: #74AA9C;">ChatGpt</span></strong></u></p>
         <div id="chat-div">
             <img @onclick="@ToggleChatting" src="\remove.png" id="close-chat-btn" title="Close">
 
@@ -12,25 +13,42 @@
             {
                 @if (message.Author == "User")
                 {
-                    <div class="user-msg">
-                        <span>@message.MessageContent</span>
+                    <div class="user-msg-container">
+                        <div class="image-container image-container-user">
+                            <span class="user-char">
+                                @FirstCharUser
+                            </span>
+                        </div>
+                        <div class="user-msg">
+                            <span>@message.MessageContent</span>
+                        </div>
                     </div>
                 }
                 else
                 {
-                    <div class="bot-msg">
-                        <span>@message.MessageContent</span>
+                    <div class="bot-msg-container">
+                        <div class="image-container">
+                            <img src="\call-center-agent.png" class="support-img-mini-chat">
+                        </div>
+                        <div class="bot-msg">
+                            <span>@message.MessageContent</span>
+                        </div>
                     </div>
                 }
             }
             @if (WaitingForResponse)
             {
-                <div class="bot-msg">
-                    <span class="loader"></span>
+                <div class="bot-msg-container">
+
+                    <div class="bot-msg">
+                        <span class="loader"></span>
+                    </div>
                 </div>
             }
+
             <div id="question-div">
-                <textarea placeholder="Enter your question" id="question-area" @bind="UserMessage"></textarea>
+
+                <textarea placeholder="What do you need help with?" id="question-area" @bind="UserMessage"></textarea>
 
                 <button class="btn btn-primary chat-btn" @onclick="@SendQuestion"
                     disabled="@WaitingForResponse">Chat</button>
@@ -55,7 +73,6 @@
         }
         else
         {
-
             <div class="closed-flex" @onclick="@ToggleChat">
                 <span>Click to <u><strong><span style="color: #74AA9C;">Chat</span></strong></u></span>
                 <img src="\call-center-agent.png" class="support-img-mini">
@@ -81,27 +98,34 @@
     ChatBotService ChatService = new();
     string UserMessage = "";
     bool WaitingForResponse = false;
-
+    private char FirstCharUser;
     protected override async Task OnInitializedAsync()
     {
-
+        var email = await userService.GetEmailAsync();
+        FirstCharUser = userService.GetByEmail(email).FirstName[0];
     }
     private void ToggleChatting()
     {
         Chatting = false;
-
+        ShowChat = false;
     }
     private async void SendQuestion()
     {
+        if (UserMessage == "")
+            return;
+        await JSRunTime.InvokeAsync<Task>("scrollToBottom", new object[] { });
         WaitingForResponse = true;
-        StateHasChanged();
         Messages.Add(new Message(UserMessage, "User"));
+        StateHasChanged();
+        await JSRunTime.InvokeAsync<Task>("scrollToBottom", new object[] { });
         var answer = await ChatService.SendQuestion(UserMessage);
         UserMessage = "";
         Messages.Add(new Message(answer, "Bot"));
+        StateHasChanged();
         await JSRunTime.InvokeAsync<Task>("scrollToBottom", new object[] { });
         WaitingForResponse = false;
         StateHasChanged();
+        await JSRunTime.InvokeAsync<Task>("scrollToBottom", new object[] { });
     }
     private void StartChat()
     {
@@ -116,7 +140,6 @@
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-
         if (firstRender)
         {
             await Task.Delay(1000);
@@ -124,6 +147,5 @@
 
             await JSRunTime.InvokeAsync<Task>("openPopup", new object[] { });
         }
-
     }
 }

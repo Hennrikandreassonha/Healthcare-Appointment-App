@@ -9,6 +9,9 @@
 main {
     flex: 1;
     background-color: #f5f7f9;
+    background-size: cover;
+    overflow: auto;
+    /*height: 100vh;*/
 }
 
 .sidebar {
