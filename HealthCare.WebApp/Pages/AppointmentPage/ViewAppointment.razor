@@ -381,7 +381,7 @@
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        //This is where we check is user is on mobile.
+        //This is where we check if user is on mobile.
         //Hover effect was making a mess on mobiles.
         if (firstRender)
         {
@@ -393,7 +393,7 @@
     public async void OnMouseOverDate(int day, User user)
     {
         //Checking if user is on a mobile device.
-        //Hover effect doesn work well on smaller screens.
+        //Hover effect doesn´t work well on smaller screens.
         if (IsMobile != null && IsMobile.Value == true)
             return;
 
