@@ -1,0 +1,250 @@
+.display-none {
+    padding: 0px !important;
+    border: 0px !important;
+}
+
+.display-block {
+    opacity: 1;
+}
+
+#chat-div {
+    width: 450px;
+    min-height: 400px;
+    overflow-y: scroll;
+    height: 500px;
+    margin-bottom: 81px;
+    background-color: #dedede;
+    margin-top: 50px;
+}
+
+#question-div {
+    display: flex;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+
+#question-area {
+    width: 100%;
+    height: 80px;
+}
+
+.user-msg {
+    border: 3px solid #1474bb;
+    margin: 10px;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #1474bb;
+    color: white;
+}
+
+.bot-msg {
+    width: 100%;
+    border: 3px solid #74AA9C;
+    margin: 10px;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #74AA9C;
+    color: white;
+}
+
+.bot-msg-container {
+    position: relative;
+    float: left;
+    width: 55%;
+}
+
+.user-msg-container {
+    position: relative;
+    float: right;
+    width: 55%;
+}
+
+.popup-container {
+    position: fixed;
+    bottom: -100%;
+    transition: bottom 0.8s ease-in-out;
+    z-index: 1;
+    min-width: 220px;
+    right: 0;
+    margin-right: 80px;
+    border: 2px solid #1474bb;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom: 0px;
+    background-color: #dedede;
+}
+
+.show {
+    bottom: 0;
+}
+
+.popup-container-closed {
+    height: 37px;
+    bottom: 0;
+    cursor: pointer;
+    transition: bottom 0.8s ease-in-out;
+}
+
+.closed-flex {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    height: 37px;
+    justify-content: space-evenly;
+    transition: bottom 0.8s ease-in-out;
+    cursor: pointer;
+}
+
+.popup-container-show {
+    bottom: 0;
+}
+
+.support-img {
+    width: 130px;
+}
+
+.support-img-mini {
+    width: 32px;
+}
+
+.info-text {
+    position: relative;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.info-text-div {
+    border: 2px solid transparent;
+    border-radius: 10px;
+    padding: 10px;
+    width: 220px;
+    padding-bottom: 0px;
+}
+
+#close-chat-btn {
+    position: absolute;
+    width: 25px;
+    right: 25px;
+    top: 20px;
+    cursor: pointer;
+}
+
+#close-btn {
+    position: absolute;
+    width: 25px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.support-img-mini-chat {
+    width: 90%;
+    height: auto;
+    display: block;
+    margin: auto;
+}
+
+.header-msg {
+    margin: 10px;
+    font-weight: 500;
+    width: 80%;
+    border-bottom: 1px solid black;
+}
+
+.image-container {
+    overflow: hidden;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    position: relative;
+    width: 56px;
+    top: 8px;
+    right: -20px;
+    background-color: #74AA9C;
+}
+
+.image-container-user {
+    right: -166px !important;
+    color: white;
+    background-color: #1474bb;
+    font-weight: 600;
+    font-size: x-large;
+}
+
+.user-char {
+    position: relative;
+    right: -16px;
+}
+
+.chat-btn {
+    background-color: #74AA9C !important;
+    border-color: #74AA9C !important;
+}
+
+@media all and (max-width: 534px) {
+    .popup-container {
+        width: 100%;
+        margin-right: 0px;
+    }
+}
+
+
+/* SPINNER */
+
+.loader {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    position: relative;
+    animation: rotate 1s linear infinite;
+    display: block;
+    margin: auto;
+}
+
+.loader::before,
+.loader::after {
+    content: "";
+    box-sizing: border-box;
+    position: absolute;
+    inset: 0px;
+    border-radius: 50%;
+    border: 5px solid #FFF;
+    animation: prixClipFix 2s linear infinite;
+}
+
+.loader::after {
+    border-color: #FF3D00;
+    animation: prixClipFix 2s linear infinite, rotate 0.5s linear infinite reverse;
+    inset: 6px;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg)
+    }
+
+    100% {
+        transform: rotate(360deg)
+    }
+}
+
+@keyframes prixClipFix {
+    0% {
+        clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0)
+    }
+
+    25% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0)
+    }
+
+    50% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%)
+    }
+
+    75% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%)
+    }
+
+    100% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0)
+    }
+}

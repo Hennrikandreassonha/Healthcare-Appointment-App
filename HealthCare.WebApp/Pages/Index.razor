@@ -93,13 +93,18 @@
                     {
                         <p>You have <u>@PreviousAppointments.Where(x => x.Feedback == null).Count()</u> feedbacks to submit</p>
                     }
-                    else if (LoggedInUser != null && @PreviousAppointments.Where(x => x.Feedback == null).Count() == 0 && LoggedInUser.Role == RoleEnum.Doctor)
-                    {
-                        <p>You have no feedbacks to view yet!</p>
-                    }
                     else if (LoggedInUser != null && LoggedInUser.Role == RoleEnum.Doctor)
                     {
-                        <p>You have <u>@PreviousAppointments.Where(x => x.Feedback != null).Count()</u> feedbacks to view</p>
+                        var feedbackCount = PreviousAppointments.Where(x => x.Feedback != null).Count();
+
+                        if (feedbackCount > 0)
+                        {
+                            <p>You have <u>@feedbackCount</u> feedbacks to view</p>
+                        }
+                        else
+                        {
+                            <p>You have no feedbacks to view yet!</p>
+                        }
                     }
                     <div class="feedback-flex">
                         <table>
@@ -414,11 +419,11 @@
         if (success)
         {
 
-            FeedbackSuccessText = "Your feedback has been saved, thank you for cooperating";
+            FeedbackSuccessText = "Your feedback has been saved, thank you for cooperating!";
         }
         else
         {
-            FeedbackFailText = "Rating was below 4 stars and therefore not saved, thank you anyway!";
+            FeedbackFailText = "Rating was below 4 stars and therefore not saved, but thank you anyway!";
         }
         FeedbackText = "";
     }

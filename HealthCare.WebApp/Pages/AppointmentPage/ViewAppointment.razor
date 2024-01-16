@@ -1,4 +1,4 @@
-﻿@page "/appointment"
+@page "/appointment"
 @inject AppointmentService appointmentService
 @inject AuthenticationStateProvider authStateProvider
 @inject UserService userService;
@@ -110,72 +110,62 @@
                             <p class="alert alert-error">@successMsg</p>
                         }
 
-                        @* filtering starts here *@
-                        <div class="filter-container">
-                            <input class="name-filter form-control" type="text" @bind="careGiverNameFilter" @oninput="FilterByName"
-                                   placeholder="Filter by name" />
-                            <div class="drop-down-time">
-                                <select class="form-select" id="time-slot-filter" aria-label="Default select example"
-                                        @onchange="FilterByTime">
-                                    <option selected>Select Time</option>
-                                    @foreach (var timeSlot in Enum.GetValues(typeof(TimeSlots)).Cast<TimeSlots>())
+                @* filtering starts here *@
+                <div class="filter-container">
+                    <input class="name-filter form-control" type="text" @bind="careGiverNameFilter" @oninput="FilterByName"
+                        placeholder="Filter by name" />
+                    <div class="drop-down-time">
+                        <select class="form-select" id="time-slot-filter" aria-label="Default select example"
+                            @onchange="FilterByTime">
+                            <option selected>Select Time</option>
+                            @foreach (var timeSlot in Enum.GetValues(typeof(TimeSlots)).Cast<TimeSlots>())
+                            {
+                                @if (timeSlot == TimeSlots.All)
+                                {
+                                    <option value="@TimeSlots.All">All</option>
+                                }
+                                else
+                                {
+                                    <option value="@timeSlot">@Convert.ToInt32(timeSlot)</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                @* filtering ends here *@
+                <div class="appointments-grid">
+                    @foreach (Appointment item in appointmentsForDate)
+                    {
+                        <div class="appointment">
+                            <div class="doctor">Doctor: @item.CareGiver.FirstName @item.CareGiver.LastName</div>
+                            <div class="contact">Email: @item.CareGiver.Email</div>
+                            <div class="appointment-date">
+                                @{
+                                    DateTime startTime = item.DateTime;
+                                    DateTime endTime = item.DateTime.AddHours(1);
+                                    string formattedTimeRange = $"{startTime.ToString("H:mm")} - {endTime.ToString("H:mm")}";
+                                }
+                                Time: @formattedTimeRange
+                            </div>
+                            <div class="select-service">
+                                <select class="form-select service-select" id="selectedService"
+                                        aria-label="Default select example"
+                                        @onchange="@(e => HandleServiceSelection((ServiceEnum)Enum.Parse(typeof(ServiceEnum), e.Value.ToString())))">
+                                    <option value="" disabled selected>Select Service</option>
+                                    @foreach (ServiceEnum service in Enum.GetValues(typeof(ServiceEnum)))
                                     {
-                                        @if (timeSlot == TimeSlots.All)
-                                        {
-                                            <option value="@TimeSlots.All">All</option>
-                                        }
-                                        else
-                                        {
-                                            <option value="@timeSlot">@Convert.ToInt32(timeSlot)</option>
-                                        }
+                                        <option value="@service">@service.GetDisplayName()</option>
                                     }
                                 </select>
                             </div>
+                            <div class="book-appointment">
+                                <button class="btn btn-primary" @onclick="() => HandleBooking(item)">Book</button>
+                            </div>
                         </div>
-                        @* filtering ends here *@
-
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Doctor</th>
-                                    <th>Contact</th>
-                                    <th>Appointment date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (Appointment item in appointmentsForDate)
-                                {
-                                    <tr>
-                                        <td>@item.CareGiver.FirstName @item.CareGiver.LastName</td>
-                                        <td>@item.CareGiver.Email</td>
-                                        <td>
-                                            @{
-                                                DateTime startTime = item.DateTime;
-                                                DateTime endTime = item.DateTime.AddHours(1);
-                                                string formattedTimeRange = $"{startTime.ToString("H:mm")} - {endTime.ToString("H:mm")}";
-                                            }
-                                            @formattedTimeRange
-                                        </td>
-                                        <td>
-                                            <select placeholder="Select Service" class="form-select service-select" id="selectedService"
-                                                    aria-label="Default select example"
-                                                    @onchange="@(e => HandleServiceSelection((ServiceEnum)Enum.Parse(typeof(ServiceEnum), e.Value.ToString())))">
-                                                <option value="" disabled selected>Select Service</option>
-                                                @foreach (ServiceEnum service in Enum.GetValues(typeof(ServiceEnum)))
-                                                {
-                                                    <option value="@service">@service.GetDisplayName()</option>
-                                                }
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-primary" @onclick="() => HandleBooking(item)">Book</button>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                }
+                    }
+                </div>
+            </div>
+        }
 
                 else if (userLoggedIn.Role == RoleEnum.Doctor)
                 {
@@ -224,22 +214,22 @@
                                 </button>
                             }
 
-                            <select style='width: 300px;' class="form-select" aria-label="Default select example"
-                                    @onchange="(args) => selectedTime = args.Value.ToString()">
-                                <option value="">Select time slot to add or remove</option>
-                                @foreach (var time in appointmentService.GetAvailableTimes())
-                                {
-                                    @if (CalendarInfoObj.DayFocused == DateTime.Now.Date.Day && time <= DateTime.Now.Hour)
-                                    {
-                                    }
-                                    else
-                                    {
-                                        <option value="@time">@time:00</option>
-                                    }
-                                }
-                            </select>
-                            <button class="btn btn-success"
-                                    @onclick="@(async () => await ToggleAvailability(userLoggedIn.Id,
+                    <select class="form-select" aria-label="Default select example"
+                        @onchange="(args) => selectedTime = args.Value.ToString()">
+                        <option value="">Select time slot to add or remove</option>
+                        @foreach (var time in appointmentService.GetAvailableTimes())
+                        {
+                            @if (CalendarInfoObj.DayFocused == DateTime.Now.Date.Day && time <= DateTime.Now.Hour)
+                            {
+                            }
+                            else
+                            {
+                                <option value="@time">@time:00</option>
+                            }
+                        }
+                    </select>
+                    <button class="btn btn-success"
+                        @onclick="@(async () => await ToggleAvailability(userLoggedIn.Id,
                         new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), selectedTime))"
                                     disabled="@string.IsNullOrEmpty(selectedTime)">
                                 Toggle availability
@@ -391,7 +381,7 @@
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        //This is where we check is user is on mobile.
+        //This is where we check if user is on mobile.
         //Hover effect was making a mess on mobiles.
         if (firstRender)
         {
@@ -403,7 +393,7 @@
     public async void OnMouseOverDate(int day, User user)
     {
         //Checking if user is on a mobile device.
-        //Hover effect doesn work well on smaller screens.
+        //Hover effect doesn´t work well on smaller screens.
         if (IsMobile != null && IsMobile.Value == true)
             return;
 
