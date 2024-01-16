@@ -49,9 +49,10 @@
 
             <div id="question-div">
 
-                <textarea placeholder="What do you need help with?" id="question-area" @bind="UserMessage"></textarea>
+                <textarea class="form-control" placeholder="What do you need help with?" id="question-area"
+                    @bind="UserMessage"></textarea>
 
-                <button class="btn btn-primary chat-btn" @onclick="@SendQuestion"
+                <button id="send-question-btn" class="btn btn-primary chat-btn" @onclick="@SendQuestion"
                     disabled="@WaitingForResponse">Chat</button>
 
             </div>
@@ -81,8 +82,15 @@
             </div>
         }
     }
+
 </div>
+@foreach (string text in TextHistory)
+{
+    <li>@text</li>
+}
 @code {
+    List<string> TextHistory = new List<string>();
+
     bool ShowChat = true;
     bool Chatting = false;
     private class Message
@@ -105,6 +113,7 @@
         var email = await userService.GetEmailAsync();
         FirstCharUser = userService.GetByEmail(email).FirstName[0];
     }
+
     private void ToggleChatting()
     {
         Chatting = false;
@@ -128,12 +137,35 @@
         StateHasChanged();
         await JSRunTime.InvokeAsync<Task>("scrollToBottom", new object[] { });
     }
-    private void StartChat()
+    [JSInvokable("SendQuestionJS")]
+    public async void SendQuestionJS(string? userMsg)
+    {
+        if (userMsg.IsNullOrEmpty())
+            return;
+        await JSRunTime.InvokeAsync<Task>("scrollToBottom", new object[] { });
+        WaitingForResponse = true;
+        Messages.Add(new Message(userMsg, "User"));
+        StateHasChanged();
+        await JSRunTime.InvokeAsync<Task>("scrollToBottom", new object[] { });
+        var answer = await ChatService.SendQuestion(userMsg);
+        UserMessage = "";
+        Messages.Add(new Message(answer, "Bot"));
+        StateHasChanged();
+        await JSRunTime.InvokeAsync<Task>("scrollToBottom", new object[] { });
+        WaitingForResponse = false;
+        StateHasChanged();
+        await JSRunTime.InvokeAsync<Task>("scrollToBottom", new object[] { });
+    }
+    private async void StartChat()
     {
         var key = config.GetSection("ChatBot:Key").Value;
-
         ChatService = new ChatBotService(key!);
         Chatting = true;
+        StateHasChanged();
+        await Task.Delay(1000);
+        var dotNetReference = DotNetObjectReference.Create(this);
+        await JSRunTime.InvokeAsync<Task>("setDotnetObject", new object[] { dotNetReference });
+        await JSRunTime.InvokeVoidAsync("enterToSendMessage");
     }
     private async void ToggleChat()
     {
@@ -144,8 +176,6 @@
         if (firstRender)
         {
             await Task.Delay(1000);
-            var test = await JSRunTime.InvokeAsync<bool>("isDevice", new object[] { });
-
             await JSRunTime.InvokeAsync<Task>("openPopup", new object[] { });
         }
     }
