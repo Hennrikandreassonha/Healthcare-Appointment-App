@@ -135,6 +135,7 @@
     width: 25px;
     right: 10px;
     cursor: pointer;
+    z-index: 10;
 }
 
 .support-img-mini-chat {
