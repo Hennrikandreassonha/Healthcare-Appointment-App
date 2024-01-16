@@ -6,6 +6,10 @@ table * {
     width: 80px;
 }
 
+button{
+    margin-bottom: 3px;
+}
+
 tr {
     border: 1px solid black;
 }
