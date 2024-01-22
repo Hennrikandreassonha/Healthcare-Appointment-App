@@ -36,7 +36,7 @@ namespace HealthCare.Tests
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal("You have been registerd as a patient", result);
+            Assert.Equal("You have been registered as a patient", result);
             _dbContext.Database.EnsureDeleted();
 
         }
@@ -53,7 +53,7 @@ namespace HealthCare.Tests
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal("You have been registerd as a caregiver", result);
+            Assert.Equal("You have been registered as a caregiver", result);
             _dbContext.Database.EnsureDeleted();
         }
         [Fact]
@@ -70,7 +70,7 @@ namespace HealthCare.Tests
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal("You have been registerd as a caregiver", result);
+            Assert.Equal("You have been registered as a caregiver", result);
 
             //Error result since user already exists.
             Assert.NotNull(result2);
