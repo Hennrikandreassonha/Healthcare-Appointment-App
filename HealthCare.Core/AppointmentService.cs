@@ -24,12 +24,6 @@ namespace HealthCare.Core
         {
             return _context.Appointment.Where(x => x.Patient.Id == userId).ToList();
         }
-        public IEnumerable<Appointment> GetAppointmentsByDate(DateTime date)
-        {
-            return _context.Appointment
-                .Where(x => x.DateTime.Year == date.Year && x.DateTime.DayOfYear == date.DayOfYear && x.PatientId == null).Include(x => x.CareGiver)
-                .ToList();
-        }
         public bool AddInitialAppointmentsForADay(int caregiverId, DateTime date)
         {
             List<int> availableTimes = new();
@@ -156,21 +150,11 @@ namespace HealthCare.Core
         public async Task<Appointment[]> GetAvailabilityByDate(int doctorId, DateTime date)
         {
             var availableAppointments = _context.Appointment
-                .Where(x => x.DateTime.Year == date.Year && x.DateTime.DayOfYear == date.DayOfYear && x.CareGiverId == doctorId &&
-                    (x.PatientId == null || x.PatientId != null))
-                .Include(x => x.Patient)
-                .ToList();
+                    .Where(x => x.CareGiverId == doctorId && x.DateTime.Year == date.Year && x.DateTime.DayOfYear == date.DayOfYear &&
+                    x.PatientId == null).OrderBy(x => x.DateTime)
+                    .ToArray();
 
-            var availableTimes = availableAppointments.Select(appointment => appointment.DateTime.Hour).Distinct().ToList();
-
-            availableTimes.Sort();
-
-            var sortedAppointments = availableAppointments
-                .Where(appointment => availableTimes.Contains(appointment.DateTime.Hour))
-                .OrderBy(appointment => appointment.DateTime.Hour)
-                .ToList();
-
-            return sortedAppointments.ToArray();
+            return availableAppointments;
         }
         public async Task<int> AmountBooked(int doctorId, DateTime date)
         {
@@ -242,4 +226,3 @@ namespace HealthCare.Core
         }
     }
 }
-

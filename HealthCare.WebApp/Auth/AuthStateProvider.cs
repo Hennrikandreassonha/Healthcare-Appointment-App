@@ -49,7 +49,7 @@ namespace HealthCare.WebApp.Auth
                 await _sessionStorage.SetAsync("UserSession", userSession);
                 claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
                 {
-                     new Claim(ClaimTypes.Name, userSession.FirstName),
+                    new Claim(ClaimTypes.Name, userSession.FirstName),
                     new Claim(ClaimTypes.Role, userSession.Role.ToString()),
                     new Claim(ClaimTypes.Email, userSession.Email)
                 }));

@@ -15,6 +15,7 @@ namespace HealthCare.Core.Data
         public DbSet<CareGiver> CareGiver { get; set; }
         public DbSet<Appointment> Appointment { get; set; }
         public DbSet<Feedback> Feedback { get; set; }
+        public DbSet<MedicalJournalEntry> MedicalJournal { get; set; }
 
         public HealthcareContext(DbContextOptions<HealthcareContext> options)
     : base(options)

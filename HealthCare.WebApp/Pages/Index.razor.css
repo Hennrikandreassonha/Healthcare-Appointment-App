@@ -6,6 +6,10 @@ table * {
     width: 80px;
 }
 
+button{
+    margin-bottom: 3px;
+}
+
 tr {
     border: 1px solid black;
 }
@@ -47,7 +51,6 @@ tr {
         width: 100%;
         padding: 0.5rem 0;
     }
-
 }
 
 .header-div-welcome {
@@ -175,10 +178,12 @@ tr {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 5px;
 }
 
 .review-feedback-table {
     width: 100%;
+    padding: 5px;
 }
 
 .review-feedback-table label {

@@ -123,6 +123,39 @@ namespace HealthCare.Core.Migrations
                     b.ToTable("CareGiver");
                 });
 
+            modelBuilder.Entity("HealthCare.Core.Models.UserModels.MedicalJournalEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AppointmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CareGiverId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Entry")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CareGiverId");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("MedicalJournal");
+                });
+
             modelBuilder.Entity("HealthCare.Core.Models.UserModels.Patient", b =>
                 {
                     b.Property<int>("Id")
@@ -187,6 +220,30 @@ namespace HealthCare.Core.Migrations
                     b.Navigation("CareGiver");
 
                     b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("HealthCare.Core.Models.UserModels.MedicalJournalEntry", b =>
+                {
+                    b.HasOne("HealthCare.Core.Models.UserModels.CareGiver", "CareGiver")
+                        .WithMany()
+                        .HasForeignKey("CareGiverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HealthCare.Core.Models.UserModels.Patient", "Patient")
+                        .WithMany("JournalEntries")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CareGiver");
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("HealthCare.Core.Models.UserModels.Patient", b =>
+                {
+                    b.Navigation("JournalEntries");
                 });
 #pragma warning restore 612, 618
         }

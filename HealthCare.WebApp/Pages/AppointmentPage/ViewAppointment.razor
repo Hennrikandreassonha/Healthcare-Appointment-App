@@ -1,4 +1,4 @@
-﻿@page "/appointment"
+@page "/appointment"
 @inject AppointmentService appointmentService
 @inject AuthenticationStateProvider authStateProvider
 @inject UserService userService;
@@ -10,103 +10,105 @@
 @using HealthCare.Core.Models.Appointment;
 @using System.Text.RegularExpressions;
 
-<div class="appointment-flex">
-    <div class="calendar">
-        <header>
-            <div id="header-div">
-                <img @onclick="DecreaseMonth" src="\calendar-arrow.png" title="Change month" alt="Healhcare logo"
-                    class="calendar-info-arrow">
-                <h1 id="year-month">@yearMonth</h1>
-                <img @onclick="IncreaseMonth" src="\calendar-arrow.png" title="Change month"
-                    class="calendar-info-arrow rotate-180">
-            </div>
-        </header>
-
-        <ul class="weekdays">
-            <li>
-                <abbr title="M">Monday</abbr>
-            </li>
-            <li>
-                <abbr title="T">Tuesday</abbr>
-            </li>
-            <li>
-                <abbr title="W">Wednesday</abbr>
-            </li>
-            <li>
-                <abbr title="T">Thursday</abbr>
-            </li>
-            <li>
-                <abbr title="F">Friday</abbr>
-            </li>
-            <li>
-                <abbr title="S">Saturday</abbr>
-            </li>
-            <li>
-                <abbr title="S">Sunday</abbr>
-            </li>
-        </ul>
-
-        <ol class="day-grid">
-            @for (int i = 0; i < GetStartDay(currentDate.Year, currentDate.Month); i++)
-            {
-                <li class="empty-day"></li>
-            }
-            @foreach (int item in CalendarInfoObj.Days)
-            {
-                @if (CalendarInfoObj.Month < DateTime.Now.Month)
-                {
-                    <li style='background-color: #8a8686;'>
-                        @item
-                    </li>
-                }
-                else if ((CalendarInfoObj.Month >= DateTime.Now.Month && item >= currentDate.Day) || CalendarInfoObj.Month >
-                DateTime.Now.Month)
-                {
-                    <li class="date-day @(IsTodaysDate(item) ? "current-date" : "") @(CalendarInfoObj.DayFocused == item && CalendarInfoObj.Month == currentDate.Month ? "date-day-focus" : "")"
-                        @onclick="() => HandleChosenDate(item, userLoggedIn)"
-                        @onmouseover="() => OnMouseOverDate(item, userLoggedIn)" @onmouseout="OnMouseOut">
-                        @item
-
-                        @if (AvailableHoverDay == item)
-                        {
-                            <div class="hover-div">
-                                <span><u>@AvailableHover</u></span>
-                                <span class="hover-div-text">Times Available</span>
-                            </div>
-                        }
-                    </li>
-                }
-                else
-                {
-                    <li style='background-color: #8a8686;'>
-                        @item
-                    </li>
-                }
-            }
-        </ol>
-    </div>
-
-    @if (chosenDay != null)
-    {
-        @if (userLoggedIn.Role == RoleEnum.Patient)
-        {
-            <div class="day-info">
+<AuthorizeView>
+    <Authorized>
+        <div class="appointment-flex">
+            <div class="calendar">
                 <header>
-                    <h3>
-                        There are @appointmentsForDate.Length appointments available for booking @chosenDay of
-                        @CalendarInfoObj.GetMonthName(CalendarInfoObj.Month)
-                    </h3>
+                    <div id="header-div">
+                        <img @onclick="DecreaseMonth" src="\calendar-arrow.png" title="Change month" alt="Healhcare logo"
+                             class="calendar-info-arrow">
+                        <h1 id="year-month">@yearMonth</h1>
+                        <img @onclick="IncreaseMonth" src="\calendar-arrow.png" title="Change month"
+                             class="calendar-info-arrow rotate-180">
+                    </div>
                 </header>
-                @if (successMsg != "")
 
-                {
-                    <p class="alert alert-success">@successMsg</p>
-                }
-                @if (errorMsg != "")
+                <ul class="weekdays">
+                    <li>
+                        <abbr title="M">Monday</abbr>
+                    </li>
+                    <li>
+                        <abbr title="T">Tuesday</abbr>
+                    </li>
+                    <li>
+                        <abbr title="W">Wednesday</abbr>
+                    </li>
+                    <li>
+                        <abbr title="T">Thursday</abbr>
+                    </li>
+                    <li>
+                        <abbr title="F">Friday</abbr>
+                    </li>
+                    <li>
+                        <abbr title="S">Saturday</abbr>
+                    </li>
+                    <li>
+                        <abbr title="S">Sunday</abbr>
+                    </li>
+                </ul>
 
+                <ol class="day-grid">
+                    @for (int i = 0; i < GetStartDay(currentDate.Year, currentDate.Month); i++)
+                    {
+                        <li class="empty-day"></li>
+                    }
+                    @foreach (int item in CalendarInfoObj.Days)
+                    {
+                        @if (CalendarInfoObj.Month < DateTime.Now.Month)
+                        {
+                            <li style='background-color: #8a8686;'>
+                                @item
+                            </li>
+                        }
+                        else if ((CalendarInfoObj.Month >= DateTime.Now.Month && item >= currentDate.Day) || CalendarInfoObj.Month >
+                        DateTime.Now.Month)
+                        {
+                            <li class="date-day @(IsTodaysDate(item) ? "current-date" : "") @(CalendarInfoObj.DayFocused == item && CalendarInfoObj.Month == currentDate.Month ? "date-day-focus" : "")"
+                                @onclick="() => HandleChosenDate(item, userLoggedIn)"
+                                @onmouseover="() => OnMouseOverDate(item, userLoggedIn)" @onmouseout="OnMouseOut">
+                                @item
+
+                                @if (AvailableHoverDay == item)
+                                {
+                                    <div class="hover-div">
+                                        <span><u>@AvailableHover</u></span>
+                                        <span class="hover-div-text">Times Available</span>
+                                    </div>
+                                }
+                            </li>
+                        }
+                        else
+                        {
+                            <li style='background-color: #8a8686;'>
+                                @item
+                            </li>
+                        }
+                    }
+                </ol>
+            </div>
+
+            @if (chosenDay != null)
+            {
+                @if (userLoggedIn.Role == RoleEnum.Patient)
                 {
-                    <p class="alert alert-error">@successMsg</p>
-                }
+                    <div class="day-info">
+                        <header>
+                            <h3>
+                                There are @appointmentsForDate.Length appointments available for booking @chosenDay of
+                                @CalendarInfoObj.GetMonthName(CalendarInfoObj.Month)
+                            </h3>
+                        </header>
+                        @if (successMsg != "")
+
+                        {
+                            <p class="alert alert-success">@successMsg</p>
+                        }
+                        @if (errorMsg != "")
+
+                        {
+                            <p class="alert alert-error">@successMsg</p>
+                        }
 
                 @* filtering starts here *@
                 <div class="filter-container">
@@ -131,98 +133,88 @@
                     </div>
                 </div>
                 @* filtering ends here *@
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Doctor</th>
-                            <th>Contact</th>
-                            <th>Appointment date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (Appointment item in appointmentsForDate)
-                        {
-                            <tr>
-                                <td>@item.CareGiver.FirstName @item.CareGiver.LastName</td>
-                                <td>@item.CareGiver.Email</td>
-                                <td>
-                                    @{
-                                        DateTime startTime = item.DateTime;
-                                        DateTime endTime = item.DateTime.AddHours(1);
-                                        string formattedTimeRange = $"{startTime.ToString("H:mm")} - {endTime.ToString("H:mm")}";
-                                    }
-                                    @formattedTimeRange
-                                </td>
-                                <td>
-                                    <select placeholder="Select Service" class="form-select service-select" id="selectedService"
+                <div class="appointments-grid">
+                    @foreach (Appointment item in appointmentsForDate)
+                    {
+                        <div class="appointment">
+                            <div class="doctor">Doctor: @item.CareGiver.FirstName @item.CareGiver.LastName</div>
+                            <div class="contact">Email: @item.CareGiver.Email</div>
+                            <div class="appointment-date">
+                                @{
+                                    DateTime startTime = item.DateTime;
+                                    DateTime endTime = item.DateTime.AddHours(1);
+                                    string formattedTimeRange = $"{startTime.ToString("H:mm")} - {endTime.ToString("H:mm")}";
+                                }
+                                Time: @formattedTimeRange
+                            </div>
+                            <div class="select-service">
+                                <select class="form-select service-select" id="selectedService"
                                         aria-label="Default select example"
                                         @onchange="@(e => HandleServiceSelection((ServiceEnum)Enum.Parse(typeof(ServiceEnum), e.Value.ToString())))">
-                                        <option value="" disabled selected>Select Service</option>
-                                        @foreach (ServiceEnum service in Enum.GetValues(typeof(ServiceEnum)))
-                                        {
-                                            <option value="@service">@service.GetDisplayName()</option>
-                                        }
-                                    </select>
-                                </td>
-                                <td>
-                                    <button class="btn btn-primary" @onclick="() => HandleBooking(item)">Book</button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                                    <option value="" disabled selected>Select Service</option>
+                                    @foreach (ServiceEnum service in Enum.GetValues(typeof(ServiceEnum)))
+                                    {
+                                        <option value="@service">@service.GetDisplayName()</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="book-appointment">
+                                <button class="btn btn-primary" @onclick="() => HandleBooking(item)">Book</button>
+                            </div>
+                        </div>
+                    }
+                </div>
             </div>
         }
 
-        else if (userLoggedIn.Role == RoleEnum.Doctor)
-        {
-            <div class="day-info">
-                <header>
-                    <h3>
-                        Click on a date to check availability
-                    </h3>
-                </header>
-                <div class="availability-flex">
+                else if (userLoggedIn.Role == RoleEnum.Doctor)
+                {
+                    <div class="day-info">
+                        <header>
+                            <h3>
+                                Click on a date to check availability
+                            </h3>
+                        </header>
+                        <div class="availability-flex">
 
-                    @* If there are any available times for doctor. *@
-                    @if (AmountBookable == 0)
-                    {
-                        <button class="btn btn-success" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
+                            @* If there are any available times for doctor. *@
+                            @if (AmountBookable == 0)
+                            {
+                                <button class="btn btn-success" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
                             new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), false)"
-                            disabled>
-                            Set available all day
-                        </button>
-                        <button class="btn btn-danger" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
+                                        disabled>
+                                    Set available all day
+                                </button>
+                                <button class="btn btn-danger" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
                             new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), true)">
-                            Set unavailable all day
-                        </button>
-                    }
-                    else if (AmountBookable > 0 && AmountBooked == 0)
-                    {
-                        <button class="btn btn-success" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
+                                    Set unavailable all day
+                                </button>
+                            }
+                            else if (AmountBookable > 0 && AmountBooked == 0)
+                            {
+                                <button class="btn btn-success" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
                             new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), false)">
-                            Set available all day
-                        </button>
-                        <button class="btn btn-danger" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
+                                    Set available all day
+                                </button>
+                                <button class="btn btn-danger" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
                             new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), true)"
-                            disabled>
-                            Set unavailable all day
-                        </button>
-                    }
-                    else
-                    {
-                        <button class="btn btn-success" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
+                                        disabled>
+                                    Set unavailable all day
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-success" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
                             new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), false)">
-                            Set available all day
-                        </button>
-                        <button class="btn btn-danger" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
+                                    Set available all day
+                                </button>
+                                <button class="btn btn-danger" @onclick="() => ToggleAvailabilityForADay(userLoggedIn.Id,
                             new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), true)">
-                            Set unavailable all day
-                        </button>
-                    }
+                                    Set unavailable all day
+                                </button>
+                            }
 
-                    <select style='width: 300px;' class="form-select" aria-label="Default select example"
+                    <select class="form-select" aria-label="Default select example"
                         @onchange="(args) => selectedTime = args.Value.ToString()">
                         <option value="">Select time slot to add or remove</option>
                         @foreach (var time in appointmentService.GetAvailableTimes())
@@ -239,64 +231,69 @@
                     <button class="btn btn-success"
                         @onclick="@(async () => await ToggleAvailability(userLoggedIn.Id,
                         new DateTime(currentDate.Year, CalendarInfoObj.Month, CalendarInfoObj.DayFocused), selectedTime))"
-                        disabled="@string.IsNullOrEmpty(selectedTime)">
-                        Toggle availability
-                    </button>
-                </div>
+                                    disabled="@string.IsNullOrEmpty(selectedTime)">
+                                Toggle availability
+                            </button>
+                        </div>
 
-                <table>
-                    <thead>
-                        <tr>
-                            @if (appointmentsForBooking.Any(a => a.Patient != null || a.Patient == null))
-                            {
-                                <th>Patient</th>
-                                <th>Contact</th>
-                                <th>Date</th>
-                            }
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (Appointment item in appointmentsForBooking)
-                        {
-                            @if (item.Patient != null)
-
-                            {
+                        <table>
+                            <thead>
                                 <tr>
-                                    <td>@item.Patient.FirstName @item.Patient.LastName</td>
-                                    <td>@item.Patient.Email</td>
-                                    <td>
-                                        @{
-                                            DateTime startTime = item.DateTime;
-                                            DateTime endTime = item.DateTime.AddHours(1);
-                                            string formattedTimeRange = $"{startTime.ToString("H:mm")} - {endTime.ToString("H:mm")}";
-                                        }
-                                        @formattedTimeRange
-                                    </td>
+                                    @if (appointmentsForBooking.Any(a => a.Patient != null || a.Patient == null))
+                                    {
+                                        <th>Patient</th>
+                                        <th>Contact</th>
+                                        <th>Date</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (Appointment item in appointmentsForBooking)
+                                {
+                                    @if (item.Patient != null)
 
-                                </tr>
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td>No patient booked</td>
-                                    <td></td>
-                                    <td>
-                                        @{
-                                            DateTime startTime = item.DateTime;
-                                            DateTime endTime = item.DateTime.AddHours(1);
-                                            string formattedTimeRange = $"{startTime.ToString("H:mm")} - {endTime.ToString("H:mm")}";
-                                        }
-                                        @formattedTimeRange
-                                    </td>
-                                </tr>
-                            }
-                        }
-                    </tbody>
-                </table>
-            </div>
-        }
-    }
-</div>
+                                    {
+                                        <tr>
+                                            <td>@item.Patient.FirstName @item.Patient.LastName</td>
+                                            <td>@item.Patient.Email</td>
+                                            <td>
+                                                @{
+                                                    DateTime startTime = item.DateTime;
+                                                    DateTime endTime = item.DateTime.AddHours(1);
+                                                    string formattedTimeRange = $"{startTime.ToString("H:mm")} - {endTime.ToString("H:mm")}";
+                                                }
+                                                @formattedTimeRange
+                                            </td>
+
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>No patient booked</td>
+                                            <td></td>
+                                            <td>
+                                                @{
+                                                    DateTime startTime = item.DateTime;
+                                                    DateTime endTime = item.DateTime.AddHours(1);
+                                                    string formattedTimeRange = $"{startTime.ToString("H:mm")} - {endTime.ToString("H:mm")}";
+                                                }
+                                                @formattedTimeRange
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            }
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <NotAuthorizedComponent />
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     public class CalendarInfo
@@ -384,7 +381,7 @@
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        //This is where we check is user is on mobile.
+        //This is where we check if user is on mobile.
         //Hover effect was making a mess on mobiles.
         if (firstRender)
         {
@@ -396,7 +393,7 @@
     public async void OnMouseOverDate(int day, User user)
     {
         //Checking if user is on a mobile device.
-        //Hover effect doesn work well on smaller screens.
+        //Hover effect doesn´t work well on smaller screens.
         if (IsMobile != null && IsMobile.Value == true)
             return;
 
@@ -466,7 +463,7 @@
         {
             appointmentsForDate = appointmentService.GetInitialAppointmentsByDate(dateToCheck)
             .Where(x => x.DateTime > DateTime.Now).ToArray();
-            resetFilteredAppointments = appointmentService.GetAppointmentsByDate(dateToCheck).Where(x => x.DateTime >
+            resetFilteredAppointments = appointmentService.GetInitialAppointmentsByDate(dateToCheck).Where(x => x.DateTime >
             DateTime.Now).ToArray();
         }
         else if (user.Role == RoleEnum.Doctor)
@@ -535,7 +532,7 @@
         else
             CalendarInfoObj.Month -= 1;
 
-        yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}.";
+        yearMonth = $"{currentDate.ToString("MMMM")} {currentDate.Year.ToString()}";
         UpdateDaysOfMonth(currentDate.Year, currentDate.Month);
     }
     private void IncreaseMonth()

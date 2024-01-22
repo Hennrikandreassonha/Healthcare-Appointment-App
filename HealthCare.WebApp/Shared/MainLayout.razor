@@ -5,17 +5,16 @@
 <PageTitle>HealthCare.WebApp</PageTitle>
 
 <div class="page">
-        <div class="sidebarbig">
-            <NavMenu />
-        </div>
+    <div class="sidebarbig">
+        <NavMenu />
+    </div>
 
     <main>
         <div class="top-row px-4">
             <img src="\logo.png" alt="Healhcare logo" class="logo nav-logo">
 
             <div class="nav-right-section">
-                <img src="\menu.png" alt="Hamburger menu" class="nav-logo-toggle"
-                @onclick="ToggleNavMenu">
+                <img src="\menu.png" alt="Hamburger menu" class="nav-logo-toggle" @onclick="ToggleNavMenu">
                 <AuthorizeView>
                     <Authorized>
                         <NavLink href="">
@@ -40,6 +39,13 @@
         <article class="content px-4">
             @Body
         </article>
+
+        <AuthorizeView>
+            <Authorized>
+                <ChatBotComponent />
+            </Authorized>
+        </AuthorizeView>
+
     </main>
 </div>
 

@@ -26,12 +26,20 @@
 
         .history-table th:nth-child(1),
         .history-table td:nth-child(1) {
-            width: 25%;
+            width: 20%;
         }
 
         .history-table th:nth-child(2),
         .history-table td:nth-child(2) {
-            width: 50%;
+            width: 20%;
+        }
+        .history-table th:nth-child(3),
+        .history-table td:nth-child(3) {
+            width: 20%;
+        }
+        .history-table th:nth-child(4),
+        .history-table td:nth-child(4) {
+            width: 40%;
         }
 
 

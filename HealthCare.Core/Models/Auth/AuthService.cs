@@ -26,8 +26,8 @@ namespace HealthCare.Core.Models.Auth
                 return "ERROR: Invalid Caregiver Code";
             }   
 
-            string successMsg = "You have been registerd as a ";
-            // Checking if registerd user is a caregiver or a patient.
+            string successMsg = "You have been registered as a ";
+            // Checking if registered user is a caregiver or a patient.
             User user = userDto.CaregiverCode == caregiverCode ? new CareGiver() : new Patient();
 
             user.Email = userDto.Email;
